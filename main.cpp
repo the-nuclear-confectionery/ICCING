@@ -110,8 +110,8 @@ int main (int argc, char *argv[])
 
 		//	Clean event and print time taken to process
 		testEvent.CleanEvent();
-		duration = (clock() - start)/(double)CLOCKS_PER_SEC;
-		cout << "Event processing time: " << duration/60 << " min" << endl;
+//		duration = (clock() - start)/(double)CLOCKS_PER_SEC;
+//		cout << "Event processing time: " << duration/60 << " min" << endl;
 	}
 
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
