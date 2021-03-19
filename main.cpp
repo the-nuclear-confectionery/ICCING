@@ -89,7 +89,7 @@ int main (int argc, char *argv[])
 
 				//	Generate Quarks from event energy sample
 				testQuarks = machine.SplitSample(testSample);
-
+					cout << "Quark made " << testQuarks.GetCharge()[0] << endl;
 				//	If there was not enough energy to create 2 quarks of given flavor mass, sample event again
 				if (testQuarks.GetEnergyFraction() == -1)	{	continue;	}
 
