@@ -736,7 +736,7 @@ Event IO::ReadEvent(Event event_in)
   }
   input.close();  //  Close input stream
 
-  if (test_ == "GreensFunction")
+/*  if (test_ == "GreensFunction")
   {
     for (int i = 0; i < event_in.initial_energy.size(); i++)
     {
@@ -745,7 +745,7 @@ Event IO::ReadEvent(Event event_in)
         event_in.initial_energy[i][j] = 10.;
       }
     }
-  }
+  }*/
 
   ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
   event_in.total_initial_entropy = a_trento*event_in.total_initial_entropy/numpoints;
