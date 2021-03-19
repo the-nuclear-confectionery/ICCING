@@ -235,7 +235,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     vector<int> antiquark_bounds = GetIntegrationBounds(quark_dist.size() , quark_rad);
     if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.size() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.size())
     { return false; }
-
+    cout << "Quark charge " << quark_density.GetCharge()[0] << endl;
     if (quark_density.GetCharge()[0] == 0.0023)
     { number_up++; }
     else if (quark_density.GetCharge()[0] == 0.0048)
