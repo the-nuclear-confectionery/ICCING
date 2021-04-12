@@ -245,6 +245,10 @@ bool Event::UpdateDensity(Quarks quark_density)
     else if (quark_density.GetCharge()[0] == 1.29)
     { number_charm++; }
 
+    if (quark_density.GetCharge()[0] == 0.095)
+    {
+      cout << "strange charges " << quark_density.GetCharge()[1] << " " <<  quark_density.GetCharge()[2] << " " <<  quark_density.GetCharge()[3] << endl;
+    }
     //******************************************************************************************
     //  Update Total energies and initial_energy
     //******************************************************************************************
