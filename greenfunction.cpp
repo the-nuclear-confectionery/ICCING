@@ -220,7 +220,7 @@ namespace GreensFunctions{
     // ENERGY ATTRACTOR CURVE //
     double E(double wT){
 
-      cout << "In e" << endl;
+      std::cout << "In e" << std::endl;
 
        double Nc=3.0;
       double Nf=3.0;
@@ -243,7 +243,7 @@ namespace GreensFunctions{
 
     void GetValues(double eTau0,double Tau,double etaOverS,double &e,double &wTilde){
 
-      cout << "In get values" << endl;
+      std::cout << "In get values" << std::endl;
        double Nc=3.0;
       double Nf=3.0;
       double nuG=2.0*(Nc*Nc-1.0);
@@ -287,7 +287,7 @@ namespace GreensFunctions{
         // SET FINAL VALUES OF T,e IN GeV //
         e=(M_PI*M_PI/30.0)*nuEff*std::pow(TMid,4.0);
 
-        cout << "at end of get values" << endl;
+        std::cout << "at end of get values" << std::endl;
 
 
     } // GetValues
