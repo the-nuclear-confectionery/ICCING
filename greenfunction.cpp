@@ -212,6 +212,12 @@ namespace GreensFunctions{
     // ENERGY ATTRACTOR CURVE //
     double E(double wT){
 
+       double Nc=3.0;
+      double Nf=3.0;
+      double nuG=2.0*(Nc*Nc-1.0);
+      double nuQ=2.0*Nc*Nf;
+      double nuEff=nuG+7.0/4.0*nuQ;
+
         if(wT<wTMin){
             return 1.0/CInfty*std::pow(wT,4.0/9.0);
         }
@@ -227,6 +233,11 @@ namespace GreensFunctions{
 
     void GetValues(double eTau0,double Tau,double etaOverS,double &e,double &wTilde){
 
+       double Nc=3.0;
+      double Nf=3.0;
+      double nuG=2.0*(Nc*Nc-1.0);
+      double nuQ=2.0*Nc*Nf;
+      double nuEff=nuG+7.0/4.0*nuQ;
         // DETERMINE (e(tau) tau^{4/3})_{infty} //
         double eTau43Infty=std::pow(4.0*M_PI*etaOverS,4.0/9.0)*std::pow(M_PI*M_PI*nuEff/30.0,1.0/9.0)*CInfty*std::pow(eTau0,8.0/9.0);
 
