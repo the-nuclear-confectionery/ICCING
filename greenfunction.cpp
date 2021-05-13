@@ -215,7 +215,7 @@ namespace GreensFunctions{
     gsl_spline *EInt;
 
 //    double wTMin; double wTMax;
-     double CInfty;
+     double CInfty=0.800226;
 
     // ENERGY ATTRACTOR CURVE //
     double E(double wT){
