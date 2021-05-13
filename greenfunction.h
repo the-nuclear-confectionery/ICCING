@@ -105,9 +105,9 @@ namespace GreensFunctions{
      double CInfty;
 
     // ENERGY ATTRACTOR CURVE //
-    double E(double wT);
+    extern double E(double wT);
 
-    void GetValues(double eTau0,double Tau,double etaOverS,double &e,double &wTilde);
+    extern void GetValues(double eTau0,double Tau,double etaOverS,double &e,double &wTilde);
 
 } // GreensFunctions
 #endif
