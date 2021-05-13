@@ -27,7 +27,7 @@ namespace GreensFunctions{
 
     double GssScalingCurve(double wT,double dXdT){
         int tID=omp_get_thread_num();
-        EVALUATE_GSL_INTERPOLATOR_2D(GssInt,wT,dXdT,FsswTAcc[tID],GssdXdTAcc[tID],wTMin,wTMax,dXdTMin,dXdTMax);
+        EVALUATE_GSL_INTERPOLATOR_2D(GssInt,wT,dXdT,GsswTAcc[tID],GssdXdTAcc[tID],wTMin,wTMax,dXdTMin,dXdTMax);
     } // GssScalingCurve
 
     double Gss(double wT,double dXdT){
@@ -39,13 +39,13 @@ namespace GreensFunctions{
     //    INTERPOLATE COORDINATE SPACE GRRENS FUNCTIONS    //
     // AS FUNCTIONS OF wTilde and (\Delta x)/(\Delta \tau) //
     /////////////////////////////////////////////////////////
-    double *wTValues,*dXdTValues;
+//    double *wTValues,*dXdTValues;
 
-    double *FssValues;
-    double *GssValues;
+//    double *FssValues;
+//    double *GssValues;
 
 
-    void Setup(int NumberOfTimes,int NumberOfPoints){
+/*    void Setup(int NumberOfTimes,int NumberOfPoints){
 
         // ALLOCATE //
         wTValues=new double[NumberOfTimes];
@@ -77,11 +77,11 @@ namespace GreensFunctions{
         GssInt=gsl_spline2d_alloc(gsl_interp2d_bilinear,NumberOfTimes,NumberOfPoints);
 
     } // Setup
-
+*/
     // READ INPUT FILE //
     // INPUT FILE MUST HAVE FOLLOWING STRUCTURE: 1:wTilde 2:|x-x_0|/|tau-tau_0| 3:|tau-tau_0|^2*Fss 4:|tau-tau_0|^2*Gss //
     // AVOID EMPTY LINES IN INPUT FILE! //
-    void SetValues(std::string fname,int NumberOfTimes,int NumberOfPoints){
+/*    void SetValues(std::string fname,int NumberOfTimes,int NumberOfPoints){
 
         double FssVal[NumberOfTimes*NumberOfPoints];
         double GssVal[NumberOfTimes*NumberOfPoints];
@@ -139,7 +139,7 @@ namespace GreensFunctions{
            l++;
         } */
 
-
+/*
         // SET GRID VALUES FOR INTERPOLATION //
         int FIndex=0;
         for(int wTIndex=0;wTIndex<NumberOfTimes;wTIndex++){
@@ -156,12 +156,12 @@ namespace GreensFunctions{
         }
 
     } // SetValues
-
+*/
     /////////////////////////
     // SETUP INTERPOLATORS //
     /////////////////////////
 
-    void SetupInterpolators(int NumberOfTimes,int NumberOfPoints){
+/*    void SetupInterpolators(int NumberOfTimes,int NumberOfPoints){
 
         // SET BOUNDARIES //
         wTMin=wTValues[0]; wTMax=wTValues[NumberOfTimes-1];
@@ -179,10 +179,10 @@ namespace GreensFunctions{
         delete[] GssValues;
 
     } // SetupInterpolators
-
+*/
 
     // CREATE OUTPUT //
-    void Output(std::string fname,int NwT,int NdXdT){
+/*    void Output(std::string fname,int NwT,int NdXdT){
 
 
         std::ofstream Outstream;
@@ -208,6 +208,65 @@ namespace GreensFunctions{
 
         Outstream.close();
     } // Output
+*/
+    // ENERGY ATTRACTOR CURVE //
+    double E(double wT){
 
+        if(wT<wTMin){
+            return 1.0/CInfty*std::pow(wT,4.0/9.0);
+        }
+        else if(wT>wTMax){
+            return 1.0-2.0/(3.0*M_PI*wT);
+        }
+        else{
+            int tID=omp_get_thread_num();
+            return gsl_spline_eval(EInt,wT,EAcc[tID]);
+        }
+
+    } // E
+
+    void GetValues(double eTau0,double Tau,double etaOverS,double &e,double &wTilde){
+
+        // DETERMINE (e(tau) tau^{4/3})_{infty} //
+        double eTau43Infty=std::pow(4.0*M_PI*etaOverS,4.0/9.0)*std::pow(M_PI*M_PI*nuEff/30.0,1.0/9.0)*CInfty*std::pow(eTau0,8.0/9.0);
+
+        //////////////////////////////////////////////////////////
+        // DETERMINE TEMPERATURE SELF-CONSISTENTLY ACCORDING TO //
+        // e(T)tau^{4/3} = E(wTilde) (e(tau) tau^{4/3})_{infty} //
+        //          wTilde= (T tau)/(4pi eta/s)                 //
+        //////////////////////////////////////////////////////////
+
+        double TLow=0.0; double THigh=std::pow(eTau43Infty/((M_PI*M_PI/30.0)*nuEff*std::pow(1.0,4.0)*std::pow(Tau,4.0/3.0)),1.0/4.0);
+
+        double TMid=(THigh+TLow)/2.0;
+        double wTildeMid=(TMid*Tau)/(4.0*M_PI*etaOverS);
+
+
+        while(THigh-TLow>1E-6*TMid){
+
+            if(E(wTildeMid)/std::pow(TMid,4)>(M_PI*M_PI/30.0)*nuEff*std::pow(1.0,4.0)*std::pow(Tau,4.0/3.0)/eTau43Infty){
+                TLow=TMid;
+            }
+            else{
+                THigh=TMid;
+            }
+
+            TMid=(THigh+TLow)/2.0;
+            wTildeMid=(TMid*Tau)/(4.0*M_PI*etaOverS);
+
+        }
+
+        // CHECK THAT eEq(T) == E(wTilde) (e(tau) tau^{4/3})_{infty} IS SOLVED //
+        //std::cerr << "wT=" << wTilde << " " << "eEq=" << (M_PI*M_PI/30.0)*nuEff*std::pow(TMid,4.0) << " " << "e=" << eTau43Infty*E((TMid*Tau)/(4.0*M_PI*etaOverS))/std::pow(Tau,4.0/3.0) << std::endl;
+
+        // SET FINAL VALUE OF wTilde //
+        wTilde=(TMid*Tau)/(4.0*M_PI*etaOverS);
+
+        // SET FINAL VALUES OF T,e IN GeV //
+        e=(M_PI*M_PI/30.0)*nuEff*std::pow(TMid,4.0);
+
+
+
+    } // GetValues
 
 } // GreensFunctions

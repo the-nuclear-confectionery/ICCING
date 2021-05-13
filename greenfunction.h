@@ -68,11 +68,11 @@ namespace GreensFunctions{
     extern double *FssValues;
     extern double *GssValues;
 
-    extern void Setup(int NumberOfTimes,int NumberOfPoints);
+//    extern void Setup(int NumberOfTimes,int NumberOfPoints);
     // READ INPUT FILE //
     // INPUT FILE MUST HAVE FOLLOWING STRUCTURE: 1:wTilde 2:|x-x_0|/|tau-tau_0| 3:|tau-tau_0|^2*Fss 4:|tau-tau_0|^2*Gss //
     // AVOID EMPTY LINES IN INPUT FILE! //
-    extern void SetValues(std::string fname,int NumberOfTimes,int NumberOfPoints);
+//    extern void SetValues(std::string fname,int NumberOfTimes,int NumberOfPoints);
 
     /////////////////////////
     // SETUP INTERPOLATORS //
@@ -82,8 +82,31 @@ namespace GreensFunctions{
 
 
     // CREATE OUTPUT //
-    extern void Output(std::string fname,int NwT,int NdXdT);
+//    extern void Output(std::string fname,int NwT,int NdXdT);
 
+
+
+    ///////////////////////////////////////////////
+    // This is for background attractor          //
+    ///////////////////////////////////////////////
+
+    // SET DEGREES OF FREEDOM //
+    double Nc=3.0;
+    double Nf=3.0;
+    double nuG=2.0*(Nc*Nc-1.0);
+    double nuQ=2.0*Nc*Nf;
+    double nuEff=nuG+7.0/4.0*nuQ;
+
+    // GSL INTERPOLATION OBJECTS //
+    gsl_interp_accel **EAcc;
+    gsl_spline *EInt;
+
+    double wTMin; double wTMax; double CInfty;
+
+    // ENERGY ATTRACTOR CURVE //
+    double E(double wT);
+
+    void GetValues(double eTau0,double Tau,double etaOverS,double &e,double &wTilde);
 
 } // GreensFunctions
 #endif
