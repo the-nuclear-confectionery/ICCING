@@ -209,6 +209,14 @@ namespace GreensFunctions{
         Outstream.close();
     } // Output
 */
+
+// GSL INTERPOLATION OBJECTS //
+    gsl_interp_accel **EAcc;
+    gsl_spline *EInt;
+
+//    double wTMin; double wTMax;
+     double CInfty;
+
     // ENERGY ATTRACTOR CURVE //
     double E(double wT){
 
