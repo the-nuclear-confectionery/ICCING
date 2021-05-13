@@ -33,12 +33,14 @@ default_random_engine get_random_number;
 
 int main (int argc, char *argv[])
 {
-	IO inOut(argv[1]);
-
 	double e_out, w_tilde;
 	GreensFunctions::GetValues(1, 1, 0.5*M_PI, e_out, w_tilde);
 	cout << "Testing BackgroundAttractor e_out = " << e_out << " w_tilde = " << w_tilde << endl;
 	return 0;
+	
+	IO inOut(argv[1]);
+
+
 	//******************************************************************************************
   //  Declare relevent variables and objects
   //******************************************************************************************
