@@ -91,11 +91,7 @@ namespace GreensFunctions{
     ///////////////////////////////////////////////
 
     // SET DEGREES OF FREEDOM //
-    extern double Nc=3.0;
-extern    double Nf=3.0;
-extern    double nuG=2.0*(Nc*Nc-1.0);
-extern    double nuQ=2.0*Nc*Nf;
-extern    double nuEff=nuG+7.0/4.0*nuQ;
+
 
     // GSL INTERPOLATION OBJECTS //
 extern    gsl_interp_accel **EAcc;
