@@ -220,7 +220,7 @@ namespace GreensFunctions{
     // ENERGY ATTRACTOR CURVE //
     double E(double wT){
 
-      std::cout << "In e" << std::endl;
+    //  std::cout << "In e" << std::endl;
 
        double Nc=3.0;
       double Nf=3.0;
@@ -268,6 +268,8 @@ namespace GreensFunctions{
 
 
         while(THigh-TLow>1E-6*TMid){
+          std::cout << "THigh-TLow " << THigh-TLow << std::endl;
+          std::cout << "1E-6*TMid " << 1E-6*TMid << std::endl;
 
             if(E(wTildeMid)/std::pow(TMid,4)>(M_PI*M_PI/30.0)*nuEff*std::pow(1.0,4.0)*std::pow(Tau,4.0/3.0)/eTau43Infty){
                 TLow=TMid;
