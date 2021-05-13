@@ -38,6 +38,7 @@ int main (int argc, char *argv[])
 	double e_out, w_tilde;
 	GreensFunctions::GetValues(1, 1, 0.5*M_PI, e_out, w_tilde);
 	cout << "Testing BackgroundAttractor e_out = " << e_out << " w_tilde = " << w_tilde << endl;
+	return 0;
 	//******************************************************************************************
   //  Declare relevent variables and objects
   //******************************************************************************************
