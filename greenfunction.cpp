@@ -251,6 +251,7 @@ namespace GreensFunctions{
       double nuEff=nuG+7.0/4.0*nuQ;
         // DETERMINE (e(tau) tau^{4/3})_{infty} //
         double eTau43Infty=std::pow(4.0*M_PI*etaOverS,4.0/9.0)*std::pow(M_PI*M_PI*nuEff/30.0,1.0/9.0)*CInfty*std::pow(eTau0,8.0/9.0);
+        std::cout << "eTau43Infty " << eTau43Infty << std::endl;
 
         //////////////////////////////////////////////////////////
         // DETERMINE TEMPERATURE SELF-CONSISTENTLY ACCORDING TO //
@@ -259,9 +260,11 @@ namespace GreensFunctions{
         //////////////////////////////////////////////////////////
 
         double TLow=0.0; double THigh=std::pow(eTau43Infty/((M_PI*M_PI/30.0)*nuEff*std::pow(1.0,4.0)*std::pow(Tau,4.0/3.0)),1.0/4.0);
+        std::cout << "THigh " << THigh << std::endl;
 
         double TMid=(THigh+TLow)/2.0;
         double wTildeMid=(TMid*Tau)/(4.0*M_PI*etaOverS);
+        std::cout << "wTildeMid " << wTildeMid << std::endl;
 
 
         while(THigh-TLow>1E-6*TMid){
@@ -283,9 +286,11 @@ namespace GreensFunctions{
 
         // SET FINAL VALUE OF wTilde //
         wTilde=(TMid*Tau)/(4.0*M_PI*etaOverS);
+        std::cout << "wTilde " << wTilde << std::endl;
 
         // SET FINAL VALUES OF T,e IN GeV //
         e=(M_PI*M_PI/30.0)*nuEff*std::pow(TMid,4.0);
+        std::cout << "e " << e << std::endl;
 
         std::cout << "at end of get values" << std::endl;
 
