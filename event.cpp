@@ -157,6 +157,11 @@ Sample Event::SampleEnergy()
       //  Copy over energy to density[0], not enough to run though algorithm
       UpdateEnergy(1.);
 
+      /*  if (test_ == "GreensFunction")
+        {
+          // skip this since all of the energy is already coppied over
+        }*/
+
       //  If total energy is less than e_thresh then no more quarks can be made
       //  so copy all energy left to density[0]
       if (total_initial_energy < e_thresh)
@@ -249,7 +254,14 @@ bool Event::UpdateDensity(Quarks quark_density)
     {
       cout << "strange charges " << quark_density.GetCharge()[1] << " " <<  quark_density.GetCharge()[2] << " " <<  quark_density.GetCharge()[3] << endl;
     }
-    */
+*/
+
+    /*  if (test_ == "GreensFunction")
+      {
+        // this are needs to be updated to subtract and add the energy correctly for the greens function case
+      }*/
+
+
     //******************************************************************************************
     //  Update Total energies and initial_energy
     //******************************************************************************************
@@ -329,6 +341,11 @@ void Event::UpdateEnergy(double ratio)
   //  Get bounds of gluon using center point as defined by SampleEnergy
   //    Makes sure calculations are only done on points in initial_energy
   vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad);
+
+  /*  if (test_ == "GreensFunction")
+    {
+      // this must be updated to only subtract energy from the initial condition since the energy is already present in the output
+    }*/
 
   for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
   {

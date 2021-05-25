@@ -32,6 +32,8 @@ IO::IO(string configFile)
       case trentoinputdir: input >> trento_input_dir; break;
       case quarkinputfile: input >> quark_input_file; break;
       case eosfile: input >> eos_file; break;
+      case backgroundattractorfile: input >> background_attractor_file; break;
+      case greensfunctionsfile: input >> greens_functions_file; break;
       case outputdir:  input >> output_dir; break;
       case inputtype: input >> input_type; break;
       case outputtype:  input >> output_type; break;
@@ -60,6 +62,13 @@ IO::IO(string configFile)
       case eosecol:  input >> eos_e_col; break;
       case atrento:  input >> a_trento; break;
       case echop:  input >> e_chop; break;
+
+      case backgroundpoints: input >> background_points;  break;
+      case greensfunctionspoints: input >> greens_functions_points;  break;
+      case greensfunctionschuncks: input >> greens_functions_chuncks;  break;
+      case cinfinity: input >> c_infinity;  break;
+      case etaovers: input >> eta_over_s;  break;
+      case tauhydro: input >> tau_hydro;  break;
 
       case gridmax: input >> grid_max;  break;
       case gridstep:  input >> grid_step; break;
@@ -108,6 +117,8 @@ void IO::CopyIO(const IO &e)
   trento_input_dir = e.trento_input_dir;
   quark_input_file = e.quark_input_file;
   eos_file = e.eos_file;
+  background_attractor_file = e.background_attractor_file;
+  greens_functions_file = e.greens_functions_file;
   output_dir = e.output_dir;
   input_type = e.input_type;
   output_type = e.output_type;
@@ -136,6 +147,13 @@ void IO::CopyIO(const IO &e)
   eos_e_col = e.eos_e_col;
   a_trento = e.a_trento;
   e_chop = e.e_chop;
+
+  background_points = e.background_points;
+  greens_functions_points = e.greens_functions_points;
+  greens_functions_chuncks = e.greens_functions_chuncks;
+  c_infinity = e.c_infinity;
+  eta_over_s = e.eta_over_s;
+  tau_hydro = e.tau_hydro;
 
   grid_max = e.grid_max;
   grid_step = e.grid_step;
@@ -183,6 +201,8 @@ void IO::Initialize()
   trento_input_dir = "";
   quark_input_file = "";
   eos_file = "";
+  background_attractor_file = "";
+  greens_functions_file = "";
   output_dir = "";
   input_type = 0;
   output_type = 0;
@@ -212,6 +232,13 @@ void IO::Initialize()
   a_trento = 0.0;
   e_chop = 0.0;
 
+  background_points = 0;
+  greens_functions_points = 0;
+  greens_functions_chuncks = 0;
+  c_infinity = 0.0;
+  eta_over_s = 0.0;
+  tau_hydro = 0.0;
+
   grid_max = 0.0;
   grid_step = 0.0;
   tau_0 = 0.0;
@@ -229,6 +256,8 @@ void IO::Initialize()
   mapConfigParams["trento_input_dir"] = trentoinputdir;
   mapConfigParams["quark_input_file"] = quarkinputfile;
   mapConfigParams["eos_file"] = eosfile;
+  mapConfigParams["background_attractor_file"] = backgroundattractorfile;
+  mapConfigParams["greens_functions_file"] = greensfunctionsfile;
   mapConfigParams["output_dir"] = outputdir;
   mapConfigParams["input_type"] = inputtype;
   mapConfigParams["output_type"] = outputtype;
@@ -257,6 +286,13 @@ void IO::Initialize()
   mapConfigParams["eos_e_col"] = eosecol;
   mapConfigParams["a_trento"] = atrento;
   mapConfigParams["e_chop"] = echop;
+
+  mapConfigParams["background_points"] = backgroundpoints;
+  mapConfigParams["greens_functions_points"] = greensfunctionspoints;
+  mapConfigParams["greens_functions_chuncks"] = greensfunctionschuncks;
+  mapConfigParams["c_infinity"] = cinfinity;
+  mapConfigParams["eta_over_s"] = etaovers;
+  mapConfigParams["tau_hydro"] = tauhydro;
 
   mapConfigParams["grid_max"] = gridmax;
   mapConfigParams["grid_step"] = gridstep;
@@ -309,6 +345,17 @@ void IO::OutputConfig(string file_name)
     << "\neos_e_col " << eos_e_col
     << "\na_trento " << a_trento
     << "\ne_chop " << e_chop;
+
+    output
+      << "\n\nbackground_attractor_file " << background_attractor_file
+      << "\ngreens_functions_file " << greens_functions_file
+      << "\nbackground_points " << background_points
+      << "\ngreens_functions_points " << greens_functions_points
+      << "\ngreens_functions_chuncks " << greens_functions_chuncks
+      << "\nc_infinity " << c_infinity
+      << "\neta_over_s " << eta_over_s
+      << "\ntau_hydro " << tau_hydro;
+
   output
     << "\ngrid_max " << grid_max
     << "\ngrid_step " << grid_step
@@ -327,6 +374,13 @@ void IO::OutputConfig(string file_name)
 //##########################################################################################
 Event IO::InitializeEvent()
 {
+
+  double e_out, w_tilde;
+  GreensFunctions evolution(background_attractor_file, greens_functions_file, background_points, greens_functions_points, greens_functions_chuncks, c_infinity, eta_over_s, tau_hydro);
+  evolution.GetValues(0.2, 1., 0.5*M_PI, e_out, w_tilde);
+  cout << "Testing BackgroundAttractor e_out = " << e_out << " w_tilde = " << w_tilde << endl;
+  exit(0);
+
   Event event_in; //  Temp Event object used to store event specific data
 
   //  Set variables in event with data from configFile
@@ -736,19 +790,14 @@ Event IO::ReadEvent(Event event_in)
   }
   input.close();  //  Close input stream
 
-/*  if (test_ == "GreensFunction")
-  {
-    for (int i = 0; i < event_in.initial_energy.size(); i++)
-    {
-      for (int j = 0; j < event_in.initial_energy.size(); j++)
-      {
-        event_in.initial_energy[i][j] = 10.;
-      }
-    }
-  }*/
-
   ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
   event_in.total_initial_entropy = a_trento*event_in.total_initial_entropy/numpoints;
+
+  /*  if (test_ == "GreensFunction")
+    {
+      // This is where I want to preevolve the event energy density
+    }*/
+
   //******************************************************************************************
   //  If method requires T_a energy density, read it into event
   //******************************************************************************************

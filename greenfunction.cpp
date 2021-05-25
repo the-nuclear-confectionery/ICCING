@@ -1,302 +1,433 @@
 #include "greenfunction.h"
 
-namespace GreensFunctions{
 
-    ///////////////////////////////////////////////
-    // EVALUTE GREENS FUNCTIONS BY INTERPOLATION //
-    ///////////////////////////////////////////////
-    // EVALUATE BETWEEN dXdTMin,dXdTMax AND wTMin,wTMax //
-    double dXdTMin,dXdTMax,wTMin,wTMax;
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Class constructor
+//    Create empty GreensFunctions
+//##########################################################################################
+GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfunctionsfile, int backgroundPoints, int greensFunctionsPoints, int greensFunctionsChuncks, double cInfinity, double etaOverS, double tauHydro)
+{
+  //  Assinging input parameters
+  background_attractor_file = backgroundAttractorFile;
+  greens_functions_file = greensfunctionsfile;
+
+  background_points = backgroundPoints;
+  greens_functions_points = greensFunctionsPoints;
+  greens_functions_chuncks = greensFunctionsChuncks;
+  c_infinity = cInfinity;
+  eta_over_s = etaOverS;
+  tau_hydro = tauHydro;
+
+  //  Constructing nuEff for background attractor
+  double Nc = 3.0;
+  double Nf = 3.0;
+  double nuG = 2.0*(Nc*Nc - 1.0);
+  double nuQ = 2.0*Nc*Nf;
+  nuEff = nuG + 7.0/4.0*nuQ;
+
+  SetupBackgroundAttractor();
+
+
+
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Class deconstructor
+//##########################################################################################
+GreensFunctions::~GreensFunctions()
+{
+
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Implicit Copy
+//##########################################################################################
+GreensFunctions::GreensFunctions(const GreensFunctions &original)
+{
+  CopyGreensFunctions(original);
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//  GreensFunctions Copy Function
+//##########################################################################################
+void GreensFunctions::CopyGreensFunctions(const GreensFunctions &e)
+{
+  background_attractor_file = e.background_attractor_file;
+  greens_functions_file = e.greens_functions_file;
+
+  background_points = e.background_points;
+  greens_functions_points = e.greens_functions_points;
+  greens_functions_chuncks = e.greens_functions_chuncks;
+  c_infinity = e.c_infinity;
+  eta_over_s = e.eta_over_s;
+  tau_hydro = e.tau_hydro;
+
+  nuEff = e.nuEff;
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Overide operator=
+//##########################################################################################
+GreensFunctions& GreensFunctions::operator= (const GreensFunctions& original)
+{
+	CopyGreensFunctions(original);
+	return *this;
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Read in data for background attractor and setup relevant variables
+//##########################################################################################
+void GreensFunctions::SetupBackgroundAttractor()
+{
+  // SET DATA //
+  double wTildeValues[background_points];
+  double EValues[background_points];
+
+  ifstream InStream;
+  InStream.open(background_attractor_file);
+
+  int i = 0;
+
+  while(InStream.good())
+  {
+      double wT;
+      double EVal;
 
-    // GSL INTERPOLATION OBJECTS //
-    gsl_interp_accel **FsswTAcc,**GsswTAcc;
-    gsl_interp_accel **FssdXdTAcc,**GssdXdTAcc;
+      InStream >> wT;
+      InStream >> EVal;
 
-    gsl_spline2d *FssInt,*GssInt;
+      wTildeValues[i]=wT;
+      EValues[i]=EVal;
 
+      i++;
+  }
 
-    double FssScalingCurve(double wT,double dXdT){
-        int tID=omp_get_thread_num();
-        EVALUATE_GSL_INTERPOLATOR_2D(FssInt,wT,dXdT,FsswTAcc[tID],FssdXdTAcc[tID],wTMin,wTMax,dXdTMin,dXdTMax);
-    } // FssScalingCurve
+  // SETUP SPLINE //
+  int NumberOfOpenMPThreads = omp_get_max_threads();
+  EAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
 
-    double Fss(double wT,double dXdT){
-        return FssScalingCurve(wT,dXdT);
-    } // Fss
+  #pragma omp parallel for
+  for(int i = 0; i < NumberOfOpenMPThreads; i++)
+  {
+      EAcc[i] = gsl_interp_accel_alloc();
+  }
 
+  EInt = gsl_spline_alloc(gsl_interp_cspline, background_points);
+  gsl_spline_init(EInt, wTildeValues, EValues, background_points);
+
+  // SET BOUNDARIES //
+  wTMin = wTildeValues[0];
+  wTMax = wTildeValues[background_points - 1];
+}
+//__________________________________________________________________________________________
 
-    double GssScalingCurve(double wT,double dXdT){
-        int tID=omp_get_thread_num();
-        EVALUATE_GSL_INTERPOLATOR_2D(GssInt,wT,dXdT,GsswTAcc[tID],GssdXdTAcc[tID],wTMin,wTMax,dXdTMin,dXdTMax);
-    } // GssScalingCurve
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Read in data for greens functions and setup relevant variables
+//##########################################################################################
+void GreensFunctions::SetupGreensFunctions()
+{
+  // ALLOCATE //
+  wTValues = new double[greens_functions_chuncks];
+  dXdTValues = new double[greens_functions_points];
+
+  FssValues = new double[greens_functions_chuncks*greens_functions_points];
+  FsvValues = new double[greens_functions_chuncks*greens_functions_points];
 
-    double Gss(double wT,double dXdT){
-        return GssScalingCurve(wT,dXdT);
-    } // Gss
+  // SETUP GSL INTERPOLATION //
+  int NumberOfOpenMPThreads = omp_get_max_threads();
 
+  FsswTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
+  FsvwTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
 
-    /////////////////////////////////////////////////////////
-    //    INTERPOLATE COORDINATE SPACE GRRENS FUNCTIONS    //
-    // AS FUNCTIONS OF wTilde and (\Delta x)/(\Delta \tau) //
-    /////////////////////////////////////////////////////////
-//    double *wTValues,*dXdTValues;
+  FssdXdTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
+  FsvdXdTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
 
-//    double *FssValues;
-//    double *GssValues;
+  #pragma omp parallel for
+  for (int i = 0; i < NumberOfOpenMPThreads; i++)
+  {
 
+      FsswTAcc[i] = gsl_interp_accel_alloc();
+      FsvwTAcc[i] = gsl_interp_accel_alloc();
 
-/*    void Setup(int NumberOfTimes,int NumberOfPoints){
+      FssdXdTAcc[i] = gsl_interp_accel_alloc();
+      FsvdXdTAcc[i] = gsl_interp_accel_alloc();
+  }
 
-        // ALLOCATE //
-        wTValues=new double[NumberOfTimes];
-        dXdTValues=new double[NumberOfPoints];
+  FssInt = gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
+  FsvInt  =gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
 
-        FssValues=new double[NumberOfTimes*NumberOfPoints];
-        GssValues=new double[NumberOfTimes*NumberOfPoints];
-
-        // SETUP GSL INTERPOLATION //
-        int NumberOfOpenMPThreads=omp_get_max_threads();
-
-        FsswTAcc=new gsl_interp_accel*[NumberOfOpenMPThreads];
-        GsswTAcc=new gsl_interp_accel*[NumberOfOpenMPThreads];
-
-        FssdXdTAcc=new gsl_interp_accel*[NumberOfOpenMPThreads];
-        GssdXdTAcc=new gsl_interp_accel*[NumberOfOpenMPThreads];
-
-        #pragma omp parallel for
-        for(int i=0;i<NumberOfOpenMPThreads;i++){
-
-            FsswTAcc[i] = gsl_interp_accel_alloc ();
-            GsswTAcc[i] = gsl_interp_accel_alloc ();
-
-            FssdXdTAcc[i] = gsl_interp_accel_alloc ();
-            GssdXdTAcc[i] = gsl_interp_accel_alloc ();
-            }
-
-        FssInt=gsl_spline2d_alloc(gsl_interp2d_bilinear,NumberOfTimes,NumberOfPoints);
-        GssInt=gsl_spline2d_alloc(gsl_interp2d_bilinear,NumberOfTimes,NumberOfPoints);
-
-    } // Setup
-*/
-    // READ INPUT FILE //
-    // INPUT FILE MUST HAVE FOLLOWING STRUCTURE: 1:wTilde 2:|x-x_0|/|tau-tau_0| 3:|tau-tau_0|^2*Fss 4:|tau-tau_0|^2*Gss //
-    // AVOID EMPTY LINES IN INPUT FILE! //
-/*    void SetValues(std::string fname,int NumberOfTimes,int NumberOfPoints){
-
-        double FssVal[NumberOfTimes*NumberOfPoints];
-        double GssVal[NumberOfTimes*NumberOfPoints];
-
-        std::ifstream InStream;
-        InStream.open(fname);
-
-        int wCounter=0; int xCounter=0;
-
-        // READ INPUT FILE //
-        while(InStream.good()){
-
-            double wT; double dXdT; double Fss; double Gss;
-
-            InStream >> wT; InStream >> dXdT; InStream >> Fss; InStream >> Gss;
-
-
-            // WRITE EACH POSITION-STEP ONCE INTO dXdTValues //
-            dXdTValues[xCounter]=dXdT;
-
-            // WRITE EACH TIME-STEP ONCE INTO wTValues //
-            if((wCounter%NumberOfPoints)==0){
-                wTValues[wCounter/NumberOfPoints]=wT;
-            }
-
-            // WRITE VALUES OF GREENS FUNCTIONS INTO ARRAYS //
-            FssVal[wCounter]=Fss; GssVal[wCounter]=Gss;
-
-
-            wCounter++;
-
-            // RESET xCounter WHEN NEW BLOCK IS REACHED IN INPUT FILE //
-            if(xCounter<NumberOfPoints){
-                xCounter++;
-            }
-
-            if(xCounter==NumberOfPoints){
-                xCounter=0;
-            }
-
-        }
-
-        // CHECK WHETHER TIMES wTilde AND POSITIONS dXdT ARE READ CORRECTLY //
-        /* int k=0;
-        while (k < NumberOfTimes) {
-           std::cout << wTValues[k] << " ";
-           printf("\n");
-           k++;
-        }
-
-        int l=0;
-        while (l < NumberOfPoints) {
-           std::cout << dXdTValues[l] << " ";
-           printf("\n");
-           l++;
-        } */
-
-/*
-        // SET GRID VALUES FOR INTERPOLATION //
-        int FIndex=0;
-        for(int wTIndex=0;wTIndex<NumberOfTimes;wTIndex++){
-
-            for(int xIndex=0;xIndex<NumberOfPoints;xIndex++){
-
-                gsl_spline2d_set(FssInt,FssValues,wTIndex,xIndex,FssVal[FIndex]);
-                gsl_spline2d_set(GssInt,GssValues,wTIndex,xIndex,GssVal[FIndex]);
-
-                FIndex++;
-
-            }
-
-        }
-
-    } // SetValues
-*/
-    /////////////////////////
-    // SETUP INTERPOLATORS //
-    /////////////////////////
-
-/*    void SetupInterpolators(int NumberOfTimes,int NumberOfPoints){
-
-        // SET BOUNDARIES //
-        wTMin=wTValues[0]; wTMax=wTValues[NumberOfTimes-1];
-        dXdTMin=dXdTValues[0]; dXdTMax=dXdTValues[NumberOfPoints-1];
-
-        // INITIALIZE INTERPOLATOR //
-        gsl_spline2d_init(FssInt,wTValues,dXdTValues,FssValues,NumberOfTimes,NumberOfPoints);
-        gsl_spline2d_init(GssInt,wTValues,dXdTValues,GssValues,NumberOfTimes,NumberOfPoints);
-
-        // CLEAN-UP //
-        delete[] wTValues;
-        delete[] dXdTValues;
-
-        delete[] FssValues;
-        delete[] GssValues;
-
-    } // SetupInterpolators
-*/
-
-    // CREATE OUTPUT //
-/*    void Output(std::string fname,int NwT,int NdXdT){
-
-
-        std::ofstream Outstream;
-        Outstream.open(fname.c_str());
-        Outstream << "# 1:wTilde=tau T(tau)/(eta/s) 2:|x-x_0|/|tau-tau0| 3:|tau-tau0|^2Fss 4:|tau-tau0|^2Gss" << std::endl;
-
-        for(int tIndex=0;tIndex<NwT;tIndex++){
-
-            double wTi=wTMin + (tIndex+0.5)*(wTMax-wTMin)/(NwT);
-
-            for(int xIndex=0;xIndex<NdXdT;xIndex++){
-
-                double dXdTi=dXdTMin + (xIndex+0.5)*(dXdTMax-dXdTMin)/(NdXdT);
-
-                Outstream << wTi << " " << dXdTi << " " << Fss(wTi,dXdTi) << " " << Gss(wTi,dXdTi) << std::endl;
-
-            }
-
-            Outstream << std::endl;
-            Outstream << std::endl;
-
-        }
-
-        Outstream.close();
-    } // Output
-*/
-
-// GSL INTERPOLATION OBJECTS //
-    gsl_interp_accel **EAcc;
-    gsl_spline *EInt;
-
-//    double wTMin; double wTMax;
-     double CInfty=0.800226;
-
-    // ENERGY ATTRACTOR CURVE //
-    double E(double wT){
-
-    //  std::cout << "In e" << std::endl;
-
-       double Nc=3.0;
-      double Nf=3.0;
-      double nuG=2.0*(Nc*Nc-1.0);
-      double nuQ=2.0*Nc*Nf;
-      double nuEff=nuG+7.0/4.0*nuQ;
-
-        if(wT<wTMin){
-            return 1.0/CInfty*std::pow(wT,4.0/9.0);
-        }
-        else if(wT>wTMax){
-            return 1.0-2.0/(3.0*M_PI*wT);
-        }
-        else{
-            int tID=omp_get_thread_num();
-            return gsl_spline_eval(EInt,wT,EAcc[tID]);
-        }
-
-    } // E
-
-    void GetValues(double eTau0,double Tau,double etaOverS,double &e,double &wTilde){
-
-      std::cout << "In get values" << std::endl;
-       double Nc=3.0;
-      double Nf=3.0;
-      double nuG=2.0*(Nc*Nc-1.0);
-      double nuQ=2.0*Nc*Nf;
-      double nuEff=nuG+7.0/4.0*nuQ;
-        // DETERMINE (e(tau) tau^{4/3})_{infty} //
-        double eTau43Infty=std::pow(4.0*M_PI*etaOverS,4.0/9.0)*std::pow(M_PI*M_PI*nuEff/30.0,1.0/9.0)*CInfty*std::pow(eTau0,8.0/9.0);
-        std::cout << "eTau43Infty " << eTau43Infty << std::endl;
-
-        //////////////////////////////////////////////////////////
-        // DETERMINE TEMPERATURE SELF-CONSISTENTLY ACCORDING TO //
-        // e(T)tau^{4/3} = E(wTilde) (e(tau) tau^{4/3})_{infty} //
-        //          wTilde= (T tau)/(4pi eta/s)                 //
-        //////////////////////////////////////////////////////////
-
-        double TLow=0.0; double THigh=std::pow(eTau43Infty/((M_PI*M_PI/30.0)*nuEff*std::pow(1.0,4.0)*std::pow(Tau,4.0/3.0)),1.0/4.0);
-        std::cout << "THigh " << THigh << std::endl;
-
-        double TMid=(THigh+TLow)/2.0;
-        double wTildeMid=(TMid*Tau)/(4.0*M_PI*etaOverS);
-        std::cout << "wTildeMid " << wTildeMid << std::endl;
-
-
-        while(THigh-TLow>1E-6*TMid){
-          std::cout << "THigh-TLow " << THigh-TLow << std::endl;
-          std::cout << "1E-6*TMid " << 1E-6*TMid << std::endl;
-
-            if(E(wTildeMid)/std::pow(TMid,4)>(M_PI*M_PI/30.0)*nuEff*std::pow(1.0,4.0)*std::pow(Tau,4.0/3.0)/eTau43Infty){
-                TLow=TMid;
-            }
-            else{
-                THigh=TMid;
-            }
-
-            TMid=(THigh+TLow)/2.0;
-            wTildeMid=(TMid*Tau)/(4.0*M_PI*etaOverS);
-
-        }
-
-        // CHECK THAT eEq(T) == E(wTilde) (e(tau) tau^{4/3})_{infty} IS SOLVED //
-        //std::cerr << "wT=" << wTilde << " " << "eEq=" << (M_PI*M_PI/30.0)*nuEff*std::pow(TMid,4.0) << " " << "e=" << eTau43Infty*E((TMid*Tau)/(4.0*M_PI*etaOverS))/std::pow(Tau,4.0/3.0) << std::endl;
-
-        // SET FINAL VALUE OF wTilde //
-        wTilde=(TMid*Tau)/(4.0*M_PI*etaOverS);
-        std::cout << "wTilde " << wTilde << std::endl;
-
-        // SET FINAL VALUES OF T,e IN GeV //
-        e=(M_PI*M_PI/30.0)*nuEff*std::pow(TMid,4.0);
-        std::cout << "e " << e << std::endl;
-
-        std::cout << "at end of get values" << std::endl;
-
-
-    } // GetValues
-
-} // GreensFunctions
+  //  SetValues Function
+  double FssVal[greens_functions_chuncks*greens_functions_points];
+  double FsvVal[greens_functions_chuncks*greens_functions_points];
+
+  ifstream InStream;
+  InStream.open(greens_functions_file);
+
+  int wCounter = 0;
+  int xCounter = 0;
+
+  // READ INPUT FILE //
+  while (InStream.good())
+  {
+
+      double wT;
+      double dXdT;
+      double Fss;
+      double Fsv;
+
+      InStream >> wT;
+      InStream >> dXdT;
+      InStream >> Fss;
+      InStream >> Fsv;
+
+
+      // WRITE EACH POSITION-STEP ONCE INTO dXdTValues //
+      dXdTValues[xCounter] = dXdT;
+
+      // WRITE EACH TIME-STEP ONCE INTO wTValues //
+      if ((wCounter%greens_functions_points) == 0)
+      {
+          wTValues[wCounter/greens_functions_points] = wT;
+      }
+
+      // WRITE VALUES OF GREENS FUNCTIONS INTO ARRAYS //
+      FssVal[wCounter] = Fss;
+      FsvVal[wCounter] = Fsv;
+
+
+      wCounter++;
+
+      // RESET xCounter WHEN NEW BLOCK IS REACHED IN INPUT FILE //
+      if (xCounter < greens_functions_points)
+      {
+          xCounter++;
+      }
+
+      if (xCounter == greens_functions_points)
+      {
+          xCounter = 0;
+      }
+
+      // SetupInterpolators function
+      // SET BOUNDARIES //
+      wTMin = wTValues[0];
+      wTMax = wTValues[greens_functions_chuncks - 1];
+      dXdTMin = dXdTValues[0];
+      dXdTMax = dXdTValues[greens_functions_points - 1];
+
+      // INITIALIZE INTERPOLATOR //
+      gsl_spline2d_init(FssInt, wTValues, dXdTValues, FssValues, greens_functions_chuncks, greens_functions_points);
+      gsl_spline2d_init(FsvInt, wTValues, dXdTValues, FsvValues, greens_functions_chuncks, greens_functions_points);
+
+      // CLEAN-UP //
+      delete[] wTValues;
+      delete[] dXdTValues;
+
+      delete[] FssValues;
+      delete[] FsvValues;
+  }
+
+  // SET GRID VALUES FOR INTERPOLATION //
+  int FIndex = 0;
+  for (int wTIndex = 0; wTIndex < greens_functions_chuncks; wTIndex++)
+  {
+
+      for (int xIndex = 0; xIndex < greens_functions_points; xIndex++)
+      {
+
+          gsl_spline2d_set(FssInt, FssValues, wTIndex, xIndex, FssVal[FIndex]);
+          gsl_spline2d_set(FsvInt, FsvValues, wTIndex, xIndex, FsvVal[FIndex]);
+
+          FIndex++;
+
+      }
+
+  }
+
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator, double xValue, double yValue, gsl_interp_accel* xAccelerator, gsl_interp_accel* yAccelerator, double xMinValue, double xMaxValue, double yMinValue, double yMaxValue)
+{
+  if (xValue < xMinValue || xValue > xMaxValue || yValue < yMinValue || yValue > yMaxValue)
+  {
+    if (Value >= yMinValue && yValue <= yMaxValue)
+    {
+      if (xValue < xMinValue)
+      {
+        return gsl_spline2d_eval(Interpolator,xMinValue,yValue,xAccelerator,yAccelerator);
+      }
+      else
+      {
+        return 0.0;
+      }
+    }
+    else if (yValue > yMaxValue)
+    {
+      if (xValue < xMinValue)
+      {
+        return gsl_spline2d_eval(Interpolator, xMinValue, yMaxValue, xAccelerator, yAccelerator);
+      }
+      else
+      {
+        return gsl_spline2d_eval(Interpolator, xValue, yMaxValue, xAccelerator, yAccelerator);
+      }
+    }
+    else
+    {
+      cerr << "#WARNING " << xValue << " " << xMinValue  << " " << xMaxValue << " " << yValue << " " << yMinValue  << " " << yMaxValue  << endl;
+      return 0.0;
+    }
+  }
+  else
+  {
+    return gsl_spline2d_eval(Interpolator, xValue, yValue, xAccelerator, yAccelerator);
+  }
+}
+//__________________________________________________________________________________________
+
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::FssScalingCurve(double wT, double dXdT)
+{
+  int tID = omp_get_thread_num();
+  return EVALUATE_GSL_INTERPOLATOR_2D(FssInt, wT, dXdT, FsswTAcc[tID], FssdXdTAcc[tID], wTMin, wTMax, dXdTMin, dXdTMax);
+} // FssScalingCurve
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::Fss(double wT, double dXdT)
+{
+  return FssScalingCurve(wT, dXdT);
+} // Fss
+
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::GssScalingCurve(double wT, double dXdT)
+{
+  int tID = omp_get_thread_num();
+  return EVALUATE_GSL_INTERPOLATOR_2D(GssInt, wT, dXdT, GsswTAcc[tID], GssdXdTAcc[tID], wTMin, wTMax, dXdTMin, dXdTMax);
+} // GssScalingCurve
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::Gss(double wT, double dXdT)
+{
+  return GssScalingCurve(wT, dXdT);
+} // Gss
+
+
+
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::E(double wT)
+{
+
+  //  std::cout << "In e" << std::endl;
+
+
+  if (wT < wTMin)
+  {
+    return 1.0/c_infinity*pow(wT, 4.0/9.0);
+  }
+  else if (wT > wTMax)
+  {
+    return 1.0 - 2.0/(3.0*M_PI*wT);
+  }
+  else
+  {
+    int tID = omp_get_thread_num();
+    return gsl_spline_eval(EInt, wT, EAcc[tID]);
+  }
+
+} // E
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, double &e, double &wTilde)
+{
+
+  cout << "In get values" << endl;
+
+  // DETERMINE (e(tau) tau^{4/3})_{infty} //
+  double eTau43Infty = pow(4.0*M_PI*etaOverS, 4.0/9.0)*pow(M_PI*M_PI*nuEff/30.0, 1.0/9.0)*c_infinity*pow(eTau0, 8.0/9.0);
+  cout << "eTau43Infty " << eTau43Infty << endl;
+
+  //////////////////////////////////////////////////////////
+  // DETERMINE TEMPERATURE SELF-CONSISTENTLY ACCORDING TO //
+  // e(T)tau^{4/3} = E(wTilde) (e(tau) tau^{4/3})_{infty} //
+  //          wTilde= (T tau)/(4pi eta/s)                 //
+  //////////////////////////////////////////////////////////
+
+  double TLow = 0.0;
+  double THigh = pow(eTau43Infty/((M_PI*M_PI/30.0)*nuEff*pow(1.0, 4.0)*pow(Tau, 4.0/3.0)), 1.0/4.0);
+  cout << "THigh " << THigh << endl;
+
+  double TMid = (THigh + TLow)/2.0;
+  double wTildeMid = (TMid*Tau)/(4.0*M_PI*etaOverS);
+  cout << "wTildeMid " << wTildeMid << endl;
+
+
+  while (THigh - TLow > 1E-6*TMid)
+  {
+    cout << "THigh-TLow " << THigh-TLow << endl;
+    cout << "1E-6*TMid " << 1E-6*TMid << endl;
+
+    if (E(wTildeMid)/pow(TMid, 4) > (M_PI*M_PI/30.0)*nuEff*pow(1.0, 4.0)*pow(Tau, 4.0/3.0)/eTau43Infty)
+    {
+      TLow = TMid;
+    }
+    else
+    {
+      THigh = TMid;
+    }
+
+    TMid = (THigh + TLow)/2.0;
+    wTildeMid = (TMid*Tau)/(4.0*M_PI*etaOverS);
+  }
+
+  // CHECK THAT eEq(T) == E(wTilde) (e(tau) tau^{4/3})_{infty} IS SOLVED //
+  //std::cerr << "wT=" << wTilde << " " << "eEq=" << (M_PI*M_PI/30.0)*nuEff*std::pow(TMid,4.0) << " " << "e=" << eTau43Infty*E((TMid*Tau)/(4.0*M_PI*etaOverS))/std::pow(Tau,4.0/3.0) << std::endl;
+
+  // SET FINAL VALUE OF wTilde //
+  wTilde = (TMid*Tau)/(4.0*M_PI*etaOverS);
+  cout << "wTilde " << wTilde << endl;
+
+  // SET FINAL VALUES OF T,e IN GeV //
+  e = (M_PI*M_PI/30.0)*nuEff*pow(TMid, 4.0);
+  cout << "e " << e << endl;
+  cout << "at end of get values" << endl;
+
+
+} // GetValues

@@ -20,7 +20,7 @@ event.o : event.h global.h ecc.h greenfunction.h event.cpp
 correlation.o : correlation.h correlation.cpp
 	$(CC) $(CFLAGS) correlation.cpp
 
-io.o : io.h event.h correlation.h io.cpp
+io.o : io.h event.h correlation.h greenfunction.h io.cpp
 	$(CC) $(CFLAGS) io.cpp
 
 functions.o : functions.h functions.cpp

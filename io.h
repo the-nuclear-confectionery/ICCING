@@ -23,6 +23,7 @@
 #include "splitting.h"
 #include "functions.h"
 #include "correlation.h"
+#include "greenfunction.h"
 //__________________________________________________________________________________________
 
 using namespace std;
@@ -43,6 +44,8 @@ private:
     trentoinputdir,
     quarkinputfile,
     eosfile,
+    backgroundattractorfile,
+    greensfunctionsfile,
     outputdir,
     inputtype,
     outputtype,
@@ -76,7 +79,14 @@ private:
     gridstep,
     tau0,
     ethresh,
-    chargetype
+    chargetype,
+
+    backgroundpoints,
+    greensfunctionspoints,
+    greensfunctionschuncks,
+    cinfinity,
+    etaovers,
+    tauhydro
     //#CONFIGPARAM
   };
 
@@ -87,6 +97,8 @@ private:
   string trento_input_dir;
   string quark_input_file;
   string eos_file;
+  string background_attractor_file;
+  string greens_functions_file;
   string output_dir;
   int input_type; //  Type of input: 0 = Full Density Grid, 1 = Sparse Density Grid
   int output_type;  // Type of output: 0 = Full Density Grids, 1 = Sparse Density Grids
@@ -128,6 +140,16 @@ private:
   double a_trento;
   double e_chop;
   vector<SplineSet> eos_interped;
+
+  //******************************************************************************************
+  //  Greens Functions Config parameters
+  //******************************************************************************************
+  int background_points;
+  int greens_functions_points;
+  int greens_functions_chuncks;
+  double c_infinity;
+  double eta_over_s;
+  double tau_hydro;
 
   //******************************************************************************************
   //  Multiple Use Config parameters

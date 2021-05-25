@@ -1,6 +1,9 @@
-#ifndef GreensFunction_H
-#define GreensFunction_H
-
+#ifndef GreensFunctions_H
+#define GreensFunctions_H
+//__________________________________________________________________________________________
+//##########################################################################################
+//  C++ Libraries
+//##########################################################################################
 #include <iostream>
 #include <fstream>
 #include <cmath>
@@ -12,98 +15,102 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_spline.h>
 #include <gsl/gsl_spline2d.h>
+//__________________________________________________________________________________________
 
-namespace GreensFunctions{
+//__________________________________________________________________________________________
+//##########################################################################################
+//  ICCING Header Files
+//##########################################################################################
 
-    // EVALUATION MACRO FOR GSL INTERPOLATION FUNCTIONS //
-    #define EVALUATE_GSL_INTERPOLATOR_2D(Interpolator,xValue,yValue,xAccelerator,yAccelerator,xMinValue,xMaxValue,yMinValue,yMaxValue)  \
-    if((xValue)<(xMinValue) || (xValue)>(xMaxValue) || (yValue)<(yMinValue) || (yValue)>(yMaxValue)){\
-        if((yValue)>=(yMinValue) && (yValue)<=(yMaxValue)){ \
-            if((xValue)<(xMinValue)){return gsl_spline2d_eval(Interpolator,xMinValue,yValue,xAccelerator,yAccelerator);} \
-            else{return 0.0;} \
-        }\
-        else if((yValue)>(yMaxValue)){\
-            if((xValue)<(xMinValue)){return gsl_spline2d_eval(Interpolator,xMinValue,yMaxValue,xAccelerator,yAccelerator);} \
-	    else{return gsl_spline2d_eval(Interpolator,xValue,yMaxValue,xAccelerator,yAccelerator);} \
-        } \
-        else{\
-	    std::cerr << "#WARNING " << xValue << " " << xMinValue  << " " << xMaxValue << " " << yValue << " " << yMinValue  << " " << yMaxValue  << std::endl; \
-            return 0.0;\
-        }\
-    }\
-    else{\
-	    return gsl_spline2d_eval(Interpolator,xValue,yValue,xAccelerator,yAccelerator);\
-    }\
+//__________________________________________________________________________________________
 
-    ///////////////////////////////////////////////
-    // EVALUTE GREENS FUNCTIONS BY INTERPOLATION //
-    ///////////////////////////////////////////////
+using namespace std;
 
-    // EVALUATE BETWEEN dXdTMin,dXdTMax AND wTMin,wTMax //
-    extern double dXdTMin,dXdTMax,wTMin,wTMax;
+class GreensFunctions
+{
+private:
+  //__________________________________________________________________________________________
+  //##########################################################################################
+  //  GreensFunctions Input Parameters
+  //##########################################################################################
+  string background_attractor_file;
+  string greens_functions_file;
 
-    // GSL INTERPOLATION OBJECTS //
-    extern gsl_interp_accel **FsswTAcc,**GsswTAcc;
-    extern gsl_interp_accel **FssdXdTAcc,**GssdXdTAcc;
-
-    extern gsl_spline2d *FssInt,*GssInt;
-
-    extern double FssScalingCurve(double wT,double dXdT);
-
-    extern double Fss(double wT,double dXdT);
-
-
-    extern double GssScalingCurve(double wT,double dXdT);
-
-    extern double Gss(double wT,double dXdT);
-
-
-    /////////////////////////////////////////////////////////
-    //    INTERPOLATE COORDINATE SPACE GRRENS FUNCTIONS    //
-    // AS FUNCTIONS OF wTilde and (\Delta x)/(\Delta \tau) //
-    /////////////////////////////////////////////////////////
-
-    extern double *wTValues,*dXdTValues;
-
-    extern double *FssValues;
-    extern double *GssValues;
-
-//    extern void Setup(int NumberOfTimes,int NumberOfPoints);
-    // READ INPUT FILE //
-    // INPUT FILE MUST HAVE FOLLOWING STRUCTURE: 1:wTilde 2:|x-x_0|/|tau-tau_0| 3:|tau-tau_0|^2*Fss 4:|tau-tau_0|^2*Gss //
-    // AVOID EMPTY LINES IN INPUT FILE! //
-//    extern void SetValues(std::string fname,int NumberOfTimes,int NumberOfPoints);
-
-    /////////////////////////
-    // SETUP INTERPOLATORS //
-    /////////////////////////
-
-    extern void SetupInterpolators(int NumberOfTimes,int NumberOfPoints);
-
-
-    // CREATE OUTPUT //
-//    extern void Output(std::string fname,int NwT,int NdXdT);
+  int background_points;
+  int greens_functions_points;
+  int greens_functions_chuncks;
+  double c_infinity;
+  double eta_over_s;
+  double tau_hydro;
 
 
 
-    ///////////////////////////////////////////////
-    // This is for background attractor          //
-    ///////////////////////////////////////////////
+  // EVALUATE BETWEEN dXdTMin,dXdTMax AND wTMin,wTMax //
+  double dXdTMin, dXdTMax, wTMin, wTMax;
 
-    // SET DEGREES OF FREEDOM //
+  // GSL INTERPOLATION OBJECTS //
+  gsl_interp_accel **FsswTAcc, **GsswTAcc;
+  gsl_interp_accel **FssdXdTAcc, **GssdXdTAcc;
 
+  gsl_spline2d *FssInt, *GssInt;
 
-    // GSL INTERPOLATION OBJECTS //
-extern    gsl_interp_accel **EAcc;
-extern    gsl_spline *EInt;
+  double *wTValues,*dXdTValues;
+
+  double *FssValues;
+  double *GssValues;
+
+  // GSL INTERPOLATION OBJECTS //
+  gsl_interp_accel **EAcc;
+  gsl_spline *EInt;
 
 //    double wTMin; double wTMax;
-extern     double CInfty;
+   double CInfty;
 
-    // ENERGY ATTRACTOR CURVE //
-    extern double E(double wT);
+   double nuEff;
+  //__________________________________________________________________________________________
 
-    extern void GetValues(double eTau0,double Tau,double etaOverS,double &e,double &wTilde);
+  //__________________________________________________________________________________________
+  //##########################################################################################
+  //  Internal Functions
+  //##########################################################################################
+  double EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator, double xValue, double yValue, gsl_interp_accel* xAccelerator, gsl_interp_accel* yAccelerator, double xMinValue, double xMaxValue, double yMinValue, double yMaxValue);
 
-} // GreensFunctions
+  void SetupBackgroundAttractor();
+  void SetupGreensFunctions();
+
+  double FssScalingCurve(double wT, double dXdT);
+
+
+
+
+  double GssScalingCurve(double wT, double dXdT);
+
+
+
+  double E(double wT);
+  //__________________________________________________________________________________________
+
+public:
+
+  //__________________________________________________________________________________________
+  //##########################################################################################
+  //  Basic Class Functions
+  //##########################################################################################
+  GreensFunctions(string backgroundAttractorFile, string greensFunctionsFile, int backgroundPoints, int greensFunctionsPoints, int greensFunctionsChuncks, double cInfinity, double etaOverS, double tauHydro);  // Class Constructor
+  ~GreensFunctions(); //  Class Destructor
+
+  GreensFunctions(const GreensFunctions &original); //  Implicit copy function, newIOObject(oldIOObject)
+  GreensFunctions& operator=(const GreensFunctions& original);  //  Defines what happens when you use = operator on class
+  //__________________________________________________________________________________________
+
+  //__________________________________________________________________________________________
+  //##########################################################################################
+  //  GreensFunctions Specific Functions
+  //##########################################################################################
+  void GetValues(double eTau0, double Tau, double etaOverS, double &e, double &wTilde);
+
+  double Fss(double wT, double dXdT);
+  double Gss(double wT, double dXdT);
+  //__________________________________________________________________________________________
+};
 #endif
