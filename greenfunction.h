@@ -60,7 +60,7 @@ private:
 
   double *FssValues;
   double *GssValues;
-
+  double *FsvValues;
   // GSL INTERPOLATION OBJECTS //
   gsl_interp_accel **EAcc;
   gsl_spline *EInt;
