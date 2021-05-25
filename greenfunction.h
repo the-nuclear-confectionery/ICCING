@@ -51,7 +51,9 @@ private:
   // GSL INTERPOLATION OBJECTS //
   gsl_interp_accel **FsswTAcc, **GsswTAcc;
   gsl_interp_accel **FssdXdTAcc, **GssdXdTAcc;
-
+  gsl_interp_accel **FsvwTAcc;
+  gsl_interp_accel **FsvdXdTAcc;
+  gsl_spline2d *FsvInt;
   gsl_spline2d *FssInt, *GssInt;
 
   double *wTValues,*dXdTValues;
@@ -73,6 +75,9 @@ private:
   //##########################################################################################
   //  Internal Functions
   //##########################################################################################
+  //  Copy function for GreensFunctions class, called by operator= and implicit copy functions
+  void CopyGreensFunctions(const GreensFunctions &e);
+
   double EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator, double xValue, double yValue, gsl_interp_accel* xAccelerator, gsl_interp_accel* yAccelerator, double xMinValue, double xMaxValue, double yMinValue, double yMaxValue);
 
   void SetupBackgroundAttractor();

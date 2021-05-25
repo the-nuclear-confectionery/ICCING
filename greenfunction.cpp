@@ -267,7 +267,7 @@ double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator,
 {
   if (xValue < xMinValue || xValue > xMaxValue || yValue < yMinValue || yValue > yMaxValue)
   {
-    if (Value >= yMinValue && yValue <= yMaxValue)
+    if (yValue >= yMinValue && yValue <= yMaxValue)
     {
       if (xValue < xMinValue)
       {
