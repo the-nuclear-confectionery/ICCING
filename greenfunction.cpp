@@ -137,7 +137,7 @@ void GreensFunctions::SetupBackgroundAttractor()
 
   // SET BOUNDARIES //
   wTMin = wTildeValues[0];
-  wTMax = wTildeValues[ wTildeValues.size() - 1];
+  wTMax = wTildeValues[wTildeValues.size() - 1];
   InStream.close();
 }
 //__________________________________________________________________________________________
