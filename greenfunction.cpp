@@ -123,8 +123,16 @@ void GreensFunctions::SetupBackgroundAttractor()
       EAcc[i] = gsl_interp_accel_alloc();
   }
 
+  double wTildeValuesSetUp[wTildeValues.size()];
+  double EValuesSetUp[wTildeValues.size()];
+  for (int i = 0; i < wTildeValues.size(); i++)
+  {
+    wTildeValuesSetUp[i] = wTildeValues[i];
+    EValuesSetUp[i] = EValues[i];
+  }
+
   EInt = gsl_spline_alloc(gsl_interp_cspline, wTildeValues.size());
-  gsl_spline_init(EInt, wTildeValues, EValues,  wTildeValues.size());
+  gsl_spline_init(EInt, wTildeValuesSetUp, EValuesSetUp,  wTildeValues.size());
   cout << "set up interpolators for background attractor" << endl;
 
   // SET BOUNDARIES //
