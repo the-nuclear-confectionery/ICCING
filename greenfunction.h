@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 #include <omp.h>
+#include <vector>
 
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_spline.h>
