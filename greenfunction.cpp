@@ -99,7 +99,7 @@ void GreensFunctions::SetupBackgroundAttractor()
   cout << "opened background attractor file" << endl;
   int i = 0;
 
-  do
+  while(InStream.good());
   {
       double wT;
       double EVal;
@@ -111,7 +111,7 @@ void GreensFunctions::SetupBackgroundAttractor()
       EValues.push_back(EVal);
       cout << "wT " << wT << " EVal " << EVal << endl;
 
-  } while(!InStream.eof());
+  }
   cout << "read in background attractor file" << endl;
 
   // SETUP SPLINE //
