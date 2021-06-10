@@ -111,7 +111,7 @@ void GreensFunctions::SetupBackgroundAttractor()
       EValues.push_back(EVal);
       cout << "wT " << wT << " EVal " << EVal << endl;
 
-  } while(!InStream.eof())
+  } while(!InStream.eof());
   cout << "read in background attractor file" << endl;
 
   // SETUP SPLINE //
