@@ -91,15 +91,15 @@ GreensFunctions& GreensFunctions::operator= (const GreensFunctions& original)
 void GreensFunctions::SetupBackgroundAttractor()
 {
   // SET DATA //
-  double wTildeValues[background_points];
-  double EValues[background_points];
+  vector<double> wTildeValues;
+  vector<double> EValues;
 
   ifstream InStream;
   InStream.open(background_attractor_file);
   cout << "opened background attractor file" << endl;
   int i = 0;
 
-  while(InStream.good())
+  while(!InStream.eof())
   {
       double wT;
       double EVal;
@@ -107,10 +107,9 @@ void GreensFunctions::SetupBackgroundAttractor()
       InStream >> wT;
       InStream >> EVal;
 
-      wTildeValues[i]=wT;
-      EValues[i]=EVal;
+      wTildeValues.push_back(wT);
+      EValues.push_back(EVal);
 
-      i++;
   }
   cout << "read in background attractor file" << endl;
 
@@ -124,13 +123,13 @@ void GreensFunctions::SetupBackgroundAttractor()
       EAcc[i] = gsl_interp_accel_alloc();
   }
 
-  EInt = gsl_spline_alloc(gsl_interp_cspline, background_points);
-  gsl_spline_init(EInt, wTildeValues, EValues, background_points);
+  EInt = gsl_spline_alloc(gsl_interp_cspline, wTildeValues.size());
+  gsl_spline_init(EInt, wTildeValues, EValues,  wTildeValues.size());
   cout << "set up interpolators for background attractor" << endl;
 
   // SET BOUNDARIES //
   wTMin = wTildeValues[0];
-  wTMax = wTildeValues[background_points - 1];
+  wTMax = wTildeValues[ wTildeValues.size() - 1];
   InStream.close();
 }
 //__________________________________________________________________________________________
