@@ -109,6 +109,7 @@ void GreensFunctions::SetupBackgroundAttractor()
 
       wTildeValues.push_back(wT);
       EValues.push_back(EVal);
+      cout << "wT " << wT << " EVal " EVal << endl;
 
   }
   cout << "read in background attractor file" << endl;
