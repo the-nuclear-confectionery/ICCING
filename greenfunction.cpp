@@ -99,7 +99,7 @@ void GreensFunctions::SetupBackgroundAttractor()
   cout << "opened background attractor file" << endl;
   int i = 0;
 
-  while(InStream.good());
+  while(!InStream.eof());
   {
       double wT;
       double EVal;
