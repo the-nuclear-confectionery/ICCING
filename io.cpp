@@ -803,9 +803,12 @@ Event IO::ReadEvent(Event event_in)
       {
         int x = event_in.valued_points[i][0];
         int y = event_in.valued_points[i][1];
+        double evolved_energy = 0, wtilde = 0;
         cout << "x " << x << " y " << y << endl;
         cout << "energy " << tau_0*event_in.initial_energy[x][y] << " tau_hydro " << tau_hydro << " eta_over_s " << eta_over_s << endl;
-        event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, event_in.density[0][x][y], event_in.w_tilde[x][y]);
+        event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, evolved_energy, wtilde);
+        event_in.density[0][x][y] = evolved_energy;
+        event_in.w_tilde[x][y] = wtilde;
         cout << "Evolved energy " << event_in.density[0][x][y] << " Original energy " << tau_0*event_in.initial_energy[x][y] << " w_tilde " << event_in.w_tilde[x][y] << endl;
       }
     }
