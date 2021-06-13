@@ -102,6 +102,7 @@ public:
   //##########################################################################################
   //  Basic Class Functions
   //##########################################################################################
+  GreensFunctions();
   GreensFunctions(string backgroundAttractorFile, string greensFunctionsFile, int backgroundPoints, int greensFunctionsPoints, int greensFunctionsChuncks, double cInfinity, double etaOverS, double tauHydro);  // Class Constructor
   ~GreensFunctions(); //  Class Destructor
 

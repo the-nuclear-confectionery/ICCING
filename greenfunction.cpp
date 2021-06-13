@@ -6,6 +6,11 @@
 //  Class constructor
 //    Create empty GreensFunctions
 //##########################################################################################
+GreensFunctions::GreensFunctions()
+{
+
+}
+
 GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfunctionsfile, int backgroundPoints, int greensFunctionsPoints, int greensFunctionsChuncks, double cInfinity, double etaOverS, double tauHydro)
 {
   //  Assinging input parameters
@@ -26,11 +31,8 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
   double nuQ = 2.0*Nc*Nf;
   nuEff = nuG + 7.0/4.0*nuQ;
 
-  if (background_attractor_file != "")
-  {
     SetupBackgroundAttractor();
     cout << "finished setting up" << endl;
-  }
 
 }
 //__________________________________________________________________________________________
