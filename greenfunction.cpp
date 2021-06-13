@@ -365,7 +365,7 @@ double GreensFunctions::Gss(double wT, double dXdT)
 double GreensFunctions::E(double wT)
 {
 
-  //  std::cout << "In e" << std::endl;
+  cout << "In e wt " << wT << endl;
 
 
   if (wT < wTMin)
@@ -436,11 +436,11 @@ cout << "c_infinity " << c_infinity << endl;
 
   // SET FINAL VALUE OF wTilde //
   wTilde = (TMid*Tau)/(4.0*M_PI*etaOverS);
-//  cout << "wTilde " << wTilde << endl;
+  cout << "wTilde " << wTilde << endl;
 
   // SET FINAL VALUES OF T,e IN GeV //
   e = (M_PI*M_PI/30.0)*nuEff*pow(TMid, 4.0);
-//  cout << "e " << e << endl;
+  cout << "e " << e << endl;
 //  cout << "at end of get values" << endl;
 
 
