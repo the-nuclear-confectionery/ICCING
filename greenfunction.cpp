@@ -70,7 +70,7 @@ void GreensFunctions::CopyGreensFunctions(const GreensFunctions &e)
   c_infinity = e.c_infinity;
   eta_over_s = e.eta_over_s;
   tau_hydro = e.tau_hydro;
-cout << "c_infinity " << c_infinity << endl;
+//cout << "c_infinity " << c_infinity << endl;
   nuEff = e.nuEff;
 }
 //__________________________________________________________________________________________
@@ -365,7 +365,7 @@ double GreensFunctions::Gss(double wT, double dXdT)
 double GreensFunctions::E(double wT)
 {
 
-  cout << "In e wt " << wT << endl;
+//  cout << "In e wt " << wT << endl;
 
 
   if (wT < wTMin)
@@ -392,11 +392,11 @@ void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, doubl
 {
 
 //  cout << "In get values" << endl;
-cout << "c_infinity " << c_infinity << endl;
+//cout << "c_infinity " << c_infinity << endl;
   // DETERMINE (e(tau) tau^{4/3})_{infty} //
   double eTau43Infty = pow(4.0*M_PI*etaOverS, 4.0/9.0)*pow(M_PI*M_PI*nuEff/30.0, 1.0/9.0)*c_infinity*pow(eTau0, 8.0/9.0);
-  cout << "etaOverS " << etaOverS << " nuEff " << nuEff << " c_infinity " << c_infinity << " eTau0 " << eTau0 << endl;
-  cout << "eTau43Infty " << eTau43Infty << endl;
+//  cout << "etaOverS " << etaOverS << " nuEff " << nuEff << " c_infinity " << c_infinity << " eTau0 " << eTau0 << endl;
+//  cout << "eTau43Infty " << eTau43Infty << endl;
 
   //////////////////////////////////////////////////////////
   // DETERMINE TEMPERATURE SELF-CONSISTENTLY ACCORDING TO //
@@ -406,17 +406,17 @@ cout << "c_infinity " << c_infinity << endl;
 
   double TLow = 0.0;
   double THigh = pow(eTau43Infty/((M_PI*M_PI/30.0)*nuEff*pow(1.0, 4.0)*pow(Tau, 4.0/3.0)), 1.0/4.0);
-  cout << "THigh " << THigh << endl;
+//  cout << "THigh " << THigh << endl;
 
   double TMid = (THigh + TLow)/2.0;
   double wTildeMid = (TMid*Tau)/(4.0*M_PI*etaOverS);
-  cout << "wTildeMid " << wTildeMid << endl;
+//  cout << "wTildeMid " << wTildeMid << endl;
 
 
   while (THigh - TLow > 1E-6*TMid)
   {
-    cout << "THigh-TLow " << THigh-TLow << endl;
-    cout << "1E-6*TMid " << 1E-6*TMid << endl;
+//    cout << "THigh-TLow " << THigh-TLow << endl;
+//    cout << "1E-6*TMid " << 1E-6*TMid << endl;
 
     if (E(wTildeMid)/pow(TMid, 4) > (M_PI*M_PI/30.0)*nuEff*pow(1.0, 4.0)*pow(Tau, 4.0/3.0)/eTau43Infty)
     {
