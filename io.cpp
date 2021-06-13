@@ -797,12 +797,14 @@ Event IO::ReadEvent(Event event_in)
 
     if (test_ == "GreensFunction")
     {
+      cout << "Reading in event" << endl;
       // This is where I want to preevolve the event energy density
       for (int i = 0; i < event_in.valued_points.size(); i++)
       {
         int x = event_in.valued_points[i][0];
         int y = event_in.valued_points[i][1];
         event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, event_in.density[0][x][y], event_in.w_tilde[x][y]);
+        cout << "Evolved energy " << event_in.density[0][x][y] << " Original energy " << tau_0*event_in.initial_energy[x][y] << " w_tilde " << event_in.w_tilde[x][y] << endl;
       }
     }
 

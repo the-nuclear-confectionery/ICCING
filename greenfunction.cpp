@@ -23,7 +23,7 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
   c_infinity = cInfinity;
   eta_over_s = etaOverS;
   tau_hydro = tauHydro;
-  cout << "Assigned variables" << endl;
+
   //  Constructing nuEff for background attractor
   double Nc = 3.0;
   double Nf = 3.0;
@@ -32,8 +32,6 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
   nuEff = nuG + 7.0/4.0*nuQ;
 
     SetupBackgroundAttractor();
-    cout << "finished setting up" << endl;
-
 }
 //__________________________________________________________________________________________
 
@@ -100,7 +98,7 @@ void GreensFunctions::SetupBackgroundAttractor()
 
   ifstream InStream;
   InStream.open(background_attractor_file);
-  cout << "opened background attractor file" << endl;
+
   int i = 0;
 
   while(!InStream.eof())
@@ -113,10 +111,10 @@ void GreensFunctions::SetupBackgroundAttractor()
 
       wTildeValues.push_back(wT);
       EValues.push_back(EVal);
-      cout << "wT " << wT << " EVal " << EVal << endl;
+//      cout << "wT " << wT << " EVal " << EVal << endl;
 
   }
-  cout << "read in background attractor file" << endl;
+//  cout << "read in background attractor file" << endl;
 
   // SETUP SPLINE //
   int NumberOfOpenMPThreads = omp_get_max_threads();
@@ -138,7 +136,7 @@ void GreensFunctions::SetupBackgroundAttractor()
 
   EInt = gsl_spline_alloc(gsl_interp_cspline, wTildeValues.size());
   gsl_spline_init(EInt, wTildeValuesSetUp, EValuesSetUp,  wTildeValues.size());
-  cout << "set up interpolators for background attractor" << endl;
+//  cout << "set up interpolators for background attractor" << endl;
 
   // SET BOUNDARIES //
   wTMin = wTildeValues[0];
