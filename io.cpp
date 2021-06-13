@@ -374,13 +374,6 @@ void IO::OutputConfig(string file_name)
 //##########################################################################################
 Event IO::InitializeEvent()
 {
-
-  double e_out, w_tilde;
-  GreensFunctions evolution(background_attractor_file, greens_functions_file, background_points, greens_functions_points, greens_functions_chuncks, c_infinity, eta_over_s, tau_hydro);
-  evolution.GetValues(0.2, 1., 0.5*M_PI, e_out, w_tilde);
-  cout << "Testing BackgroundAttractor e_out = " << e_out << " w_tilde = " << w_tilde << endl;
-  exit(0);
-
   Event event_in; //  Temp Event object used to store event specific data
 
   //  Set variables in event with data from configFile
@@ -400,6 +393,15 @@ Event IO::InitializeEvent()
     event_in.density.push_back(event_in.initial_energy);
   }
 
+  //******************************************************************************************
+  //  Define Greens Functions Used for pre hydro evolution
+  //******************************************************************************************
+  if (test_ == "GreensFunction")
+  {
+    event_in.w_tilde.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
+    event_in.evolution = GreensFunctions(background_attractor_file, greens_functions_file, background_points, greens_functions_points, greens_functions_chuncks, c_infinity, eta_over_s, tau_hydro);
+  }
+  
   //******************************************************************************************
   //  Initialze Gluon Distribution for sampling
   //******************************************************************************************
@@ -761,7 +763,7 @@ Event IO::ReadEvent(Event event_in)
 
   // Loop input variables
   int x, y;
-  double readx,ready,value,numpoints=0;
+  double readx, ready, value, numpoints = 0;
 
   //  Ignore first line of input file (Trento specific, needs to be changed)
   input.ignore(10000, '\n');
@@ -793,10 +795,16 @@ Event IO::ReadEvent(Event event_in)
   ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
   event_in.total_initial_entropy = a_trento*event_in.total_initial_entropy/numpoints;
 
-  /*  if (test_ == "GreensFunction")
+    if (test_ == "GreensFunction")
     {
       // This is where I want to preevolve the event energy density
-    }*/
+      for (int i = 0; i < event_in.valued_points.size(); i++)
+      {
+        int x = event_in.valued_points[i][0];
+        int y = event_in.valued_points[i][1];
+        event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, event_in.densities[0][x][y], event_in.w_tilde[x][y]);
+      }
+    }
 
   //******************************************************************************************
   //  If method requires T_a energy density, read it into event

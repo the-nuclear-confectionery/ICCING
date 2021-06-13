@@ -77,7 +77,7 @@ int main (int argc, char *argv[])
 			//******************************************************************************************
 	  	//  Event Loop, Process event until initial energy density is empty
 	  	//******************************************************************************************
-			while (!testEvent.IsEventDone())
+	/*		while (!testEvent.IsEventDone())
 			{
 				//	Declare Sample and Quarks for individual event processing
 				Sample testSample;
@@ -105,7 +105,7 @@ int main (int argc, char *argv[])
 
 		//	Calculate Eccentricities of event
 		testEvent.CalculateEccentricities();
-
+*/
 		//	Write event data to files
 		inOut.WriteEvent(testEvent);
 
