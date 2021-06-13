@@ -8,7 +8,12 @@
 //##########################################################################################
 GreensFunctions::GreensFunctions()
 {
-
+  //  Constructing nuEff for background attractor
+  double Nc = 3.0;
+  double Nf = 3.0;
+  double nuG = 2.0*(Nc*Nc - 1.0);
+  double nuQ = 2.0*Nc*Nf;
+  nuEff = nuG + 7.0/4.0*nuQ;
 }
 
 GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfunctionsfile, int backgroundPoints, int greensFunctionsPoints, int greensFunctionsChuncks, double cInfinity, double etaOverS, double tauHydro)
@@ -24,14 +29,7 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
   eta_over_s = etaOverS;
   tau_hydro = tauHydro;
 
-  //  Constructing nuEff for background attractor
-  double Nc = 3.0;
-  double Nf = 3.0;
-  double nuG = 2.0*(Nc*Nc - 1.0);
-  double nuQ = 2.0*Nc*Nf;
-  nuEff = nuG + 7.0/4.0*nuQ;
-
-    SetupBackgroundAttractor();
+  SetupBackgroundAttractor();
 }
 //__________________________________________________________________________________________
 
