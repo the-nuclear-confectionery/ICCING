@@ -26,9 +26,11 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
   double nuQ = 2.0*Nc*Nf;
   nuEff = nuG + 7.0/4.0*nuQ;
 
-  SetupBackgroundAttractor();
-  cout << "finished setting up" << endl;
-
+  if (background_attractor_file != "")
+  {
+    SetupBackgroundAttractor();
+    cout << "finished setting up" << endl;
+  }
 
 }
 //__________________________________________________________________________________________
