@@ -401,7 +401,7 @@ Event IO::InitializeEvent()
     event_in.w_tilde.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
     event_in.evolution = GreensFunctions(background_attractor_file, greens_functions_file, background_points, greens_functions_points, greens_functions_chuncks, c_infinity, eta_over_s, tau_hydro);
   }
-  
+
   //******************************************************************************************
   //  Initialze Gluon Distribution for sampling
   //******************************************************************************************
@@ -802,7 +802,7 @@ Event IO::ReadEvent(Event event_in)
       {
         int x = event_in.valued_points[i][0];
         int y = event_in.valued_points[i][1];
-        event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, event_in.densities[0][x][y], event_in.w_tilde[x][y]);
+        event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, event_in.density[0][x][y], event_in.w_tilde[x][y]);
       }
     }
 
