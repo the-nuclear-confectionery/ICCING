@@ -72,6 +72,8 @@ void Event::CopyEvent(const Event &e)
   total_entropy = e.total_entropy;
   out_sample = e.out_sample;
   seed = e.seed;
+
+  evolution = e.evolution;
 }
 //__________________________________________________________________________________________
 
