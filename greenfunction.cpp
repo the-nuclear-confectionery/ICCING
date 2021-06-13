@@ -28,7 +28,7 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
   c_infinity = cInfinity;
   eta_over_s = etaOverS;
   tau_hydro = tauHydro;
-  cout << "c_infinity " << c_infinity << " cInfinity " << cInfinity << endl;
+
   SetupBackgroundAttractor();
 }
 //__________________________________________________________________________________________
@@ -68,7 +68,7 @@ void GreensFunctions::CopyGreensFunctions(const GreensFunctions &e)
   c_infinity = e.c_infinity;
   eta_over_s = e.eta_over_s;
   tau_hydro = e.tau_hydro;
-
+cout << "c_infinity " << c_infinity << endl;
   nuEff = e.nuEff;
 }
 //__________________________________________________________________________________________
@@ -390,7 +390,7 @@ void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, doubl
 {
 
   cout << "In get values" << endl;
-
+cout << "c_infinity " << c_infinity << endl;
   // DETERMINE (e(tau) tau^{4/3})_{infty} //
   double eTau43Infty = pow(4.0*M_PI*etaOverS, 4.0/9.0)*pow(M_PI*M_PI*nuEff/30.0, 1.0/9.0)*c_infinity*pow(eTau0, 8.0/9.0);
   cout << "etaOverS " << etaOverS << " nuEff " << nuEff << " c_infinity " << c_infinity << " eTau0 " << eTau0 << endl;
