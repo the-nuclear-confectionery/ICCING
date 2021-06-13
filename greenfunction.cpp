@@ -28,7 +28,7 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
   c_infinity = cInfinity;
   eta_over_s = etaOverS;
   tau_hydro = tauHydro;
-
+  cout << "c_infinity " << c_infinity << " cInfinity " << cInfinity << endl;
   SetupBackgroundAttractor();
 }
 //__________________________________________________________________________________________
