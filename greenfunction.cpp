@@ -14,6 +14,7 @@ GreensFunctions::GreensFunctions()
   double nuG = 2.0*(Nc*Nc - 1.0);
   double nuQ = 2.0*Nc*Nf;
   nuEff = nuG + 7.0/4.0*nuQ;
+  c_infinity = -1;
 }
 
 GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfunctionsfile, int backgroundPoints, int greensFunctionsPoints, int greensFunctionsChuncks, double cInfinity, double etaOverS, double tauHydro)
