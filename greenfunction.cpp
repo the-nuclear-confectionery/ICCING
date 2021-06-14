@@ -417,7 +417,7 @@ void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, doubl
   {
 //    cout << "THigh-TLow " << THigh-TLow << endl;
 //    cout << "1E-6*TMid " << 1E-6*TMid << endl;
-
+    cout << "Output " << TLow << ” ” << THigh << ” ” << TMid << ” ” << wTildeMid << endl;
     if (E(wTildeMid)/pow(TMid, 4) > (M_PI*M_PI/30.0)*nuEff*pow(1.0, 4.0)*pow(Tau, 4.0/3.0)/eTau43Infty)
     {
       TLow = TMid;
