@@ -72,6 +72,33 @@ void GreensFunctions::CopyGreensFunctions(const GreensFunctions &e)
   tau_hydro = e.tau_hydro;
 //cout << "c_infinity " << c_infinity << endl;
   nuEff = e.nuEff;
+
+  // EVALUATE BETWEEN dXdTMin,dXdTMax AND wTMin,wTMax //
+  dXdTMin = e.dXdTMin;
+  dXdTMax = e.dXdTMax;
+  wTMin = e.wTMin;
+  wTMax = e.wTMax;
+
+  // GSL INTERPOLATION OBJECTS //
+  FsswTAcc = e.FsswTAcc;
+  GsswTAcc = e.GsswTAcc;
+  FssdXdTAcc = e.FssdXdTAcc;
+  GssdXdTAcc = e.GssdXdTAcc;
+  FsvwTAcc = e.FsvwTAcc;
+  FsvdXdTAcc = e.FsvdXdTAcc;
+  FsvInt = e.FsvInt;
+  FssInt = e.FssInt;
+  GssInt = e.GssInt;
+
+  wTValues = e.wTValues;
+  dXdTValues = e.dXdTValues;
+
+  FssValues = e.FssValues;
+  GssValues = e.GssValues;
+  FsvValues = e.FsvValues;
+  // GSL INTERPOLATION OBJECTS //
+  EAcc = e.EAcc;
+  EInt = e.EInt;
 }
 //__________________________________________________________________________________________
 

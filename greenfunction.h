@@ -67,7 +67,7 @@ private:
   gsl_spline *EInt;
 
 //    double wTMin; double wTMax;
-   double CInfty;
+  
 
    double nuEff;
   //__________________________________________________________________________________________
