@@ -797,23 +797,27 @@ Event IO::ReadEvent(Event event_in)
 
     if (test_ == "GreensFunction")
     {
-      cout << "Reading in event" << endl;
+  //    cout << "Reading in event" << endl;
       // This is where I want to preevolve the event energy density
+      cout << "number of points " << event_in.valued_points.size() << endl;
+
       for (int i = 0; i < event_in.valued_points.size(); i++)
       {
+        cout << "current point " << i << endl;
         int x = event_in.valued_points[i][0];
         int y = event_in.valued_points[i][1];
         double evolved_energy = 0, wtilde = 0;
-        cout << "x " << x << " y " << y << endl;
-        cout << "energy " << tau_0*event_in.initial_energy[x][y] << " tau_hydro " << tau_hydro << " eta_over_s " << eta_over_s << endl;
+//        cout << "x " << x << " y " << y << endl;
+//        cout << "energy " << tau_0*event_in.initial_energy[x][y] << " tau_hydro " << tau_hydro << " eta_over_s " << eta_over_s << endl;
   //      event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, evolved_energy, wtilde);
         event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, evolved_energy, wtilde);
-      cout << "evolved_energy " << evolved_energy << " wtilde " << wtilde << endl;
+//      cout << "evolved_energy " << evolved_energy << " wtilde " << wtilde << endl;
         event_in.density[0][x][y] = evolved_energy;
         event_in.w_tilde[x][y] = wtilde;
-        cout << "Evolved energy " << event_in.density[0][x][y] << " Original energy " << tau_0*event_in.initial_energy[x][y] << " w_tilde " << event_in.w_tilde[x][y] << endl;
+//        cout << "Evolved energy " << event_in.density[0][x][y] << " Original energy " << tau_0*event_in.initial_energy[x][y] << " w_tilde " << event_in.w_tilde[x][y] << endl;
       //  exit(0);
       }
+      cout << "Finished evolving event" << endl;
     }
 
   //******************************************************************************************
