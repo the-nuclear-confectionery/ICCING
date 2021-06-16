@@ -74,6 +74,7 @@ void Event::CopyEvent(const Event &e)
   seed = e.seed;
 
   evolution = e.evolution;
+  w_tilde = e.w_tilde;
 }
 //__________________________________________________________________________________________
 
