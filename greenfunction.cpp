@@ -395,8 +395,8 @@ void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, doubl
 //cout << "c_infinity " << c_infinity << endl;
   // DETERMINE (e(tau) tau^{4/3})_{infty} //
   double eTau43Infty = pow(4.0*M_PI*etaOverS, 4.0/9.0)*pow(M_PI*M_PI*nuEff/30.0, 1.0/9.0)*c_infinity*pow(eTau0, 8.0/9.0);
-//  cout << "etaOverS " << etaOverS << " nuEff " << nuEff << " c_infinity " << c_infinity << " eTau0 " << eTau0 << endl;
-//  cout << "eTau43Infty " << eTau43Infty << endl;
+  cout << "etaOverS " << etaOverS << " nuEff " << nuEff << " c_infinity " << c_infinity << " eTau0 " << eTau0 << endl;
+  cout << "eTau43Infty " << eTau43Infty << endl;
 
   //////////////////////////////////////////////////////////
   // DETERMINE TEMPERATURE SELF-CONSISTENTLY ACCORDING TO //
