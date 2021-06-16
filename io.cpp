@@ -881,6 +881,7 @@ Event IO::ReadEvent(Event event_in)
     }
     input.close();  //  Close input stream
   }
+  cout << "Finished reading event" << endl;
 
   return event_in;  //  Return event with data
 }
