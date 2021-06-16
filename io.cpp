@@ -807,10 +807,11 @@ Event IO::ReadEvent(Event event_in)
         cout << "x " << x << " y " << y << endl;
         cout << "energy " << tau_0*event_in.initial_energy[x][y] << " tau_hydro " << tau_hydro << " eta_over_s " << eta_over_s << endl;
   //      event_in.evolution.GetValues(tau_0*event_in.initial_energy[x][y], tau_hydro, eta_over_s, evolved_energy, wtilde);
-        event_in.evolution.GetValues(0.0001, tau_hydro, eta_over_s, evolved_energy, wtilde);
+        event_in.evolution.GetValues(1.0e-4, tau_hydro, eta_over_s, evolved_energy, wtilde);
         event_in.density[0][x][y] = evolved_energy;
         event_in.w_tilde[x][y] = wtilde;
         cout << "Evolved energy " << event_in.density[0][x][y] << " Original energy " << tau_0*event_in.initial_energy[x][y] << " w_tilde " << event_in.w_tilde[x][y] << endl;
+        exit(0);
       }
     }
 
