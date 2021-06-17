@@ -266,23 +266,6 @@ void GreensFunctions::SetupGreensFunctions()
           xCounter = 0;
       }
 
-      // SetupInterpolators function
-      // SET BOUNDARIES //
-      wTMin = wTValues[0];
-      wTMax = wTValues[greens_functions_chuncks - 1];
-      dXdTMin = dXdTValues[0];
-      dXdTMax = dXdTValues[greens_functions_points - 1];
-
-      // INITIALIZE INTERPOLATOR //
-      gsl_spline2d_init(FssInt, wTValues, dXdTValues, FssValues, greens_functions_chuncks, greens_functions_points);
-      gsl_spline2d_init(FsvInt, wTValues, dXdTValues, FsvValues, greens_functions_chuncks, greens_functions_points);
-
-      // CLEAN-UP //
-      delete[] wTValues;
-      delete[] dXdTValues;
-
-      delete[] FssValues;
-      delete[] FsvValues;
   }
 
   cout << "setting grid values Greens Function" << endl;
@@ -303,6 +286,25 @@ void GreensFunctions::SetupGreensFunctions()
       }
 
   }
+  
+  // SetupInterpolators function
+  // SET BOUNDARIES //
+  wTMin = wTValues[0];
+  wTMax = wTValues[greens_functions_chuncks - 1];
+  dXdTMin = dXdTValues[0];
+  dXdTMax = dXdTValues[greens_functions_points - 1];
+
+  // INITIALIZE INTERPOLATOR //
+  gsl_spline2d_init(FssInt, wTValues, dXdTValues, FssValues, greens_functions_chuncks, greens_functions_points);
+  gsl_spline2d_init(FsvInt, wTValues, dXdTValues, FsvValues, greens_functions_chuncks, greens_functions_points);
+
+  // CLEAN-UP //
+  delete[] wTValues;
+  delete[] dXdTValues;
+
+  delete[] FssValues;
+  delete[] FsvValues;
+
 
 }
 //__________________________________________________________________________________________
