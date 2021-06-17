@@ -238,7 +238,7 @@ void GreensFunctions::SetupGreensFunctions()
       InStream >> Fss;
       InStream >> Fsv;
 
-
+      cout << wT << " " << dXdT << " " << Fss << " " << Fsv << endl;
       // WRITE EACH POSITION-STEP ONCE INTO dXdTValues //
       dXdTValues[xCounter] = dXdT;
 
