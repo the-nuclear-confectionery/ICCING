@@ -902,7 +902,7 @@ void IO::WriteEvent(Event event)
   if (output_type == 0)
   {
     output_energy = event.initial_energy;
-    OutputFullDensityGrids(output_energy, output_dir + "ic" + to_string(current_event) + ".dat");
+    OutputFullDensityGrids(output_energy, output_dir + "ic_converted" + to_string(current_event) + ".dat");
 
     if (t_a)  //  Output T_a if flag is true
     {
@@ -921,7 +921,7 @@ void IO::WriteEvent(Event event)
   else if (output_type == 1)
   {
     output_energy = event.initial_energy;
-    OutputSparseDensityGrids(output_energy, output_dir + "ic" + to_string(current_event) + ".dat");
+    OutputSparseDensityGrids(output_energy, output_dir + "ic_converted" + to_string(current_event) + ".dat");
 
     OutputSparseDensityGrids(event.density, event.total_energy, output_dir + "densities" + to_string(current_event) + ".dat");
 
