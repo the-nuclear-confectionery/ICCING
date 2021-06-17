@@ -32,6 +32,7 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
   nuEff = nuG + 7.0/4.0*nuQ;
 
   SetupBackgroundAttractor();
+  SetupGreensFunctions();
 }
 //__________________________________________________________________________________________
 
@@ -206,7 +207,7 @@ void GreensFunctions::SetupGreensFunctions()
   }
 
   FssInt = gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
-  FsvInt  =gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
+  FsvInt = gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
 
   //  SetValues Function
   double FssVal[greens_functions_chuncks*greens_functions_points];
