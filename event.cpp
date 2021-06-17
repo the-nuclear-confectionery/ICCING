@@ -348,23 +348,23 @@ void Event::UpdateEnergy(double ratio)
   //    Makes sure calculations are only done on points in initial_energy
   vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad);
 
-  if (test_ == "GreensFunction")
-  {
-    // this must be updated to only subtract energy from the initial condition since the energy is already present in the output
-    //  Change energy totals to reflect change in energy grids
-    total_initial_energy -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
-    total_energy += gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
-
-    //  Subtract energy proportional to ratio from initial_energy and add it to density[0]
-    initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j] -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
-
-    return;
-  }
-
   for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
   {
     for (int j = gluon_bounds[1]; j < gluon_bounds[3]; j++)
     {
+      if (test_ == "GreensFunction")
+      {
+        // this must be updated to only subtract energy from the initial condition since the energy is already present in the output
+        //  Change energy totals to reflect change in energy grids
+        total_initial_energy -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+        total_energy += gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+
+        //  Subtract energy proportional to ratio from initial_energy and add it to density[0]
+        initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j] -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+
+        continue;
+      }
+
       //  Change energy totals to reflect change in energy grids
       total_initial_energy -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
       total_energy += gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
