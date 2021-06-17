@@ -180,6 +180,8 @@ void GreensFunctions::SetupBackgroundAttractor()
 //##########################################################################################
 void GreensFunctions::SetupGreensFunctions()
 {
+  cout << "Setting up Greens Function" << endl;
+
   // ALLOCATE //
   wTValues = new double[greens_functions_chuncks];
   dXdTValues = new double[greens_functions_points];
@@ -213,6 +215,8 @@ void GreensFunctions::SetupGreensFunctions()
   //  SetValues Function
   double FssVal[greens_functions_chuncks*greens_functions_points];
   double FsvVal[greens_functions_chuncks*greens_functions_points];
+
+  cout << "Reading in Greens Function" << endl;
 
   ifstream InStream;
   InStream.open(greens_functions_file);
@@ -280,6 +284,8 @@ void GreensFunctions::SetupGreensFunctions()
       delete[] FssValues;
       delete[] FsvValues;
   }
+
+  cout << "setting grid values Greens Function" << endl;
 
   // SET GRID VALUES FOR INTERPOLATION //
   int FIndex = 0;
