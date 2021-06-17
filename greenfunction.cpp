@@ -33,6 +33,7 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
 
   SetupBackgroundAttractor();
   SetupGreensFunctions();
+  cout << "Greens Function setup complete" << endl;
 }
 //__________________________________________________________________________________________
 
