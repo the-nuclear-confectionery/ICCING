@@ -75,6 +75,8 @@ void Event::CopyEvent(const Event &e)
 
   evolution = e.evolution;
   w_tilde = e.w_tilde;
+  greens_rad = e.greens_rad;
+  greens_dist = e.greens_dist;
 }
 //__________________________________________________________________________________________
 
@@ -262,12 +264,6 @@ bool Event::UpdateDensity(Quarks quark_density)
     }
 */
 
-    /*  if (test_ == "GreensFunction")
-      {
-        // this are needs to be updated to subtract and add the energy correctly for the greens function case
-      }*/
-
-
     //******************************************************************************************
     //  Update Total energies and initial_energy
     //******************************************************************************************
@@ -300,6 +296,13 @@ bool Event::UpdateDensity(Quarks quark_density)
         //  Deposit Quark Energy and Charges
         temp_x = quark_x - quark_rad + i;
         temp_y = quark_y - quark_rad + j;
+
+          if (test_ == "GreensFunction")
+          {
+            // this are needs to be updated to subtract and add the energy correctly for the greens function case
+          }
+
+
         //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
         density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist[i][j];
         //  Baryon = baron_number*quark_dist

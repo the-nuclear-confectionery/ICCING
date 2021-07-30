@@ -86,6 +86,9 @@ private:
   //##########################################################################################
   GreensFunctions evolution;
   vector<vector<double>> w_tilde;
+  double tau_hydro;
+  double greens_rad;
+  vector<vector<int>> greens_dist;  //  Used to distribute using greens functions
   //__________________________________________________________________________________________
 
   //__________________________________________________________________________________________

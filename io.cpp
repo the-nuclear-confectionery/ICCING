@@ -398,6 +398,7 @@ Event IO::InitializeEvent()
   //******************************************************************************************
   if (test_ == "GreensFunction")
   {
+    event_in.tau_hydro = tau_hydro;
     event_in.w_tilde.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
     event_in.evolution = GreensFunctions(background_attractor_file, greens_functions_file, background_points, greens_functions_points, greens_functions_chuncks, c_infinity, eta_over_s, tau_hydro);
   }
@@ -460,6 +461,29 @@ Event IO::InitializeEvent()
       point = sqrt(pow(i,2) + pow(j,2));  //  Get distance of point from center of circle
       //  Calculate value of gaussian at point in circle
       event_in.quark_dist[i + ox_quark][j + oy_quark] = 1/(normalization*pow(grid_step,2)*tau_0)*exp(-((pow(point,2))/(2*pow(event_in.quark_rad,2))));
+    }
+  }
+
+
+  //******************************************************************************************
+  //  Initialze Circle for use with Greens Functions
+  //******************************************************************************************
+  event_in.greens_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of greens distribution
+  //  Set size of greens_dist grid used to distribute according to greens functions
+  event_in.greens_dist.resize(2*event_in.greens_rad + 1, vector<int>(2*event_in.greens_rad + 1, 0));
+
+  //  Initialize greens distribution
+  int ox_greens = event_in.greens_rad;  //  x-value of greens_dist center
+  int oy_greens = event_in.greens_rad;  //  y-value of greens_dist center
+
+  //  Loop through only points in radius of greens distribution and set to 1
+  for (int i = -event_in.greens_rad; i <= event_in.greens_rad; i++) //  This goes -radius to radius in x
+  {
+    // This calculates the hight of the greens_dist at a given x-value
+    int height = round(sqrt(event_in.greens_rad*event_in.greens_rad - i*i));
+    for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
+    {
+      event_in.greens_dist[i + ox_greens][j + oy_greens] = 1;  //  Set points in circle to 1 for calculations
     }
   }
 
