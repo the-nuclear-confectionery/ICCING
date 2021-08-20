@@ -236,20 +236,38 @@ bool Event::UpdateDensity(Quarks quark_density)
     //******************************************************************************************
     x_center = quark_x;
     y_center = quark_y;
-    vector<int> quark_bounds = GetIntegrationBounds(quark_dist.size(), quark_rad);
-    if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.size())
-    { return false; }
+
+    if (test_ == "GreensFunction")
+    {
+      vector<int> quark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
+      if (abs(quark_bounds[0] - quark_bounds[2]) < greens_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < greens_dist.size())
+      { return false; }
+    }
+    else
+    {
+      vector<int> quark_bounds = GetIntegrationBounds(quark_dist.size(), quark_rad);
+      if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.size())
+      { return false; }
+    }
 
     //******************************************************************************************
     //  Test if Anti-Quark is in bounds
     //******************************************************************************************
-    x_center = temp_x;
-    y_center = temp_y;
     x_center = antiquark_x;
     y_center = antiquark_y;
-    vector<int> antiquark_bounds = GetIntegrationBounds(quark_dist.size() , quark_rad);
-    if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.size() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.size())
-    { return false; }
+
+    if (test_ == "GreensFunction")
+    {
+      vector<int> antiquark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
+      if (abs(antiquark_bounds[0] - antiquark_bounds[2]) < greens_dist.size() || abs(antiquark_bounds[1] - antiquark_bounds[3]) < greens_dist.size())
+      { return false; }
+    }
+    else
+    {
+      vector<int> antiquark_bounds = GetIntegrationBounds(quark_dist.size() , quark_rad);
+      if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.size() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.size())
+      { return false; }
+    }
 
     if (quark_density.GetCharge()[0] == 0.0023)
     { number_up++; }
@@ -259,12 +277,6 @@ bool Event::UpdateDensity(Quarks quark_density)
     { number_strange++; }
     else if (quark_density.GetCharge()[0] == 1.29)
     { number_charm++; }
-
-/*    if (quark_density.GetCharge()[0] == 0.095)
-    {
-      cout << "strange charges " << quark_density.GetCharge()[1] << " " <<  quark_density.GetCharge()[2] << " " <<  quark_density.GetCharge()[3] << endl;
-    }
-*/
 
     //******************************************************************************************
     //  Update Total energies and initial_energy
@@ -295,36 +307,74 @@ bool Event::UpdateDensity(Quarks quark_density)
       for (int j = quark_bounds[1]; j < quark_bounds[3]; j++)
       {
 
-        //  Deposit Quark Energy and Charges
-        temp_x = quark_x - quark_rad + i;
-        temp_y = quark_y - quark_rad + j;
+        if (test_ == "GreensFunction")
+        {
+          //  Deposit Quark Energy and Charges
+          temp_x = quark_x - greens_rad + i;
+          temp_y = quark_y - greens_rad + j;
+          double quark_distance = sqrt(pow((quark_x - temp_x)*grid_step, 2) + pow((quark_y - temp_y)*grid_step, 2));
 
-          if (test_ == "GreensFunction")
-          {
-            // this are needs to be updated to subtract and add the energy correctly for the greens function case
-          }
+          //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
+          density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
+                                        *(final_energy_backup[i][j]/initial_energy_backup[i][j])
+                                        *evolution.Gss(w_tilde[i][j], quark_distance/(tau_hydro - tau_0));
+          //  Baryon = baron_number*quark_dist
+          density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*greens_dist[i][j]
+                                        *(tau_0/tau_hydro)*evolution.Fss(w_tilde[i][j], quark_distance/(tau_hydro - tau_0));
+          //  Strangeness = strangeness*quark_dist
+          density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*greens_dist[i][j]
+                                        *(tau_0/tau_hydro)*evolution.Fss(w_tilde[i][j], quark_distance/(tau_hydro - tau_0));;
+          //  EM_charge = em_charge*quark_dist
+          density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*greens_dist[i][j]
+                                        *(tau_0/tau_hydro)*evolution.Fss(w_tilde[i][j], quark_distance/(tau_hydro - tau_0));
 
+          //  Deposit Anti-Quark Energy and Charges
+          temp_x = antiquark_x - greens_rad + i;
+          temp_y = antiquark_y - greens_rad + j;
+          double antiquark_distance = sqrt(pow((quark_x - temp_x)*grid_step, 2) + pow((quark_y - temp_y)*grid_step, 2));
 
-        //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
-        density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist[i][j];
-        //  Baryon = baron_number*quark_dist
-        density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*quark_dist[i][j];
-        //  Strangeness = strangeness*quark_dist
-        density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*quark_dist[i][j];
-        //  EM_charge = em_charge*quark_dist
-        density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*quark_dist[i][j];
+          //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
+          density[0][temp_x][temp_y] += (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
+                                        *(final_energy_backup[i][j]/initial_energy_backup[i][j])
+                                        *evolution.Gss(w_tilde[i][j], antiquark_distance/(tau_hydro - tau_0));
+          //  Baryon = baron_number*quark_dist
+          density[1][temp_x][temp_y] -= quark_density.GetCharge()[1]*greens_dist[i][j]
+                                        *(tau_0/tau_hydro)*evolution.Fss(w_tilde[i][j], antiquark_distance/(tau_hydro - tau_0));
+          //  Strangeness = strangeness*quark_dist
+          density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*greens_dist[i][j]
+                                        *(tau_0/tau_hydro)*evolution.Fss(w_tilde[i][j], antiquark_distance/(tau_hydro - tau_0));
+          //  EM_charge = em_charge*quark_dist
+          density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*greens_dist[i][j]
+                                        *(tau_0/tau_hydro)*evolution.Fss(w_tilde[i][j], antiquark_distance/(tau_hydro - tau_0));
+        }
+        else
+        {
+          //  Deposit Quark Energy and Charges
+          temp_x = quark_x - quark_rad + i;
+          temp_y = quark_y - quark_rad + j;
 
-        //  Deposit Anti-Quark Energy and Charges
-        temp_x = antiquark_x - quark_rad + i;
-        temp_y = antiquark_y - quark_rad + j;
-        //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
-        density[0][temp_x][temp_y] += (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist[i][j];
-        //  Baryon = baron_number*quark_dist
-        density[1][temp_x][temp_y] -= quark_density.GetCharge()[1]*quark_dist[i][j];
-        //  Strangeness = strangeness*quark_dist
-        density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*quark_dist[i][j];
-        //  EM_charge = em_charge*quark_dist
-        density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*quark_dist[i][j];
+          //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
+          density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist[i][j];
+          //  Baryon = baron_number*quark_dist
+          density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*quark_dist[i][j];
+          //  Strangeness = strangeness*quark_dist
+          density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*quark_dist[i][j];
+          //  EM_charge = em_charge*quark_dist
+          density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*quark_dist[i][j];
+
+          //  Deposit Anti-Quark Energy and Charges
+          temp_x = antiquark_x - quark_rad + i;
+          temp_y = antiquark_y - quark_rad + j;
+          //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
+          density[0][temp_x][temp_y] += (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist[i][j];
+          //  Baryon = baron_number*quark_dist
+          density[1][temp_x][temp_y] -= quark_density.GetCharge()[1]*quark_dist[i][j];
+          //  Strangeness = strangeness*quark_dist
+          density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*quark_dist[i][j];
+          //  EM_charge = em_charge*quark_dist
+          density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*quark_dist[i][j];
+        }
+
       }
     }
   }
