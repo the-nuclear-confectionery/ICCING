@@ -821,6 +821,8 @@ Event IO::ReadEvent(Event event_in)
 
     if (test_ == "GreensFunction")
     {
+      event_in.initial_energy_backup = event_in.initial_energy;
+
   //    cout << "Reading in event" << endl;
       // This is where I want to preevolve the event energy density
       cout << "number of points " << event_in.valued_points.size() << endl;
@@ -841,6 +843,8 @@ Event IO::ReadEvent(Event event_in)
 //        cout << "Evolved energy " << event_in.density[0][x][y] << " Original energy " << tau_0*event_in.initial_energy[x][y] << " w_tilde " << event_in.w_tilde[x][y] << endl;
       //  exit(0);
       }
+
+      event_in.final_energy_backup = event_in.density[0];
       cout << "Finished evolving event" << endl;
     }
 

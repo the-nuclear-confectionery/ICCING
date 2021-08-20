@@ -77,6 +77,8 @@ void Event::CopyEvent(const Event &e)
   w_tilde = e.w_tilde;
   greens_rad = e.greens_rad;
   greens_dist = e.greens_dist;
+  initial_energy_backup = e.initial_energy_backup;
+  final_energy_backup = e.final_energy_backup;
 }
 //__________________________________________________________________________________________
 
@@ -459,5 +461,8 @@ void Event::CleanEvent()
   total_initial_energy = 0;
   total_energy = 0;
   seed = 0;
+
+  initial_energy_backup.clear();
+  final_energy_backup.clear();
 }
 //__________________________________________________________________________________________
