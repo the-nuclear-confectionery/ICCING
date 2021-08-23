@@ -239,7 +239,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     x_center = quark_x;
     y_center = quark_y;
 
-/*    if (test_ == "GreensFunction")
+    if (test_ == "GreensFunction")
     {
       quark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
       if (abs(quark_bounds[0] - quark_bounds[2]) < greens_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < greens_dist.size())
@@ -247,10 +247,10 @@ bool Event::UpdateDensity(Quarks quark_density)
     }
     else
     {
-*/      quark_bounds = GetIntegrationBounds(quark_dist.size(), quark_rad);
+      quark_bounds = GetIntegrationBounds(quark_dist.size(), quark_rad);
       if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.size())
       { return false; }
-  //  }
+    }
 
     //******************************************************************************************
     //  Test if Anti-Quark is in bounds
@@ -258,7 +258,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     x_center = antiquark_x;
     y_center = antiquark_y;
 
-/*    if (test_ == "GreensFunction")
+    if (test_ == "GreensFunction")
     {
       antiquark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
       if (abs(antiquark_bounds[0] - antiquark_bounds[2]) < greens_dist.size() || abs(antiquark_bounds[1] - antiquark_bounds[3]) < greens_dist.size())
@@ -266,10 +266,10 @@ bool Event::UpdateDensity(Quarks quark_density)
     }
     else
     {
-*/      antiquark_bounds = GetIntegrationBounds(quark_dist.size() , quark_rad);
+      antiquark_bounds = GetIntegrationBounds(quark_dist.size() , quark_rad);
       if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.size() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.size())
       { return false; }
-//    }
+    }
 
     if (quark_density.GetCharge()[0] == 0.0023)
     { number_up++; }
@@ -309,7 +309,7 @@ bool Event::UpdateDensity(Quarks quark_density)
       for (int j = quark_bounds[1]; j < quark_bounds[3]; j++)
       {
 
-/*        if (test_ == "GreensFunction")
+        if (test_ == "GreensFunction")
         {
           //  Deposit Quark Energy and Charges
           temp_x = quark_x - greens_rad + i;
@@ -351,7 +351,7 @@ bool Event::UpdateDensity(Quarks quark_density)
         }
         else
         {
-*/          //  Deposit Quark Energy and Charges
+          //  Deposit Quark Energy and Charges
           temp_x = quark_x - quark_rad + i;
           temp_y = quark_y - quark_rad + j;
 
@@ -375,7 +375,7 @@ bool Event::UpdateDensity(Quarks quark_density)
           density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*quark_dist[i][j];
           //  EM_charge = em_charge*quark_dist
           density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*quark_dist[i][j];
-        //}
+        }
 
       }
     }

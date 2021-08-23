@@ -33,10 +33,8 @@ default_random_engine get_random_number;
 
 int main (int argc, char *argv[])
 {
-	cout << "test 1" << endl;
 
 	IO inOut(argv[1]);
-	cout << "test 2" << endl;
 
 
 	//******************************************************************************************
@@ -55,7 +53,6 @@ int main (int argc, char *argv[])
 
 	initializedEvent = inOut.InitializeEvent();
 	inOut.InitializeEOS();
-	cout << "test 3" << endl;
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	ofstream quark_output;
 	if (inOut.GetTest() == "QuarkRatio"){	quark_output.open(inOut.GetOutputDir() + "quark_ratio_test.dat");	}
@@ -70,7 +67,6 @@ int main (int argc, char *argv[])
 
 		//	Read next event using initializedEvent as base
 		testEvent = inOut.ReadEvent(initializedEvent);
-		cout << "test 4" << endl;
 
 /*		if (inOut.GetTest() == "GreensFunction")
 		{
@@ -86,7 +82,6 @@ int main (int argc, char *argv[])
 				//	Declare Sample and Quarks for individual event processing
 				Sample testSample;
 				Quarks testQuarks;
-				cout << "test 5" << endl;
 
 				//	Get an energy sample from event
 				testSample = testEvent.SampleEnergy();

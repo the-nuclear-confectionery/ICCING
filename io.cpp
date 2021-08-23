@@ -375,7 +375,6 @@ void IO::OutputConfig(string file_name)
 Event IO::InitializeEvent()
 {
   Event event_in; //  Temp Event object used to store event specific data
-cout << "Test 1" << endl;
   //  Set variables in event with data from configFile
   event_in.kappa_ = kappa_;
   event_in.lambda_ = lambda_;
@@ -384,7 +383,6 @@ cout << "Test 1" << endl;
   event_in.grid_max = grid_max;
   event_in.grid_step = grid_step;
   event_in.grid_points = grid_points;
-  cout << "Test 2" << endl;
 
   //  Initialize input grid to 0 with dimensions grid_points + 1
   event_in.initial_energy.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
@@ -393,7 +391,6 @@ cout << "Test 1" << endl;
   {
     event_in.density.push_back(event_in.initial_energy);
   }
-  cout << "Test 3" << endl;
 
   //******************************************************************************************
   //  Define Greens Functions Used for pre hydro evolution
@@ -404,7 +401,6 @@ cout << "Test 1" << endl;
     event_in.w_tilde.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
     event_in.evolution = GreensFunctions(background_attractor_file, greens_functions_file, background_points, greens_functions_points, greens_functions_chuncks, c_infinity, eta_over_s, tau_hydro);
   }
-  cout << "Test 4" << endl;
 
   //******************************************************************************************
   //  Initialze Gluon Distribution for sampling
@@ -416,7 +412,6 @@ cout << "Test 1" << endl;
   //  Initialize gluon distribution
   int ox = event_in.gluon_rad;  //  x-value of gluon_dist center
   int oy = event_in.gluon_rad;  //  y-value of gluon_dist center
-  cout << "Test 5" << endl;
 
   //  Loop through only points in radius of gluon and set to 1
   for (int i = -event_in.gluon_rad; i <= event_in.gluon_rad; i++) //  This goes -radius to radius in x
@@ -429,7 +424,6 @@ cout << "Test 1" << endl;
     }
   }
 
-  cout << "Test 6" << endl;
 
   //******************************************************************************************
   //  Calculate Quark distribution for depositing densities
@@ -468,7 +462,6 @@ cout << "Test 1" << endl;
       cout << i + ox_quark << " " << j + oy_quark << endl;
       event_in.quark_dist[i + ox_quark][j + oy_quark] = 1/(normalization*pow(grid_step,2)*tau_0)*exp(-((pow(point,2))/(2*pow(event_in.quark_rad,2))));
     }
-    cout << "Test 7" << endl;
 
   }
 
@@ -476,15 +469,14 @@ cout << "Test 1" << endl;
   //******************************************************************************************
   //  Initialze Circle for use with Greens Functions
   //******************************************************************************************
+
   event_in.greens_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of greens distribution
   //  Set size of greens_dist grid used to distribute according to greens functions
   event_in.greens_dist.resize(2*event_in.greens_rad + 1, vector<int>(2*event_in.greens_rad + 1, 0));
-  cout << "Test 8" << endl;
 
   //  Initialize greens distribution
   int ox_greens = event_in.greens_rad;  //  x-value of greens_dist center
   int oy_greens = event_in.greens_rad;  //  y-value of greens_dist center
-  cout << "Test 9" << endl;
 
   //  Loop through only points in radius of greens distribution and set to 1
   for (int i = -event_in.greens_rad; i <= event_in.greens_rad; i++) //  This goes -radius to radius in x
@@ -495,10 +487,8 @@ cout << "Test 1" << endl;
     {
       event_in.greens_dist[i + ox_greens][j + oy_greens] = 1;  //  Set points in circle to 1 for calculations
     }
-    cout << "Test 10" << endl;
 
   }
-  cout << "Test 11" << endl;
 
   return event_in;
 }
@@ -834,7 +824,7 @@ Event IO::ReadEvent(Event event_in)
 
     if (test_ == "GreensFunction")
     {
-//      event_in.initial_energy_backup = event_in.initial_energy;
+      event_in.initial_energy_backup = event_in.initial_energy;
 
   //    cout << "Reading in event" << endl;
       // This is where I want to preevolve the event energy density
@@ -857,7 +847,7 @@ Event IO::ReadEvent(Event event_in)
       //  exit(0);
       }
 
-//      event_in.final_energy_backup = event_in.density[0];
+      event_in.final_energy_backup = event_in.density[0];
       cout << "Finished evolving event" << endl;
     }
 
