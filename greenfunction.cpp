@@ -33,7 +33,7 @@ GreensFunctions::GreensFunctions(string backgroundAttractorFile, string greensfu
 
   SetupBackgroundAttractor();
   SetupGreensFunctions();
-  cout << "Greens Function setup complete" << endl;
+//  cout << "Greens Function setup complete" << endl;
 }
 //__________________________________________________________________________________________
 
@@ -180,7 +180,7 @@ void GreensFunctions::SetupBackgroundAttractor()
 //##########################################################################################
 void GreensFunctions::SetupGreensFunctions()
 {
-  cout << "Setting up Greens Function" << endl;
+//  cout << "Setting up Greens Function" << endl;
 
   // ALLOCATE //
   wTValues = new double[greens_functions_chuncks];
@@ -216,7 +216,7 @@ void GreensFunctions::SetupGreensFunctions()
   double FssVal[greens_functions_chuncks*greens_functions_points];
   double FsvVal[greens_functions_chuncks*greens_functions_points];
 
-  cout << "Reading in Greens Function" << endl;
+//  cout << "Reading in Greens Function" << endl;
 
   ifstream InStream;
   InStream.open(greens_functions_file);
@@ -238,7 +238,7 @@ void GreensFunctions::SetupGreensFunctions()
       InStream >> Fss;
       InStream >> Fsv;
 
-      cout << wT << " " << dXdT << " " << Fss << " " << Fsv << endl;
+//      cout << wT << " " << dXdT << " " << Fss << " " << Fsv << endl;
       // WRITE EACH POSITION-STEP ONCE INTO dXdTValues //
       dXdTValues[xCounter] = dXdT;
 
@@ -268,7 +268,7 @@ void GreensFunctions::SetupGreensFunctions()
 
   }
 
-  cout << "setting grid values Greens Function" << endl;
+//  cout << "setting grid values Greens Function" << endl;
 
   // SET GRID VALUES FOR INTERPOLATION //
   int FIndex = 0;
@@ -286,7 +286,7 @@ void GreensFunctions::SetupGreensFunctions()
       }
 
   }
-  
+
   // SetupInterpolators function
   // SET BOUNDARIES //
   wTMin = wTValues[0];
@@ -432,8 +432,8 @@ void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, doubl
 //cout << "c_infinity " << c_infinity << endl;
   // DETERMINE (e(tau) tau^{4/3})_{infty} //
   double eTau43Infty = pow(4.0*M_PI*etaOverS, 4.0/9.0)*pow(M_PI*M_PI*nuEff/30.0, 1.0/9.0)*c_infinity*pow(eTau0, 8.0/9.0);
-  cout << "etaOverS " << etaOverS << " nuEff " << nuEff << " c_infinity " << c_infinity << " eTau0 " << eTau0 << endl;
-  cout << "eTau43Infty " << eTau43Infty << endl;
+//  cout << "etaOverS " << etaOverS << " nuEff " << nuEff << " c_infinity " << c_infinity << " eTau0 " << eTau0 << endl;
+//  cout << "eTau43Infty " << eTau43Infty << endl;
 
   //////////////////////////////////////////////////////////
   // DETERMINE TEMPERATURE SELF-CONSISTENTLY ACCORDING TO //
@@ -454,7 +454,7 @@ void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, doubl
   {
 //    cout << "THigh-TLow " << THigh-TLow << endl;
 //    cout << "1E-6*TMid " << 1E-6*TMid << endl;
-    cout << "Output " << TLow << " " << THigh << " " << TMid << " " << wTildeMid << endl;
+//    cout << "Output " << TLow << " " << THigh << " " << TMid << " " << wTildeMid << endl;
     if (E(wTildeMid)/pow(TMid, 4) > (M_PI*M_PI/30.0)*nuEff*pow(1.0, 4.0)*pow(Tau, 4.0/3.0)/eTau43Infty)
     {
       TLow = TMid;
@@ -473,11 +473,11 @@ void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, doubl
 
   // SET FINAL VALUE OF wTilde //
   wTilde = (TMid*Tau)/(4.0*M_PI*etaOverS);
-  cout << "wTilde " << wTilde << endl;
+//  cout << "wTilde " << wTilde << endl;
 
   // SET FINAL VALUES OF T,e IN GeV //
   e = (M_PI*M_PI/30.0)*nuEff*pow(TMid, 4.0);
-  cout << "e " << e << endl;
+//  cout << "e " << e << endl;
 //  cout << "at end of get values" << endl;
 
 
