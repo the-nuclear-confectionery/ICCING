@@ -478,10 +478,12 @@ cout << "Test 1" << endl;
   event_in.greens_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of greens distribution
   //  Set size of greens_dist grid used to distribute according to greens functions
   event_in.greens_dist.resize(2*event_in.greens_rad + 1, vector<int>(2*event_in.greens_rad + 1, 0));
+  cout << "Test 8" << endl;
 
   //  Initialize greens distribution
   int ox_greens = event_in.greens_rad;  //  x-value of greens_dist center
   int oy_greens = event_in.greens_rad;  //  y-value of greens_dist center
+  cout << "Test 9" << endl;
 
   //  Loop through only points in radius of greens distribution and set to 1
   for (int i = -event_in.greens_rad; i <= event_in.greens_rad; i++) //  This goes -radius to radius in x
@@ -492,8 +494,10 @@ cout << "Test 1" << endl;
     {
       event_in.greens_dist[i + ox_greens][j + oy_greens] = 1;  //  Set points in circle to 1 for calculations
     }
+    cout << "Test 10" << endl;
+
   }
-  cout << "Test 8" << endl;
+  cout << "Test 11" << endl;
 
   return event_in;
 }
