@@ -231,6 +231,8 @@ bool Event::UpdateDensity(Quarks quark_density)
     int antiquark_x = x_center - round(quark_density.GetAlpha()*quark_density.GetPosition()[0]);
     int antiquark_y = y_center - round(quark_density.GetAlpha()*quark_density.GetPosition()[1]);
 
+    vector<int> quark_bounds;
+    vector<int> antiquark_bounds;
     //******************************************************************************************
     //  Test if Quark is in bounds
     //******************************************************************************************
@@ -239,13 +241,13 @@ bool Event::UpdateDensity(Quarks quark_density)
 
     if (test_ == "GreensFunction")
     {
-      vector<int> quark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
+      quark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
       if (abs(quark_bounds[0] - quark_bounds[2]) < greens_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < greens_dist.size())
       { return false; }
     }
     else
     {
-      vector<int> quark_bounds = GetIntegrationBounds(quark_dist.size(), quark_rad);
+      quark_bounds = GetIntegrationBounds(quark_dist.size(), quark_rad);
       if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.size())
       { return false; }
     }
@@ -258,13 +260,13 @@ bool Event::UpdateDensity(Quarks quark_density)
 
     if (test_ == "GreensFunction")
     {
-      vector<int> antiquark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
+      antiquark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
       if (abs(antiquark_bounds[0] - antiquark_bounds[2]) < greens_dist.size() || abs(antiquark_bounds[1] - antiquark_bounds[3]) < greens_dist.size())
       { return false; }
     }
     else
     {
-      vector<int> antiquark_bounds = GetIntegrationBounds(quark_dist.size() , quark_rad);
+      antiquark_bounds = GetIntegrationBounds(quark_dist.size() , quark_rad);
       if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.size() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.size())
       { return false; }
     }
