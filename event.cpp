@@ -242,7 +242,7 @@ bool Event::UpdateDensity(Quarks quark_density)
 
     if (test_ == "GreensFunction")
     {
-      cout << "test 1" << endl;
+//      cout << "test 1" << endl;
       quark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
       if (abs(quark_bounds[0] - quark_bounds[2]) < greens_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < greens_dist.size())
       { return false; }
@@ -262,7 +262,7 @@ bool Event::UpdateDensity(Quarks quark_density)
 
     if (test_ == "GreensFunction")
     {
-      cout << "test 2" << endl;
+//      cout << "test 2" << endl;
       antiquark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad);
       if (abs(antiquark_bounds[0] - antiquark_bounds[2]) < greens_dist.size() || abs(antiquark_bounds[1] - antiquark_bounds[3]) < greens_dist.size())
       { return false; }
@@ -314,13 +314,13 @@ bool Event::UpdateDensity(Quarks quark_density)
 
         if (test_ == "GreensFunction")
         {
-          cout << "test 3" << endl;
+//          cout << "test 3" << endl;
 
           //  Deposit Quark Energy and Charges
           temp_x = quark_x - greens_rad + i;
           temp_y = quark_y - greens_rad + j;
           double quark_distance = sqrt(pow((quark_x - temp_x)*grid_step, 2) + pow((quark_y - temp_y)*grid_step, 2));
-          cout << "test 4 " << greens_dist.size() << endl;
+/*          cout << "test 4 " << greens_dist.size() << endl;
           cout << quark_bounds[0] << " " << quark_bounds[1] << " " << quark_bounds[2] << " " << quark_bounds[3] << endl;
           cout << i << " " << j << endl;
           cout << greens_dist[i][j] << endl;
@@ -330,20 +330,20 @@ bool Event::UpdateDensity(Quarks quark_density)
           cout << quark_distance << endl;
           cout << (tau_hydro - tau_0) << endl;
           cout << evolution.Gss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0)) << endl;
-          //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
+  */        //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
           density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
                                         *(final_energy_backup[quark_x][quark_y]/initial_energy_backup[quark_x][quark_y])
                                         *evolution.Gss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
-          cout << "test 5" << endl;
+//          cout << "test 5" << endl;
 //  Baryon = baron_number*quark_dist
           density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
           //  Strangeness = strangeness*quark_dist
-          cout << "test 6" << endl;
+//          cout << "test 6" << endl;
           density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));;
           //  EM_charge = em_charge*quark_dist
-          cout << "test 7" << endl;
+//          cout << "test 7" << endl;
           density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 

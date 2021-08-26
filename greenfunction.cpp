@@ -312,14 +312,14 @@ void GreensFunctions::SetupGreensFunctions()
 //##########################################################################################
 double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator, double xValue, double yValue, gsl_interp_accel* xAccelerator, gsl_interp_accel* yAccelerator, double xMinValue, double xMaxValue, double yMinValue, double yMaxValue)
 {
-  cout << "test 7" << endl;
+//  cout << "test 7" << endl;
   if (xValue < xMinValue || xValue > xMaxValue || yValue < yMinValue || yValue > yMaxValue)
   {
     if (yValue >= yMinValue && yValue <= yMaxValue)
     {
       if (xValue < xMinValue)
       {
-        cout << "test 2" << endl;
+//        cout << "test 2" << endl;
 
         return gsl_spline2d_eval(Interpolator,xMinValue,yValue,xAccelerator,yAccelerator);
       }
@@ -332,20 +332,20 @@ double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator,
     {
       if (xValue < xMinValue)
       {
-        cout << "test 3" << endl;
+//        cout << "test 3" << endl;
 
         return gsl_spline2d_eval(Interpolator, xMinValue, yMaxValue, xAccelerator, yAccelerator);
       }
       else
       {
-        cout << "test 4" << endl;
+//        cout << "test 4" << endl;
 
         return gsl_spline2d_eval(Interpolator, xValue, yMaxValue, xAccelerator, yAccelerator);
       }
     }
     else
     {
-      cout << "test 5" << endl;
+//      cout << "test 5" << endl;
 
       cerr << "#WARNING " << xValue << " " << xMinValue  << " " << xMaxValue << " " << yValue << " " << yMinValue  << " " << yMaxValue  << endl;
       return 0.0;
@@ -353,7 +353,7 @@ double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator,
   }
   else
   {
-    cout << "test 6" << endl;
+//    cout << "test 6" << endl;
 
     return gsl_spline2d_eval(Interpolator, xValue, yValue, xAccelerator, yAccelerator);
   }
@@ -388,7 +388,7 @@ double GreensFunctions::Fss(double wT, double dXdT)
 double GreensFunctions::GssScalingCurve(double wT, double dXdT)
 {
   int tID = omp_get_thread_num();
-  cout << "test 1" << endl;
+/*  cout << "test 1" << endl;
   cout << GssInt << endl;
   cout << wT << endl;
   cout << dXdT << endl;
@@ -398,7 +398,7 @@ double GreensFunctions::GssScalingCurve(double wT, double dXdT)
   cout << wTMax << endl;
   cout << dXdTMin << endl;
   cout << dXdTMax << endl;
-
+*/
   return EVALUATE_GSL_INTERPOLATOR_2D(GssInt, wT, dXdT, GsswTAcc[tID], GssdXdTAcc[tID], wTMin, wTMax, dXdTMin, dXdTMax);
 } // GssScalingCurve
 
@@ -408,7 +408,7 @@ double GreensFunctions::GssScalingCurve(double wT, double dXdT)
 //##########################################################################################
 double GreensFunctions::Gss(double wT, double dXdT)
 {
-  cout << "Gss " << wT << " " << dXdT << endl;
+//  cout << "Gss " << wT << " " << dXdT << endl;
   return GssScalingCurve(wT, dXdT);
 } // Gss
 
