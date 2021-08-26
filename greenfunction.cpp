@@ -392,6 +392,16 @@ double GreensFunctions::GssScalingCurve(double wT, double dXdT)
 {
   int tID = omp_get_thread_num();
   cout << "test 1" << endl;
+  cout << GssInt << endl;
+  cout << wT << endl;
+  cout << dXdT << endl;
+  cout << GsswTAcc[tID] << endl;
+  cout << GssdXdTAcc[tID] << endl;
+  cout << wTMin << endl;
+  cout << wTMax << endl;
+  cout << dXdTMin << endl;
+  cout << dXdTMax << endl;
+
   return EVALUATE_GSL_INTERPOLATOR_2D(GssInt, wT, dXdT, GsswTAcc[tID], GssdXdTAcc[tID], wTMin, wTMax, dXdTMin, dXdTMax);
 } // GssScalingCurve
 
