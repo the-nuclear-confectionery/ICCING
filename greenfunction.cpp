@@ -315,6 +315,7 @@ void GreensFunctions::SetupGreensFunctions()
 //##########################################################################################
 double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator, double xValue, double yValue, gsl_interp_accel* xAccelerator, gsl_interp_accel* yAccelerator, double xMinValue, double xMaxValue, double yMinValue, double yMaxValue)
 {
+  cout << "test 7" << endl;
   if (xValue < xMinValue || xValue > xMaxValue || yValue < yMinValue || yValue > yMaxValue)
   {
     if (yValue >= yMinValue && yValue <= yMaxValue)
