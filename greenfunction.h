@@ -52,22 +52,19 @@ private:
   // GSL INTERPOLATION OBJECTS //
   gsl_interp_accel **FsswTAcc, **GsswTAcc;
   gsl_interp_accel **FssdXdTAcc, **GssdXdTAcc;
-  gsl_interp_accel **FsvwTAcc;
-  gsl_interp_accel **FsvdXdTAcc;
-  gsl_spline2d *FsvInt;
   gsl_spline2d *FssInt, *GssInt;
 
   double *wTValues,*dXdTValues;
 
   double *FssValues;
   double *GssValues;
-  double *FsvValues;
+
   // GSL INTERPOLATION OBJECTS //
   gsl_interp_accel **EAcc;
   gsl_spline *EInt;
 
 //    double wTMin; double wTMax;
-  
+
 
    double nuEff;
   //__________________________________________________________________________________________
