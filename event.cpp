@@ -349,7 +349,7 @@ bool Event::UpdateDensity(Quarks quark_density)
           density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[i][j], antiquark_distance/(tau_hydro - tau_0));
         }
-        else
+/*        else
         {
           //  Deposit Quark Energy and Charges
           temp_x = quark_x - quark_rad + i;
@@ -376,7 +376,7 @@ bool Event::UpdateDensity(Quarks quark_density)
           //  EM_charge = em_charge*quark_dist
           density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*quark_dist[i][j];
         }
-
+*/
       }
     }
   }
