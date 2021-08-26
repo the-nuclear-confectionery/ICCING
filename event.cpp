@@ -320,7 +320,8 @@ bool Event::UpdateDensity(Quarks quark_density)
           temp_y = quark_y - greens_rad + j;
           double quark_distance = sqrt(pow((quark_x - temp_x)*grid_step, 2) + pow((quark_y - temp_y)*grid_step, 2));
           cout << "test 4 " << greens_dist.size() << endl;
-
+          cout << quark_bounds[0] << " " << quark_bounds[1] << " " << quark_bounds[2] << " " << quark_bounds[3] << endl;
+          cout << i << " " << j << endl;
           cout << greens_dist[i][j] << " " << final_energy_backup[i][j] << " " << initial_energy_backup[i][j] << " " << evolution.Gss(w_tilde[i][j], quark_distance/(tau_hydro - tau_0)) << endl;
           //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
           density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
