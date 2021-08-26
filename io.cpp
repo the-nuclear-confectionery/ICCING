@@ -460,7 +460,7 @@ Event IO::InitializeEvent()
     {
       point = sqrt(pow(i,2) + pow(j,2));  //  Get distance of point from center of circle
       //  Calculate value of gaussian at point in circle
-      cout << i + ox_quark << " " << j + oy_quark << endl;
+//      cout << i + ox_quark << " " << j + oy_quark << endl;
       event_in.quark_dist[i + ox_quark][j + oy_quark] = 1/(normalization*pow(grid_step,2)*tau_0)*exp(-((pow(point,2))/(2*pow(event_in.quark_rad,2))));
     }
 
@@ -829,11 +829,11 @@ Event IO::ReadEvent(Event event_in)
 
   //    cout << "Reading in event" << endl;
       // This is where I want to preevolve the event energy density
-      cout << "number of points " << event_in.valued_points.size() << endl;
+//      cout << "number of points " << event_in.valued_points.size() << endl;
 
       for (int i = 0; i < event_in.valued_points.size(); i++)
       {
-        cout << "current point " << i << endl;
+//        cout << "current point " << i << endl;
         int x = event_in.valued_points[i][0];
         int y = event_in.valued_points[i][1];
         double evolved_energy = 0, wtilde = 0;
@@ -849,7 +849,7 @@ Event IO::ReadEvent(Event event_in)
       }
 
       event_in.final_energy_backup = event_in.density[0];
-      cout << "Finished evolving event" << endl;
+//      cout << "Finished evolving event" << endl;
     }
 
   //******************************************************************************************
@@ -913,7 +913,7 @@ Event IO::ReadEvent(Event event_in)
     }
     input.close();  //  Close input stream
   }
-  cout << "Finished reading event" << endl;
+//  cout << "Finished reading event" << endl;
 
   return event_in;  //  Return event with data
 }
