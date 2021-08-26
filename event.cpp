@@ -75,6 +75,7 @@ void Event::CopyEvent(const Event &e)
 
   evolution = e.evolution;
   w_tilde = e.w_tilde;
+  tau_hydro = e.tau_hydro;
   greens_rad = e.greens_rad;
   greens_dist = e.greens_dist;
   initial_energy_backup = e.initial_energy_backup;
