@@ -157,7 +157,7 @@ Charge Splitter::RollFlavor(double Qs)
 
 //  if (test_ == "GreensFunction")
 //  {
-    create_charge.Strange(charge_type);
+//    create_charge.Strange(charge_type);
 //    cout << "Created strange quarks " << create_charge.GetCharge()[0] << endl;
 //}
 
