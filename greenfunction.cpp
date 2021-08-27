@@ -347,8 +347,8 @@ double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator,
     {
 //      cout << "test 5" << endl;
 
-      cerr << "#WARNING " << xValue << " " << xMinValue  << " " << xMaxValue << " " << yValue << " " << yMinValue  << " " << yMaxValue  << endl;
-      return gsl_spline2d_eval(Interpolator, xValue, yValue, xAccelerator, yAccelerator);
+//      cerr << "#WARNING " << xValue << " " << xMinValue  << " " << xMaxValue << " " << yValue << " " << yMinValue  << " " << yMaxValue  << endl;
+      return gsl_spline2d_eval(Interpolator, xValue, yMinValue, xAccelerator, yAccelerator);
     }
   }
   else
