@@ -99,7 +99,7 @@ int main (int argc, char *argv[])
 				//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 				//	Update Density grids with sampled quarks, if quarks are out of bounds of grid, sample event again
-				if (!testEvent.UpdateDensity(testQuarks)) { continue; }
+				if (!testEvent.UpdateDensity(testQuarks)) { break; }
 
 			}
 
