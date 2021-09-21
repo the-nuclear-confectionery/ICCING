@@ -1,5 +1,18 @@
 //__________________________________________________________________________________________
 //##########################################################################################
+//	ICCING Code Version 1.0
+//	Designed by Matthew Sievert
+// 	Implimented and Evolved by Patrick Carzon
+// 	Written at Rutgers University and University of Illinois at Urbana-Champaign
+//
+//	For questions and comments please email:
+//	Patrick Carzon @ pcarzon2@illinois.edu
+//##########################################################################################
+//__________________________________________________________________________________________
+
+
+//__________________________________________________________________________________________
+//##########################################################################################
 //  C++ Libraries
 //##########################################################################################
 #include <iostream>
@@ -30,28 +43,38 @@ using namespace std;
 default_random_engine get_random_number;
 //__________________________________________________________________________________________
 
+// 	When running a code from the command line and passing values to it, the information
+//	is read in as argc, which is the number of strings passed to the program with the
+//	first one being the name of the program by default, and argv, which is an array of
+//	the strings passed as arguments to the program
 int main (int argc, char *argv[])
 {
+	//	Declare and initialize the input/output object
+	//	This gets passed the path to the config file and reads in operating parameters
 	IO inOut(argv[1]);
 
 	//******************************************************************************************
   //  Declare relevent variables and objects
   //******************************************************************************************
-	Event testEvent, initializedEvent;
+	Event currentEvent, initializedEvent;
 	Splitter machine;
-
-	clock_t start;
-	double duration;
 
 	//******************************************************************************************
   //  Initialize objects
   //******************************************************************************************
+	//	Set parameters relevent to the splitter class
+	//	Also read in the flavor chemistry file
 	machine = inOut.InitializeSplitter();
 
+	//	Set parameters relevent to the event class
+	//	Also initialize density profiles for sampling gluons and distributing quarks
 	initializedEvent = inOut.InitializeEvent();
+
+	//	Read in and process the equation of state file
 	inOut.InitializeEOS();
 
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 	This is a test that records the mass of quark pairs and their relevent Qs
 	ofstream quark_output;
 	if (inOut.GetTest() == "QuarkRatio"){	quark_output.open(inOut.GetOutputDir() + "quark_ratio_test.dat");	}
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -61,59 +84,64 @@ int main (int argc, char *argv[])
   //******************************************************************************************
 	while (!inOut.LastEvent())
 	{
-		start = clock();	//	Start Clock for timing event
-
+		//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		//	Read next event using initializedEvent as base
-		testEvent = inOut.ReadEvent(initializedEvent);
+		currentEvent = inOut.ReadEvent(initializedEvent);
+		//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-/*		if (inOut.GetTest() == "GreensFunction")
-		{
-			testEvent = initializedEvent;
-			cout << "initializedEvent" << endl;
-
-		}*/
 			//******************************************************************************************
 	  	//  Event Loop, Process event until initial energy density is empty
 	  	//******************************************************************************************
-			while (!testEvent.IsEventDone())
+			while (!currentEvent.IsEventDone())
 			{
+				bool successful_density_update;
 				//	Declare Sample and Quarks for individual event processing
-				Sample testSample;
-				Quarks testQuarks;
+				Sample currentSample;
+				Quarks currentQuarks;
 
+				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 				//	Get an energy sample from event
-				testSample = testEvent.SampleEnergy();
-				// If initial energy density is empty, end event loop and start new event
-				if (testSample.q_s == -100){	continue;	}
+				currentSample = currentEvent.SampleEnergy();
+				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+				// If initial energy density is less than e_thresh, continue event loop and find new point
+				if (currentSample.q_s == -100){	continue;	}
+
+				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 				//	Generate Quarks from event energy sample
-				testQuarks = machine.SplitSample(testSample);
-//					cout << "Quark made " << testQuarks.GetCharge()[0] << endl;
+				currentQuarks = machine.SplitSample(currentSample);
+				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 				//	If there was not enough energy to create 2 quarks of given flavor mass, sample event again
-				if (testQuarks.GetEnergyFraction() == -1)	{	continue;	}
+				if (currentQuarks.GetEnergyFraction() == -1)	{	continue;	}
 
 				//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				if (inOut.GetTest() == "QuarkRatio") {	quark_output << testSample.q_s << " " << testQuarks.GetCharge()[0] << endl;	}
+				// 	This is a test that records the mass of quark pairs and their relevent Qs
+				if (inOut.GetTest() == "QuarkRatio") {	quark_output << currentSample.q_s << " " << currentQuarks.GetCharge()[0] << endl;	}
 				//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-				//	Update Density grids with sampled quarks, if quarks are out of bounds of grid, sample event again
-				if (!testEvent.UpdateDensity(testQuarks)) { continue; }
+				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				//	Update Density grids with sampled quarks
+				// 	(maybe make this so the program ends and throws an error or maybe give the user a choice to just throw out the event)
+				successful_density_update = currentEvent.UpdateDensity(currentQuarks);
+				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+				// 	If quarks are out of bounds of grid, sample event again
+				if (!successful_density_update) { continue; }
 
 			}
 
+		//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		//	Calculate Eccentricities of event
-		testEvent.CalculateEccentricities();
+		currentEvent.CalculateEccentricities();
 
 		//	Write event data to files
-		inOut.WriteEvent(testEvent);
-
-		//	Clean event and print time taken to process
-		testEvent.CleanEvent();
-//		duration = (clock() - start)/(double)CLOCKS_PER_SEC;
-//		cout << "Event processing time: " << duration/60 << " min" << endl;
+		inOut.WriteEvent(currentEvent);
+		//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	}
 
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	// 	This is a test that records the mass of quark pairs and their relevent Qs
 	if (inOut.GetTest() == "QuarkRatio"){	quark_output.close();	}
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

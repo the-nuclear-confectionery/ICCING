@@ -70,7 +70,7 @@ private:
     eosscol,
     eosecol,
     atrento,
-    echop,
+    schop,
 
     gridmax,
     gridstep,
@@ -126,7 +126,7 @@ private:
   int eos_s_col;
   int eos_e_col;
   double a_trento;
-  double e_chop;
+  double s_chop;
   vector<SplineSet> eos_interped;
 
   //******************************************************************************************

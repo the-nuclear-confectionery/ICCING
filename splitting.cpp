@@ -155,12 +155,6 @@ Charge Splitter::RollFlavor(double Qs)
   else
   { create_charge.Charm(charge_type);  }
 
-/*  if (test_ == "GreensFunction")
-  {
-    create_charge.Strange(charge_type);
-//    cout << "Created strange quarks " << create_charge.GetCharge()[0] << endl;
-}*/
-
   //  Return charge of sample
   return create_charge;
 }
@@ -191,8 +185,6 @@ vector<double> Splitter::RollLocation(double mass, double Qs)
     Qs = 2;
   }
   //  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-//  mass = 0.095;
-//  Qs = 2;
 
   //  Get the largest value of the correlation function at the given mass, and Qs
   ceiling = 1.01*Model_Correlator.FindMaximum(pow(10, -5), mass, Qs, 0, 1, 0.001);
@@ -264,7 +256,7 @@ Quarks Splitter::SplitSample(Sample sampled_energy)
   set_charge = RollFlavor(sampled_energy.q_s);
   if (test_ == "GreensFunction")
   { sampled_energy.q_s = 2; }
-//  cout << sampled_energy.e_tot << sampled_energy.q_s << endl;
+
   //  If there is not enough energy to create 2 quarks of given flavor,
   //  go back to SampleEnergy and find new center point
   if (2*set_charge.GetCharge()[0] > gluon_energy_frac*sampled_energy.e_tot)
