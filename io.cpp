@@ -59,7 +59,7 @@ IO::IO(string configFile)
       case eosscol:  input >> eos_s_col; break;
       case eosecol:  input >> eos_e_col; break;
       case atrento:  input >> a_trento; break;
-      case echop:  input >> s_chop; break;
+      case schop:  input >> s_chop; break;
 
       case gridmax: input >> grid_max;  break;
       case gridstep:  input >> grid_step; break;
@@ -260,7 +260,7 @@ void IO::Initialize()
   mapConfigParams["eos_s_col"] = eosscol;
   mapConfigParams["eos_e_col"] = eosecol;
   mapConfigParams["a_trento"] = atrento;
-  mapConfigParams["s_chop"] = echop;
+  mapConfigParams["s_chop"] = schop;
 
   mapConfigParams["grid_max"] = gridmax;
   mapConfigParams["grid_step"] = gridstep;
@@ -930,7 +930,6 @@ void IO::WriteEvent(Event event)
   //******************************************************************************************
   if (output_type == 0)
   {
-    output_energy = event.initial_energy;
     OutputFullDensityGrids(event.density[0], output_dir + "energy_density_" + to_string(current_event) + ".dat");
     OutputFullDensityGrids(event.density[1], output_dir + "baryon_density_" + to_string(current_event) + ".dat");
     OutputFullDensityGrids(event.density[2], output_dir + "strange_density_" + to_string(current_event) + ".dat");
