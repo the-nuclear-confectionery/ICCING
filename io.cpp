@@ -68,7 +68,7 @@ IO::IO(string configFile)
       case chargetype:  input >> charge_type; break;
 
       //  Error statement, triggered if unknown parameter is specified in config, exits program
-      default: cout << "Error Unknown Parameter Used" << endl; exit(); break;
+      default: cout << "Error Unknown Parameter Used" << endl; exit(0); break;
 
       //#CONFIGPARAM
     }// End of switch
