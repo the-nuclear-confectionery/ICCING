@@ -37,7 +37,6 @@ private:
   //##########################################################################################
   //  Event Input Parameters
   //##########################################################################################
-  double kappa_; //  Used for Qs grid
   double gluon_rad;
   double quark_rad;
   double lambda_;
@@ -45,7 +44,7 @@ private:
   double grid_step;
   double tau_0;
   double e_thresh;
-  double kappa_;
+  double kappa_;  //  Used for Qs grid
   int grid_points;
   string test_;
   uniform_int_distribution<int> get_grid_point;
