@@ -756,11 +756,12 @@ Event IO::ReadEvent(Event event_in)
   //******************************************************************************************
   if (input_type == 0)
   {
-    istringstream event_line;
+    string line;
 
     //  Loop through file and read line by line for full grid
-    while (getline(input, event_line))
+    while (getline(input, line))
     {
+        istringstream event_line(line);
         //  Seperate each value in line and set corresponding coordinate
         //  in initial_energy to value while updating other important variables
         while(event_line >> value)
@@ -823,11 +824,12 @@ Event IO::ReadEvent(Event event_in)
     //  Loop through file until end is reached
     if (input_type == 0)
     {
-      istringstream event_line;
+      string line;
 
       //  Loop through file and read line by line for full grid
-      while (getline(input, event_line))
+      while (getline(input, line))
       {
+          istringstream event_line(line);
           //  Seperate each value in line and set corresponding coordinate
           //  in t_a to value while updating other important variables
           while(event_line >> value)
@@ -876,11 +878,12 @@ Event IO::ReadEvent(Event event_in)
     //  Loop through file until end is reached
     if (input_type == 0)
     {
-      istringstream event_line;
+      string line;
 
       //  Loop through file and read line by line for full grid
-      while (getline(input, event_line))
+      while (getline(input, line))
       {
+          istringstream event_line(line);
           //  Seperate each value in line and set corresponding coordinate
           //  in t_b to value while updating other important variables
           while(event_line >> value)
