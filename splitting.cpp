@@ -254,8 +254,6 @@ Quarks Splitter::SplitSample(Sample sampled_energy)
 
   //  Get flavor of gluon
   set_charge = RollFlavor(sampled_energy.q_s);
-  if (test_ == "GreensFunction")
-  { sampled_energy.q_s = 2; }
 
   //  If there is not enough energy to create 2 quarks of given flavor,
   //  go back to SampleEnergy and find new center point
