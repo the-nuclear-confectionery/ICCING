@@ -5,11 +5,11 @@
 //  Class constructor
 //    Create empty Correlator
 //##########################################################################################
-Correlator::Correlator(string model, double lambda)
+Correlator::Correlator(string model, double lambda, double alphas)
 {
   dipole_model = model;
   lambda_bym = lambda;
-
+  alpha_s = alphas;
   //  Statement that ties chosen correlation function to general corr function variable
   //  Done this way so that the correlation function only has to be determined once
   if (dipole_model == "MV")
@@ -55,6 +55,7 @@ void Correlator::CopyCorrelator(const Correlator &e)
 //  corr = e.corr;
   dipole_model = e.dipole_model;
   lambda_bym = e.lambda_bym;
+  alpha_s = e.alpha_s;
 
   if (dipole_model == "MV")
   {
@@ -86,9 +87,7 @@ Correlator& Correlator::operator= (const Correlator& original)
 //##########################################################################################
 double Correlator::GBWModel(double r, double alpha, double m, double Qs)
 {
-//  m = 0.095;
-//  Qs = 2;
-//  cout << "I am in correct spot " << m << " " << Qs << endl;
+//  double term1 = alpha_s*r*(pow(m, 2)/(4*M_PI))*pow(GeVfm, 2);
   double term1 = r*(pow(m, 2)/(8*pow(M_PI, 2)))*pow(GeVfm, 2);
   double term2 = (1 - exp(-0.25*(pow(alpha, 2) + pow(1 - alpha, 2))*pow(GeVfm*r*Qs, 2)));
   double term3 = (pow(alpha, 2) + pow(1 - alpha, 2))*pow(cyl_bessel_k(1, GeVfm*m*r), 2) + pow(cyl_bessel_k(0, GeVfm*m*r), 2);
@@ -102,6 +101,7 @@ double Correlator::GBWModel(double r, double alpha, double m, double Qs)
 //##########################################################################################
 double Correlator::MVModel(double r, double alpha, double m, double Qs)
 {
+//  double term1 = alpha_s*r*(pow(m, 2)/(4*M_PI))*pow(GeVfm, 2);
   double term1 = r*(pow(m, 2)/(8*pow(M_PI, 2)))*pow(GeVfm, 2);
   double term2 = (1 - exp(-0.25*(pow(alpha, 2)*log(1/(alpha*GeVfm*r*lambda_bym)) + pow(1 - alpha, 2)*log(1/((1 - alpha)*GeVfm*r*lambda_bym)))*pow(GeVfm*r*Qs, 2)));
   double term3 = (pow(alpha, 2) + pow(1 - alpha, 2))*pow(cyl_bessel_k(1, GeVfm*m*r), 2) + pow(cyl_bessel_k(0, GeVfm*m*r), 2);
@@ -121,6 +121,7 @@ double Correlator::FindMaximum(double alpha, double m, double Qs, double lower, 
   double k = (sqrt(5.) - 1.) / 2.;  //  Golden Ratio
   double xL = upper - k * (upper - lower);  //  Value on the Left
   double xR = lower + k * (upper - lower);  //  Value on the Right
+
   //  While the difference between the upper and lower bound are greater than the chosen tolerance, keep searching
   while (upper - lower > tolerance)
   {
