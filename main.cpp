@@ -127,7 +127,7 @@ int main (int argc, char *argv[])
 				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 				// 	If quarks are out of bounds of grid, sample event again
-				if (!successful_density_update) { continue; }
+				if (!successful_density_update) { cout << "Grid is too small. Quarks out of bounds." << endl;	exit(0); }
 
 			}
 
