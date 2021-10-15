@@ -888,7 +888,7 @@ Event IO::ReadEvent(Event event_in)
           //  in t_b to value while updating other important variables
           while(event_line >> value)
           {
-            event_in.t_b[x][y] = value;
+            event_in.t_b[x][y] = kappa_*sqrt(value);
 
             y++;  // increment y (column value)
           }
