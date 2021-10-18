@@ -110,16 +110,16 @@ Sample Event::GetGlue()
 
       //  Sum up q_s of gluon region
       // think about shifting calculation of qs to here
-//      q_s += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist[i][j];
-      q_s += t_b[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
+      q_s += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist[i][j];
+//      q_s += t_b[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
 
       //  Sum up total energy from gluon region
       e_tot += initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
 
-      if(gluon_dist[i][j] == 1)
-      {
+//      if(gluon_dist[i][j] == 1)
+//      {
         total_points++; //  Calculate total for normalization of q_s
-      }
+//      }
     }
   }
 
@@ -334,8 +334,8 @@ void Event::UpdateEnergy(double ratio)
       total_energy += gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
 
       //  Subtract energy proportional to ratio from initial_energy and add it to density[0]
-      initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j] -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
       density[0][x_center - gluon_rad + i][y_center - gluon_rad + j] += gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+      initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j] -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
     }
   }
 }
