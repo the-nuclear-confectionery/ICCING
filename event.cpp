@@ -116,10 +116,10 @@ Sample Event::GetGlue()
       //  Sum up total energy from gluon region
       e_tot += initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
 
-      if(gluon_dist[i][j] == 1)
-      {
+//      if(gluon_dist[i][j] == 1)
+//      {
         total_points++; //  Calculate total for normalization of q_s
-      }
+//      }
     }
   }
 
