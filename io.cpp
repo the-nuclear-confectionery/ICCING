@@ -888,7 +888,7 @@ Event IO::ReadEvent(Event event_in)
           //  in t_b to value while updating other important variables
           while(event_line >> value)
           {
-            event_in.t_b[x][y] = kappa_*sqrt(value);
+            event_in.t_b[x][y] = value;
 
             y++;  // increment y (column value)
           }
@@ -906,7 +906,7 @@ Event IO::ReadEvent(Event event_in)
         y = (int)round((ready + grid_max)/grid_step);
 
         //  Set point in event's initial energy density grid
-        event_in.t_b[x][y] = kappa_*sqrt(value);
+        event_in.t_b[x][y] = value;
         input.ignore(10000, '\n');  //  Ignore rest of line
         if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
       }
