@@ -111,7 +111,6 @@ Sample Event::GetGlue()
       //  Sum up q_s of gluon region
       // think about shifting calculation of qs to here
       q_s += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist[i][j];
-//      q_s += t_b[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
 
       //  Sum up total energy from gluon region
       e_tot += initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
