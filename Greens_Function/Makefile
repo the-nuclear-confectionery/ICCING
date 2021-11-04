@@ -1,2 +1,0 @@
-all:
-	/usr/local/opt/llvm/bin/clang -o AttractorAndInterpolator.exe Main.cpp -Wall -std=c++11 -O3 -lstdc++ -I/usr/local/opt/llvm/include -L/usr/local/opt/llvm/lib -fopenmp `gsl-config --cflags` `gsl-config --libs`

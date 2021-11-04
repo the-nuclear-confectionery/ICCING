@@ -55,9 +55,6 @@ IO::IO(string configFile)
       case rmax:  input >> r_max; break;
       case lambdabym: input >> lambda_bym; break;
 
-      case eosemmitlines:  input >> eos_emmit_lines; break;
-      case eosscol:  input >> eos_s_col; break;
-      case eosecol:  input >> eos_e_col; break;
       case atrento:  input >> a_trento; break;
       case schop:  input >> s_chop; break;
 
@@ -135,9 +132,6 @@ void IO::CopyIO(const IO &e)
   r_max = e.r_max;
   lambda_bym = e.lambda_bym;
 
-  eos_emmit_lines = e.eos_emmit_lines;
-  eos_s_col = e.eos_s_col;
-  eos_e_col = e.eos_e_col;
   a_trento = e.a_trento;
   s_chop = e.s_chop;
 
@@ -210,9 +204,6 @@ void IO::Initialize()
   r_max = 1.0;
   lambda_bym = 0.0;
 
-  eos_emmit_lines = 0.0;
-  eos_s_col = 0;
-  eos_e_col = 0;
   a_trento = 119.0;
   s_chop = 10.0E-20;
 
@@ -256,9 +247,6 @@ void IO::Initialize()
   mapConfigParams["r_max"] = rmax;
   mapConfigParams["lambda_bym"] = lambdabym;
 
-  mapConfigParams["eos_emmit_lines"] = eosemmitlines;
-  mapConfigParams["eos_s_col"] = eosscol;
-  mapConfigParams["eos_e_col"] = eosecol;
   mapConfigParams["a_trento"] = atrento;
   mapConfigParams["s_chop"] = schop;
 
@@ -308,10 +296,7 @@ void IO::OutputConfig(string file_name)
     << "\nr_max " << r_max
     << "\nlambda_bym " << lambda_bym;
   output
-    << "\n\neos_emmit_lines " << eos_emmit_lines
-    << "\neos_s_col " << eos_s_col
-    << "\neos_e_col " << eos_e_col
-    << "\na_trento " << a_trento
+    << "\n\na_trento " << a_trento
     << "\ns_chop " << s_chop;
   output
     << "\ngrid_max " << grid_max
@@ -497,7 +482,6 @@ void IO::InitializeEOS()
   input.open(eos_file);
 
   vector<double> energy;
-  vector<double> temperature;
   vector<double> entropy;
   double value;
 
@@ -514,7 +498,6 @@ void IO::InitializeEOS()
     energy.push_back(value);
 
     input >> value;
-    temperature.push_back(value);
 
     input >> value;
     entropy.push_back(value);

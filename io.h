@@ -67,9 +67,6 @@ private:
     rmax,
     lambdabym,
 
-    eosemmitlines,
-    eosscol,
-    eosecol,
     atrento,
     schop,
 
@@ -123,9 +120,6 @@ private:
   //******************************************************************************************
   //  EOS Config parameters
   //******************************************************************************************
-  int eos_emmit_lines;
-  int eos_s_col;
-  int eos_e_col;
   double a_trento;
   double s_chop;
   vector<SplineSet> eos_interped;
