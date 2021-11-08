@@ -104,7 +104,7 @@ private:
   Sample GetGlue();
 
   //  Gets intigration bounds for density grid manipulations
-  vector<int> GetIntegrationBounds(int size, double raduis);
+  vector<int> GetIntegrationBounds(int size, double raduis, double xcenter, double ycenter);
 
   //  Subtracts energy from initial_energy and adds it to density[0]
   void UpdateEnergy(double ratio);

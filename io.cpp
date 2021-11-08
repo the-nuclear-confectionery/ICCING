@@ -57,11 +57,8 @@ IO::IO(string configFile)
       case rmax:  input >> r_max; break;
       case lambdabym: input >> lambda_bym; break;
 
-      case eosemmitlines:  input >> eos_emmit_lines; break;
-      case eosscol:  input >> eos_s_col; break;
-      case eosecol:  input >> eos_e_col; break;
       case atrento:  input >> a_trento; break;
-      case echop:  input >> e_chop; break;
+      case schop:  input >> s_chop; break;
 
       case backgroundpoints: input >> background_points;  break;
       case greensfunctionspoints: input >> greens_functions_points;  break;
@@ -75,6 +72,9 @@ IO::IO(string configFile)
       case tau0:  input >> tau_0; break;
       case ethresh:  input >> e_thresh; break;
       case chargetype:  input >> charge_type; break;
+
+      //  Error statement, triggered if unknown parameter is specified in config, exits program
+      default: cout << "Error Unknown Parameter Used" << endl; exit(0); break;
 
       //#CONFIGPARAM
     }// End of switch
@@ -94,6 +94,7 @@ IO::IO(string configFile)
 
   grid_points = 2*(grid_max/grid_step); //  Calculate # grid_points
 
+  // Output all values, specified and unspecified, used by run of code
   OutputConfig(output_dir + "run_parameters" + to_string(current_event) + ".dat");
 }// End of Class constructor
 //__________________________________________________________________________________________
@@ -142,11 +143,8 @@ void IO::CopyIO(const IO &e)
   r_max = e.r_max;
   lambda_bym = e.lambda_bym;
 
-  eos_emmit_lines = e.eos_emmit_lines;
-  eos_s_col = e.eos_s_col;
-  eos_e_col = e.eos_e_col;
   a_trento = e.a_trento;
-  e_chop = e.e_chop;
+  s_chop = e.s_chop;
 
   background_points = e.background_points;
   greens_functions_points = e.greens_functions_points;
@@ -204,8 +202,8 @@ void IO::Initialize()
   background_attractor_file = "";
   greens_functions_file = "";
   output_dir = "";
-  input_type = 0;
-  output_type = 0;
+  input_type = 1;
+  output_type = 1;
   seed_ = 0;
   test_ = "";
 
@@ -213,24 +211,21 @@ void IO::Initialize()
   first_event = 0;
   last_event = 0;
   t_a = false;
-  t_b = false;
+  t_b = true;
 
-  kappa_ = 0.0;
-  rad_ = 0.0;
-  qrad_ = 0.0;
-  lambda_ = 0.0;
+  kappa_ = 1.0;
+  rad_ = 0.5;
+  qrad_ = 0.5;
+  lambda_ = 1.0;
 
   dipole_model = "";
-  alpha_s = 0.0;
-  alpha_min = 0.0;
-  r_max = 0.0;
+  alpha_s = 0.3;
+  alpha_min = 0.01;
+  r_max = 1.0;
   lambda_bym = 0.0;
 
-  eos_emmit_lines = 0.0;
-  eos_s_col = 0;
-  eos_e_col = 0;
-  a_trento = 0.0;
-  e_chop = 0.0;
+  a_trento = 119.0;
+  s_chop = 10.0E-20;
 
   background_points = 0;
   greens_functions_points = 0;
@@ -239,10 +234,10 @@ void IO::Initialize()
   eta_over_s = 0.0;
   tau_hydro = 0.0;
 
-  grid_max = 0.0;
-  grid_step = 0.0;
-  tau_0 = 0.0;
-  e_thresh = 0.0;
+  grid_max = 12.0;
+  grid_step = 0.06;
+  tau_0 = 0.6;
+  e_thresh = 0.25;
   charge_type = "BSQ";
   //#CONFIGPARAM
 
@@ -281,11 +276,8 @@ void IO::Initialize()
   mapConfigParams["r_max"] = rmax;
   mapConfigParams["lambda_bym"] = lambdabym;
 
-  mapConfigParams["eos_emmit_lines"] = eosemmitlines;
-  mapConfigParams["eos_s_col"] = eosscol;
-  mapConfigParams["eos_e_col"] = eosecol;
   mapConfigParams["a_trento"] = atrento;
-  mapConfigParams["e_chop"] = echop;
+  mapConfigParams["s_chop"] = schop;
 
   mapConfigParams["background_points"] = backgroundpoints;
   mapConfigParams["greens_functions_points"] = greensfunctionspoints;
@@ -340,11 +332,8 @@ void IO::OutputConfig(string file_name)
     << "\nr_max " << r_max
     << "\nlambda_bym " << lambda_bym;
   output
-    << "\n\neos_emmit_lines " << eos_emmit_lines
-    << "\neos_s_col " << eos_s_col
-    << "\neos_e_col " << eos_e_col
-    << "\na_trento " << a_trento
-    << "\ne_chop " << e_chop;
+    << "\n\na_trento " << a_trento
+    << "\ns_chop " << s_chop;
 
     output
       << "\n\nbackground_attractor_file " << background_attractor_file
@@ -380,6 +369,7 @@ Event IO::InitializeEvent()
   event_in.lambda_ = lambda_;
   event_in.tau_0 = tau_0;
   event_in.e_thresh = e_thresh;
+  event_in.kappa_ = kappa_;
   event_in.grid_max = grid_max;
   event_in.grid_step = grid_step;
   event_in.grid_points = grid_points;
@@ -405,10 +395,12 @@ Event IO::InitializeEvent()
 
   //******************************************************************************************
   //  Initialze Gluon Distribution for sampling
+  // `  Using this simple mask, makes repeat calculations quick and easy since there is no
+  //    need to calculate the circle multiple times.
   //******************************************************************************************
-  event_in.gluon_rad = round(rad_/grid_step); //  Set radius of gluons
+  event_in.gluon_rad = round(rad_/grid_step); //  Set radius of gluons in grid points
   //  Set size of gluon_dist grid used to sample energy from initial_energy
-  event_in.gluon_dist.resize(2*event_in.gluon_rad + 1, vector<int>(2*event_in.gluon_rad + 1, 0));
+  event_in.gluon_dist.resize(2*event_in.gluon_rad + 1, vector<int>(2*event_in.gluon_rad + 1, 0.));
 
   //  Initialize gluon distribution
   int ox = event_in.gluon_rad;  //  x-value of gluon_dist center
@@ -428,6 +420,9 @@ Event IO::InitializeEvent()
 
   //******************************************************************************************
   //  Calculate Quark distribution for depositing densities
+  //    This gaussian weighted mask simplifies and streamlines the deposit of quarks, since
+  //    there is no need to repeat the normalization and profile calculation.
+  //    This mask gets weighted by quark charges and energy for deposit in output.
   //******************************************************************************************
   event_in.quark_rad = round(qrad_/grid_step); //  Set radius of quarks
   //  Set size of quark_dist grid used to create quarks
@@ -460,7 +455,6 @@ Event IO::InitializeEvent()
     {
       point = sqrt(pow(i,2) + pow(j,2));  //  Get distance of point from center of circle
       //  Calculate value of gaussian at point in circle
-//      cout << i + ox_quark << " " << j + oy_quark << endl;
       event_in.quark_dist[i + ox_quark][j + oy_quark] = 1/(normalization*pow(grid_step,2)*tau_0)*exp(-((pow(point,2))/(2*pow(event_in.quark_rad,2))));
     }
 
@@ -501,34 +495,10 @@ Event IO::InitializeEvent()
 //##########################################################################################
 Splitter IO::InitializeSplitter()
 {
-  Splitter init_splitter;
 
-  double value;
-  vector<double> ratio_q_s;
-  vector<vector<double>> ratio_quarks(4);
+  Splitter init_splitter; //  Temp Splitter object used to store splitter specific data
 
-  ifstream input;
-  input.open(quark_input_file);
-
-  while (!input.eof())
-  {
-    input >> value;
-    ratio_q_s.push_back(value);
-
-    for (int i = 0; i < 4; i++)
-    {
-      input >> value;
-      ratio_quarks[i].push_back(value);
-    }
-  }
-
-  init_splitter.flavor_chemistry.resize(4);
-
-  for (int i = 0; i < 4; i++)
-  {
-    init_splitter.flavor_chemistry[i] = CubicSpline(ratio_q_s, ratio_quarks[i]);
-  }
-
+  //  Set variables in splitter with data from configFile
   if (charge_type == "BSQ")  { init_splitter.charge_type = 0;  }
   if (charge_type == "UDS")  { init_splitter.charge_type = 1;  }
   init_splitter.alpha_s = alpha_s;
@@ -540,7 +510,44 @@ Splitter IO::InitializeSplitter()
   init_splitter.test_ = test_;
   init_splitter.output_dir = output_dir;
 
-  init_splitter.Model_Correlator = Correlator(dipole_model, lambda_bym);
+  //  Initialization of correlator function with correct dipole_model
+  init_splitter.Model_Correlator = Correlator(dipole_model, lambda_bym, alpha_s);
+
+  //******************************************************************************************
+  //  Read in quark chemistry file for use in splitting probabilities
+  //    This is an interpolation function used to get the splitting probability for a given
+  //    quark and q_s.
+  //******************************************************************************************
+  double value;
+  vector<double> ratio_q_s;
+  vector<vector<double>> ratio_quarks(4); // 0 = up, 1 = down, 2 = strange, 3 = charm
+  init_splitter.flavor_chemistry.resize(4);
+
+  ifstream input;
+  input.open(quark_input_file);
+
+  //  Read each line of file and add flavor probabilities for given q_s at specified index
+  while (!input.eof())
+  {
+    //  Read in q_s value and add to the end of q_s list
+    input >> value;
+    ratio_q_s.push_back(value);
+
+    //  Read in the 4 different flavor probabilities and add them to the end of their
+    //  respective lists
+    for (int i = 0; i < 4; i++)
+    {
+      input >> value;
+      ratio_quarks[i].push_back(value);
+    }
+  }
+
+  //  Initialize Cubic Spline interpolators for each set of flavor with the same list of q_s
+  for (int i = 0; i < 4; i++)
+  {
+    init_splitter.flavor_chemistry[i] = CubicSpline(ratio_q_s, ratio_quarks[i]);
+  }
+
 
   return init_splitter;
 }
@@ -553,7 +560,6 @@ Splitter IO::InitializeSplitter()
 //##########################################################################################
 void IO::InitializeEOS()
 {
-  //  Output file stream
   ifstream input;
   input.open(eos_file);
 
@@ -565,7 +571,8 @@ void IO::InitializeEOS()
   input >> length;
 
   //******************************************************************************************
-  //  Loop through file until end is reached
+  //  For each line of EOS file add correlated energy, temperature, and entropy values to end
+  //  of respective list
   //******************************************************************************************
   for (int i = 0; i < length; i++)
   {
@@ -582,6 +589,7 @@ void IO::InitializeEOS()
 
   input.close();
 
+  //  Initialze Cubic Spline for use in converting initial condition from entropy to energy
   eos_interped = CubicSpline(entropy, energy);
 }
 //__________________________________________________________________________________________
@@ -592,25 +600,35 @@ void IO::InitializeEOS()
 //##########################################################################################
 void IO::ConvertEvent(vector<vector<double>> &input, double &total)
 {
+  SplineSet range;
+  double entropy, energy;
 
+  //  For each point in grid convert from entropy to energy
   for (int i = 0; i < input.size(); i++)
   {
     for (int j = 0; j < input[i].size(); j++)
     {
+      //  If point is valued, do calculation
       if (input[i][j] > 0)
-  {    SplineSet range;
-      double entropy, energy;
-    entropy = a_trento*input[i][j];
-    range = FindRange(eos_interped, entropy);
+      {
+        //  Multiply by scaling factor, this is because Trento uses thickness Functions
+        //  which are not entropy but proportional to entropy
+        entropy = a_trento*input[i][j];
 
-    if (entropy > e_chop)
-    {
-    input[i][j] = InterpolateValue(range, entropy);
-    total += input[i][j];
-    }
-    else
-    {input[i][j] = 0;}
-  }
+        //  If entropy is above specified entropy cuttoff then convert to energy,
+        //  otherwise set to 0 since these points won't be seen by hydro anyway
+        if (entropy > s_chop)
+        {
+          //  Find range where entropy lies in eos
+          range = FindRange(eos_interped, entropy);
+
+          //  Make conversion from entropy to energy and add to total tracker
+          input[i][j] = InterpolateValue(range, entropy);
+          total += input[i][j];
+        }
+        else
+        { input[i][j] = 0;  }
+      }
     }
   }
 }
@@ -790,34 +808,65 @@ Event IO::ReadEvent(Event event_in)
   input.open(trento_input_dir + "ic" + to_string(current_event) + ".dat");
 
   // Loop input variables
-  int x, y;
-  double readx, ready, value, numpoints = 0;
+  int x = 0, y = 0;
+  double readx,ready,value,numpoints=0;
 
-  //  Ignore first line of input file (Trento specific, needs to be changed)
+  //  Ignore first line of input file
   input.ignore(10000, '\n');
 
   //******************************************************************************************
   //  Loop through file until end is reached
+  //    If input_type = 0, then read in file as full grid with filler 0's, else
+  //    if input_type = 1, then read in file as sparse (only valued points) format
   //******************************************************************************************
-  while (!input.eof())
+  if (input_type == 0)
   {
-      //  Read in point from energy density
-      input >> readx >> ready >> value;
+    string line;
 
-      //  Take physical point and convert x and y values into grid indicies
-      x = (int)round((readx + grid_max)/grid_step);
-      y = (int)round((ready + grid_max)/grid_step);
-      event_in.valued_points.push_back({{x},{y}});
+    //  Loop through file and read line by line for full grid
+    while (getline(input, line))
+    {
+        istringstream event_line(line);
+        //  Seperate each value in line and set corresponding coordinate
+        //  in initial_energy to value while updating other important variables
+        while(event_line >> value)
+        {
+          event_in.valued_points.push_back({{x},{y}});
 
-      //  Set point in event's initial energy density grid
-      event_in.initial_energy[x][y] = value;
-      event_in.total_initial_entropy += value;
-      numpoints++;
+          event_in.initial_energy[x][y] = value;
+          event_in.total_initial_entropy += value;
+          if(value > 0) { numpoints++;  }
 
-      input.ignore(10000, '\n');  //  Ignore rest of line
-      if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
+          // increment y (column value)
+          y++;
+        }
 
+        //  increment x (row value)
+        x++;
+      }
   }
+  else if (input_type == 1)
+  {
+    while (!input.eof())
+    {
+        //  Read in point from energy density
+        input >> readx >> ready >> value;
+
+        //  Take physical point and convert x and y values into grid indicies
+        x = (int)round((readx + grid_max)/grid_step);
+        y = (int)round((ready + grid_max)/grid_step);
+        event_in.valued_points.push_back({{x},{y}});
+
+        //  Set point in event's initial energy density grid
+        event_in.initial_energy[x][y] = value;
+        event_in.total_initial_entropy += value;
+        numpoints++;
+
+        input.ignore(10000, '\n');  //  Ignore rest of line
+        if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
+    }
+  }
+
   input.close();  //  Close input stream
 
   ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
@@ -862,25 +911,47 @@ Event IO::ReadEvent(Event event_in)
     //  Initialize t_a grid to 0 with dimensions grid_points + 1
     event_in.t_a.resize(grid_points + 1, vector<double>(grid_points + 1, 0));
 
-    //  Ignore first line of input file (Trento specific, needs to be changed)
+    //  Ignore first line of input file
     input.ignore(10000, '\n');
 
     //  Loop through file until end is reached
-    while (!input.eof())
+    if (input_type == 0)
     {
-        //  Read in point from energy density
-        input >> readx >> ready >> value;
+      string line;
 
-        //  Take physical point and convert x and y values into grid indicies
-        x = (int)round((readx + grid_max)/grid_step);
-        y = (int)round((ready + grid_max)/grid_step);
+      //  Loop through file and read line by line for full grid
+      while (getline(input, line))
+      {
+          istringstream event_line(line);
+          //  Seperate each value in line and set corresponding coordinate
+          //  in t_a to value while updating other important variables
+          while(event_line >> value)
+          {
+            event_in.t_a[x][y] = value;
 
-        //  Set point in event's initial energy density grid
-        event_in.t_a[x][y] = kappa_*sqrt(value);
-
-        input.ignore(10000, '\n');  //  Ignore rest of line
-        if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
+            y++;  // increment y (column value)
+          }
+          x++;  //  increment x (row value)
+        }
     }
+    else if (input_type == 1)
+    {
+      while (!input.eof())
+      {
+          //  Read in point from energy density
+          input >> readx >> ready >> value;
+
+          //  Take physical point and convert x and y values into grid indicies
+          x = (int)round((readx + grid_max)/grid_step);
+          y = (int)round((ready + grid_max)/grid_step);
+
+          //  Set point in event's initial energy density grid
+          event_in.t_a[x][y] = value;
+
+          input.ignore(10000, '\n');  //  Ignore rest of line
+          if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
+        }
+      }
     input.close();  //  Close input stream
   }
 
@@ -894,26 +965,47 @@ Event IO::ReadEvent(Event event_in)
     //  Initialize t_b grid to 0 with dimensions grid_points + 1
     event_in.t_b.resize(grid_points + 1, vector<double>(grid_points + 1, 0));
 
-    //  Ignore first line of input file (Trento specific, needs to be changed)
+    //  Ignore first line of input file
     input.ignore(10000, '\n');
 
     //  Loop through file until end is reached
-    while (!input.eof())
+    if (input_type == 0)
     {
-      //  Read in point from energy density
-      input >> readx >> ready >> value;
-      //  Take physical point and convert x and y values into grid indicies
-      x = (int)round((readx + grid_max)/grid_step);
-      y = (int)round((ready + grid_max)/grid_step);
+      string line;
 
-      //  Set point in event's initial energy density grid
-      event_in.t_b[x][y] = kappa_*sqrt(value);
-      input.ignore(10000, '\n');  //  Ignore rest of line
-      if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
+      //  Loop through file and read line by line for full grid
+      while (getline(input, line))
+      {
+          istringstream event_line(line);
+          //  Seperate each value in line and set corresponding coordinate
+          //  in t_b to value while updating other important variables
+          while(event_line >> value)
+          {
+            event_in.t_b[x][y] = value;
+
+            y++;  // increment y (column value)
+          }
+          x++;  //  increment x (row value)
+        }
+    }
+    else if (input_type == 1)
+    {
+      while (!input.eof())
+      {
+        //  Read in point from energy density
+        input >> readx >> ready >> value;
+        //  Take physical point and convert x and y values into grid indicies
+        x = (int)round((readx + grid_max)/grid_step);
+        y = (int)round((ready + grid_max)/grid_step);
+
+        //  Set point in event's initial energy density grid
+        event_in.t_b[x][y] = value;
+        input.ignore(10000, '\n');  //  Ignore rest of line
+        if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
+      }
     }
     input.close();  //  Close input stream
   }
-//  cout << "Finished reading event" << endl;
 
   return event_in;  //  Return event with data
 }
@@ -926,25 +1018,24 @@ Event IO::ReadEvent(Event event_in)
 //##########################################################################################
 void IO::WriteEvent(Event event)
 {
-  vector<vector<double>> output_energy;
 
   //******************************************************************************************
   //  Output Full Density Grids
   //******************************************************************************************
   if (output_type == 0)
   {
-    output_energy = event.initial_energy;
-    OutputFullDensityGrids(output_energy, output_dir + "ic_converted" + to_string(current_event) + ".dat");
+    OutputFullDensityGrids(event.density[0], output_dir + "energy_density_" + to_string(current_event) + ".dat");
+    OutputFullDensityGrids(event.density[1], output_dir + "baryon_density_" + to_string(current_event) + ".dat");
+    OutputFullDensityGrids(event.density[2], output_dir + "strange_density_" + to_string(current_event) + ".dat");
+    OutputFullDensityGrids(event.density[3], output_dir + "charge_density_" + to_string(current_event) + ".dat");
 
     if (t_a)  //  Output T_a if flag is true
     {
-      output_energy = event.t_a;
-      OutputFullDensityGrids(output_energy, output_dir + "ta" + to_string(current_event) + ".dat");
+      OutputFullDensityGrids(event.t_a, output_dir + "ta" + to_string(current_event) + ".dat");
     }
     if (t_b)  //  Output T_b if flag is true
     {
-      output_energy = event.t_b;
-      OutputFullDensityGrids(output_energy, output_dir + "tb" + to_string(current_event) + ".dat");
+      OutputFullDensityGrids(event.t_b, output_dir + "tb" + to_string(current_event) + ".dat");
     }
   }
   //******************************************************************************************
@@ -952,20 +1043,17 @@ void IO::WriteEvent(Event event)
   //******************************************************************************************
   else if (output_type == 1)
   {
-    output_energy = event.initial_energy;
-    OutputSparseDensityGrids(output_energy, output_dir + "ic_converted" + to_string(current_event) + ".dat");
+    OutputSparseDensityGrids(event.initial_energy, output_dir + "ic_converted" + to_string(current_event) + ".dat");
 
     OutputSparseDensityGrids(event.density, event.total_energy, output_dir + "densities" + to_string(current_event) + ".dat");
 
     if (t_a)  //  Output T_a if flag is true
     {
-      output_energy = event.t_a;
-      OutputSparseDensityGrids(output_energy, output_dir + "ta" + to_string(current_event) + ".dat");
+      OutputSparseDensityGrids(event.t_a, output_dir + "ta" + to_string(current_event) + ".dat");
     }
     if (t_b)  //  Output T_b if flag is true
     {
-      output_energy = event.t_b;
-      OutputSparseDensityGrids(output_energy, output_dir + "tb" + to_string(current_event) + ".dat");
+      OutputSparseDensityGrids(event.t_b, output_dir + "ta" + to_string(current_event) + ".dat");
     }
   }
 
