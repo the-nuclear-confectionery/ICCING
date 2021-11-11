@@ -389,6 +389,7 @@ Event IO::InitializeEvent()
   if (test_ == "GreensFunction")
   {
     event_in.tau_hydro = tau_hydro;
+    event_in.eta_over_s = eta_over_s;
     event_in.w_tilde.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
     event_in.evolution = GreensFunctions(background_attractor_file, greens_functions_file, background_points, greens_functions_points, greens_functions_chuncks, c_infinity, eta_over_s, tau_hydro);
   }

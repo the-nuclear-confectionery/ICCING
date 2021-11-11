@@ -76,6 +76,7 @@ void Event::CopyEvent(const Event &e)
   evolution = e.evolution;
   w_tilde = e.w_tilde;
   tau_hydro = e.tau_hydro;
+  eta_over_s = e.eta_over_s;
   greens_rad = e.greens_rad;
   greens_dist = e.greens_dist;
   initial_energy_backup = e.initial_energy_backup;
@@ -300,6 +301,15 @@ bool Event::UpdateDensity(Quarks quark_density)
         total_initial_energy -= energy;
         total_energy += energy;
         initial_energy[temp_x][temp_y] -= energy;
+
+        // This removes the gluon from the final state which was chosen to split and is now being redistributed
+        if (test_ == "GreensFunction")
+        {
+          double evolved_energy = 0, wtilde = 0;
+          evolution.GetValues(tau_0*energy, tau_hydro, eta_over_s, evolved_energy, wtilde);
+
+          density[0][temp_x][temp_y] -= evolved_energy;
+        }
       }
     }
 

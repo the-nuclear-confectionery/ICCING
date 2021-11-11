@@ -87,6 +87,7 @@ private:
   GreensFunctions evolution;
   vector<vector<double>> w_tilde;
   double tau_hydro;
+  double eta_over_s;
   double greens_rad;
   vector<vector<int>> greens_dist;  //  Used to distribute using greens functions
   vector<vector<double>> initial_energy_backup;  //  Input Energy density backup for use with greens functions
