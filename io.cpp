@@ -21,7 +21,7 @@ IO::IO(string configFile)
   while (!input.eof())
 	{
     input >> var_type;  //  Read parameter type
-
+cout << var_type << endl;
     //  Switch through the possible parameter types
     //  uses var_type as key to map then reads value to class variable
     switch(mapConfigParams[var_type])
@@ -29,7 +29,7 @@ IO::IO(string configFile)
       //  case ConfigParam (Does var_type map to ConfigParam?)
       //  input >> input_var (Read in value of var_type)
       //  break; (Stop checking switch and move on)
-      case trentoinputdir: input >> trento_input_dir; break;
+      case trentoinputdir: input >> trento_input_dir; cout << trento_input_dir << endl; break;
       case quarkinputfile: input >> quark_input_file; break;
       case eosfile: input >> eos_file; break;
       case backgroundattractorfile: input >> background_attractor_file; break;
@@ -854,7 +854,7 @@ cout << trento_input_dir + "ic" + to_string(current_event) + ".dat" << endl;
     {
         //  Read in point from energy density
         input >> readx >> ready >> value;
-cout << readx << " " << ready << " " << value << endl;
+//cout << readx << " " << ready << " " << value << endl;
         //  Take physical point and convert x and y values into grid indicies
         x = (int)round((readx + grid_max)/grid_step);
         y = (int)round((ready + grid_max)/grid_step);
