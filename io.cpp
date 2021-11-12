@@ -1054,7 +1054,7 @@ void IO::WriteEvent(Event event)
     }
     if (t_b)  //  Output T_b if flag is true
     {
-      OutputSparseDensityGrids(event.t_b, output_dir + "ta" + to_string(current_event) + ".dat");
+      OutputSparseDensityGrids(event.t_b, output_dir + "tb" + to_string(current_event) + ".dat");
     }
   }
 
