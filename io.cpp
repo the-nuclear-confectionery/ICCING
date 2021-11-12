@@ -810,10 +810,11 @@ Event IO::ReadEvent(Event event_in)
 
   // Loop input variables
   int x = 0, y = 0;
-  double readx,ready,value,numpoints=0;
+  double readx, ready, value, numpoints = 0;
 
   //  Ignore first line of input file
   input.ignore(10000, '\n');
+  cout << "track 1" << endl;
 
   //******************************************************************************************
   //  Loop through file until end is reached
@@ -845,6 +846,7 @@ Event IO::ReadEvent(Event event_in)
         //  increment x (row value)
         x++;
       }
+      cout << "track 2" << endl;
   }
   else if (input_type == 1)
   {
@@ -866,12 +868,15 @@ Event IO::ReadEvent(Event event_in)
         input.ignore(10000, '\n');  //  Ignore rest of line
         if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
     }
+    cout << "track 3" << endl;
+
   }
 
   input.close();  //  Close input stream
 
   ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
   event_in.total_initial_entropy = a_trento*event_in.total_initial_entropy/numpoints;
+  cout << "track 4" << endl;
 
     if (test_ == "GreensFunction")
     {
@@ -897,6 +902,7 @@ Event IO::ReadEvent(Event event_in)
 //        cout << "Evolved energy " << event_in.density[0][x][y] << " Original energy " << tau_0*event_in.initial_energy[x][y] << " w_tilde " << event_in.w_tilde[x][y] << endl;
       //  exit(0);
       }
+      cout << "track 5" << endl;
 
       event_in.final_energy_backup = event_in.density[0];
 //      cout << "Finished evolving event" << endl;
