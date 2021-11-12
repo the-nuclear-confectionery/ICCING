@@ -73,6 +73,7 @@ int main (int argc, char *argv[])
 
 	//	Read in and process the equation of state file
 	inOut.InitializeEOS();
+	cout << "try 2" << endl;
 
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	// 	This is a test that records the mass of quark pairs and their relevent Qs
@@ -89,6 +90,7 @@ int main (int argc, char *argv[])
 		//	Read next event using initializedEvent as base
 		currentEvent = inOut.ReadEvent(initializedEvent);
 		//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		cout << "try 3" << endl;
 
 			//******************************************************************************************
 	  	//  Event Loop, Process event until initial energy density is empty
@@ -104,6 +106,7 @@ int main (int argc, char *argv[])
 				//	Get an energy sample from event
 				currentSample = currentEvent.SampleEnergy();
 				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				cout << "try 4" << endl;
 
 				// If initial energy density is less than e_thresh, continue event loop and find new point
 				if (currentSample.q_s == -100){	continue;	}
@@ -112,6 +115,7 @@ int main (int argc, char *argv[])
 				//	Generate Quarks from event energy sample
 				currentQuarks = machine.SplitSample(currentSample);
 				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				cout << "try 5" << endl;
 
 				//	If there was not enough energy to create 2 quarks of given flavor mass, sample event again
 				if (currentQuarks.GetEnergyFraction() == -1)	{	continue;	}
@@ -125,6 +129,7 @@ int main (int argc, char *argv[])
 				//	Update Density grids with sampled quarks
 				successful_density_update = currentEvent.UpdateDensity(currentQuarks);
 				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+				cout << "try 6" << endl;
 
 				// 	If quarks are out of bounds of grid, sample event again
 				if (!successful_density_update) { cout << "Grid is too small. Quarks out of bounds." << endl;	exit(0); }
