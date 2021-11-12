@@ -125,7 +125,7 @@ void IO::CopyIO(const IO &e)
   output_type = e.output_type;
   seed_ = e.seed_;
   test_ = e.test_;
-
+cout << "test 1 " << trento_input_dir << endl;
   event_label = e.event_label;
   first_event = e.first_event;
   last_event = e.last_event;
@@ -206,6 +206,7 @@ void IO::Initialize()
   output_type = 1;
   seed_ = 0;
   test_ = "";
+  cout << "test 2 " << trento_input_dir << endl;
 
   event_label = "";
   first_event = 0;
@@ -311,6 +312,7 @@ void IO::OutputConfig(string file_name)
     << "\noutput_type " << output_type
     << "\nseed_ " << seed_
     << "\ntest_ " << test_;
+    cout << "test 3 " << trento_input_dir << endl;
 
   output
     << "\n\nevent_label " << event_label
@@ -485,7 +487,8 @@ Event IO::InitializeEvent()
     }
 
   }
- cout << "try 1" << endl;
+  cout << "test 4 " << trento_input_dir << endl;
+
   return event_in;
 }
 //__________________________________________________________________________________________
@@ -804,6 +807,8 @@ void IO::OutputQuarkCounts(double total_entropy, int gluon, int up, int down, in
 //##########################################################################################
 Event IO::ReadEvent(Event event_in)
 {
+  cout << "test 5 " << trento_input_dir << endl;
+
   //  Input file stream
   ifstream input;
   input.open(trento_input_dir + "ic" + to_string(current_event) + ".dat");
