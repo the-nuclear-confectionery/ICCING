@@ -807,7 +807,7 @@ Event IO::ReadEvent(Event event_in)
   //  Input file stream
   ifstream input;
   input.open(trento_input_dir + "ic" + to_string(current_event) + ".dat");
-
+cout << trento_input_dir + "ic" + to_string(current_event) + ".dat" << endl;
   // Loop input variables
   int x = 0, y = 0;
   double readx, ready, value, numpoints = 0;
