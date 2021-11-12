@@ -21,7 +21,7 @@ IO::IO(string configFile)
   while (!input.eof())
 	{
     input >> var_type;  //  Read parameter type
-cout << var_type << endl;
+
     //  Switch through the possible parameter types
     //  uses var_type as key to map then reads value to class variable
     switch(mapConfigParams[var_type])
@@ -29,7 +29,7 @@ cout << var_type << endl;
       //  case ConfigParam (Does var_type map to ConfigParam?)
       //  input >> input_var (Read in value of var_type)
       //  break; (Stop checking switch and move on)
-      case trentoinputdir: input >> trento_input_dir; cout << trento_input_dir << endl; break;
+      case trentoinputdir: input >> trento_input_dir; break;
       case quarkinputfile: input >> quark_input_file; break;
       case eosfile: input >> eos_file; break;
       case backgroundattractorfile: input >> background_attractor_file; break;
@@ -93,7 +93,6 @@ cout << var_type << endl;
   current_event = first_event;  //  Set current_event to first_event
 
   grid_points = 2*(grid_max/grid_step); //  Calculate # grid_points
-  cout << "test 0 " << trento_input_dir << endl;
 
   // Output all values, specified and unspecified, used by run of code
   OutputConfig(output_dir + "run_parameters" + to_string(current_event) + ".dat");
@@ -126,7 +125,7 @@ void IO::CopyIO(const IO &e)
   output_type = e.output_type;
   seed_ = e.seed_;
   test_ = e.test_;
-cout << "test 1 " << trento_input_dir << endl;
+
   event_label = e.event_label;
   first_event = e.first_event;
   last_event = e.last_event;
@@ -207,7 +206,6 @@ void IO::Initialize()
   output_type = 1;
   seed_ = 0;
   test_ = "";
-  cout << "test 2 " << trento_input_dir << endl;
 
   event_label = "";
   first_event = 0;
@@ -313,7 +311,6 @@ void IO::OutputConfig(string file_name)
     << "\noutput_type " << output_type
     << "\nseed_ " << seed_
     << "\ntest_ " << test_;
-    cout << "test 3 " << trento_input_dir << endl;
 
   output
     << "\n\nevent_label " << event_label
@@ -488,7 +485,6 @@ Event IO::InitializeEvent()
     }
 
   }
-  cout << "test 4 " << trento_input_dir << endl;
 
   return event_in;
 }
@@ -808,8 +804,6 @@ void IO::OutputQuarkCounts(double total_entropy, int gluon, int up, int down, in
 //##########################################################################################
 Event IO::ReadEvent(Event event_in)
 {
-  cout << "test 5 " << trento_input_dir << endl;
-
   //  Input file stream
   ifstream input;
   input.open(trento_input_dir + "ic" + to_string(current_event) + ".dat");
@@ -820,7 +814,6 @@ cout << trento_input_dir + "ic" + to_string(current_event) + ".dat" << endl;
 
   //  Ignore first line of input file
   input.ignore(10000, '\n');
-  cout << "track 1" << endl;
 
   //******************************************************************************************
   //  Loop through file until end is reached
@@ -852,7 +845,6 @@ cout << trento_input_dir + "ic" + to_string(current_event) + ".dat" << endl;
         //  increment x (row value)
         x++;
       }
-      cout << "track 2" << endl;
   }
   else if (input_type == 1)
   {
@@ -860,7 +852,7 @@ cout << trento_input_dir + "ic" + to_string(current_event) + ".dat" << endl;
     {
         //  Read in point from energy density
         input >> readx >> ready >> value;
-//cout << readx << " " << ready << " " << value << endl;
+
         //  Take physical point and convert x and y values into grid indicies
         x = (int)round((readx + grid_max)/grid_step);
         y = (int)round((ready + grid_max)/grid_step);
@@ -874,15 +866,12 @@ cout << trento_input_dir + "ic" + to_string(current_event) + ".dat" << endl;
         input.ignore(10000, '\n');  //  Ignore rest of line
         if (input.peek() == '\n') {break;}  //  Saftey check for empty line at end of file
     }
-    cout << "track 3" << endl;
-
   }
 
   input.close();  //  Close input stream
 
   ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
   event_in.total_initial_entropy = a_trento*event_in.total_initial_entropy/numpoints;
-  cout << "track 4" << endl;
 
     if (test_ == "GreensFunction")
     {
@@ -908,7 +897,6 @@ cout << trento_input_dir + "ic" + to_string(current_event) + ".dat" << endl;
 //        cout << "Evolved energy " << event_in.density[0][x][y] << " Original energy " << tau_0*event_in.initial_energy[x][y] << " w_tilde " << event_in.w_tilde[x][y] << endl;
       //  exit(0);
       }
-      cout << "track 5" << endl;
 
       event_in.final_energy_backup = event_in.density[0];
 //      cout << "Finished evolving event" << endl;

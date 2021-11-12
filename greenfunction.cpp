@@ -309,7 +309,6 @@ void GreensFunctions::SetupGreensFunctions()
 
   delete[] FssValues;
   delete[] GssValues;
-cout << "test 1"<<endl;
 
 }
 //__________________________________________________________________________________________
@@ -320,7 +319,6 @@ cout << "test 1"<<endl;
 //##########################################################################################
 double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator, double xValue, double yValue, gsl_interp_accel* xAccelerator, gsl_interp_accel* yAccelerator, double xMinValue, double xMaxValue, double yMinValue, double yMaxValue)
 {
-  cout << "test 2"<<endl;
   if (yValue > yMaxValue)
   {
     return 0.0;
@@ -399,7 +397,7 @@ double GreensFunctions::EVALUATE_GSL_INTERPOLATOR_2D(gsl_spline2d* Interpolator,
 double GreensFunctions::FssScalingCurve(double wT, double dXdT)
 {
   int tID = omp_get_thread_num();
-cout << "test 3"<<endl;
+
   if (dXdT < dXdTMin)
   {
     if (wT < wTMin)
@@ -443,7 +441,7 @@ double GreensFunctions::Fss(double wT, double dXdT)
 double GreensFunctions::GssScalingCurve(double wT, double dXdT)
 {
   int tID = omp_get_thread_num();
-cout << "test 4"<<endl;
+
   if (dXdT < dXdTMin)
   {
     if (wT < wTMin)
@@ -495,7 +493,6 @@ double GreensFunctions::E(double wT)
 
 //  cout << "In e wt " << wT << endl;
 
-cout << "test 5"<<endl;
   if (wT < wTMin)
   {
     return 1.0/c_infinity*pow(wT, 4.0/9.0);
@@ -519,7 +516,6 @@ cout << "test 5"<<endl;
 void GreensFunctions::GetValues(double eTau0, double Tau, double etaOverS, double &e, double &wTilde)
 {
 
-  cout << "In get values" << endl;
 //cout << "c_infinity " << c_infinity << endl;
   // DETERMINE (e(tau) tau^{4/3})_{infty} //
   double eTau43Infty = pow(4.0*M_PI*etaOverS, 4.0/9.0)*pow(M_PI*M_PI*nuEff/30.0, 1.0/9.0)*c_infinity*pow(eTau0, 8.0/9.0);
