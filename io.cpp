@@ -93,6 +93,7 @@ cout << var_type << endl;
   current_event = first_event;  //  Set current_event to first_event
 
   grid_points = 2*(grid_max/grid_step); //  Calculate # grid_points
+  cout << "test 0 " << trento_input_dir << endl;
 
   // Output all values, specified and unspecified, used by run of code
   OutputConfig(output_dir + "run_parameters" + to_string(current_event) + ".dat");
