@@ -243,7 +243,7 @@ void GreensFunctions::SetupGreensFunctions()
       InStream >> Gstd;
       InStream >> Gstr;
 
-      cout << wT << " " << dXdT << " " << Fss << " " << Gss << endl;
+//      cout << wT << " " << dXdT << " " << Fss << " " << Gss << endl;
       // WRITE EACH POSITION-STEP ONCE INTO dXdTValues //
       dXdTValues[xCounter] = dXdT;
 
@@ -273,7 +273,7 @@ void GreensFunctions::SetupGreensFunctions()
 
   }
 
-  cout << "setting grid values Greens Function" << endl;
+//  cout << "setting grid values Greens Function" << endl;
 
   // SET GRID VALUES FOR INTERPOLATION //
   int FIndex = 0;
