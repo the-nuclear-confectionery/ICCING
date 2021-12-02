@@ -496,6 +496,10 @@ vector<int> Event::GetIntegrationBounds(int size, double raduis, double xcenter,
 //##########################################################################################
 bool Event::IsEventDone()
 {
+
+  if (test_ == "GreensFunction" && number_strange == 1)
+  { return true;  }
+
   if (test_ == "SChop")
   {
     for (int i = 0; i < valued_points.size(); i++)
