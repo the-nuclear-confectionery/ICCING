@@ -497,8 +497,8 @@ vector<int> Event::GetIntegrationBounds(int size, double raduis, double xcenter,
 bool Event::IsEventDone()
 {
 
-  if (test_ == "GreensFunction" && number_strange == 1)
-  { return true;  }
+//  if (test_ == "GreensFunction" && number_strange == 1)
+//  { return true;  }
 
   if (test_ == "SChop")
   {
