@@ -138,6 +138,36 @@ Sample Event::GetGlue()
 }
 //__________________________________________________________________________________________
 
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Select energy of gluon
+//##########################################################################################
+double Event::GetOriginalEnergy()
+{
+  double e_tot;
+
+  //  Get bounds of gluon using center point as defined by SampleEnergy
+  //    Makes sure calculations are only done on points in initial_energy
+  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x_center, y_center);
+
+  //  Loop over gluon_dist using gluon_bounds
+  for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
+  {
+    for (int j = gluon_bounds[1]; j < gluon_bounds[3]; j++)
+    {
+      //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
+
+      //  Sum up total energy from gluon region
+      e_tot += initial_energy_backup[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
+    }
+  }
+
+  //  Set normalized q_s and e_tot for output
+  e_tot = pow(grid_step,2)*tau_0*e_tot;
+
+  return e_tot;
+}
+//__________________________________________________________________________________________
 
 //__________________________________________________________________________________________
 //##########################################################################################
@@ -230,6 +260,8 @@ bool Event::UpdateDensity(Quarks quark_density)
     int temp_x;
     int temp_y;
     double energy;
+    double original_energy;
+
     //******************************************************************************************
     //  Calculate centers of Quark and Anti-Quark
     //******************************************************************************************
@@ -276,14 +308,29 @@ bool Event::UpdateDensity(Quarks quark_density)
       { return false; }
     }
 
+
+    original_energy = GetOriginalEnergy();
+
     if (quark_density.GetCharge()[0] == 0.0023)
-    { number_up++; }
+    {
+      if (original_energy < up_chop) {  return true;  }
+      number_up++;
+    }
     else if (quark_density.GetCharge()[0] == 0.0048)
-    { number_down++; }
+    {
+      if (original_energy < down_chop) {  return true;  }
+      number_down++;
+    }
     else if (quark_density.GetCharge()[0] == 0.095)
-    { number_strange++; }
+    {
+      if (original_energy < strange_chop) {  return true;  }
+      number_strange++;
+    }
     else if (quark_density.GetCharge()[0] == 1.29)
-    { number_charm++; }
+    {
+      if (original_energy < charm_chop) {  return true;  }
+      number_charm++;
+    }
 
     //******************************************************************************************
     //  Update Total energies and initial_energy

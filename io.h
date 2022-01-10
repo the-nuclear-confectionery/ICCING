@@ -71,6 +71,10 @@ private:
 
     atrento,
     schop,
+    upchop,
+    downchop,
+    strangechop,
+    charmchop,
 
     gridmax,
     gridstep,
@@ -133,6 +137,10 @@ private:
   //******************************************************************************************
   double a_trento;
   double s_chop;
+  double up_chop;
+  double down_chop;
+  double strange_chop;
+  double charm_chop;
   vector<SplineSet> eos_interped;
 
   //******************************************************************************************

@@ -48,6 +48,10 @@ private:
   double e_thresh;
   int grid_points;
   string test_;
+  double up_chop;
+  double down_chop;
+  double strange_chop;
+  double charm_chop;
   uniform_int_distribution<int> get_grid_point;
   //__________________________________________________________________________________________
 
@@ -103,6 +107,9 @@ private:
 
   //  Select energy of gluon
   Sample GetGlue();
+
+  //  Select energy of area
+  double GetOriginalEnergy();
 
   //  Gets intigration bounds for density grid manipulations
   vector<int> GetIntegrationBounds(int size, double raduis, double xcenter, double ycenter);

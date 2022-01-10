@@ -59,6 +59,10 @@ IO::IO(string configFile)
 
       case atrento:  input >> a_trento; break;
       case schop:  input >> s_chop; break;
+      case upchop:  input >> up_chop; break;
+      case downchop:  input >> down_chop; break;
+      case strangechop:  input >> strange_chop; break;
+      case charmchop:  input >> charm_chop; break;
 
       case backgroundpoints: input >> background_points;  break;
       case greensfunctionspoints: input >> greens_functions_points;  break;
@@ -145,6 +149,10 @@ void IO::CopyIO(const IO &e)
 
   a_trento = e.a_trento;
   s_chop = e.s_chop;
+  up_chop = e.up_chop;
+  down_chop = e.down_chop;
+  strange_chop = e.strange_chop;
+  charm_chop = e.charm_chop;
 
   background_points = e.background_points;
   greens_functions_points = e.greens_functions_points;
@@ -226,6 +234,10 @@ void IO::Initialize()
 
   a_trento = 119.0;
   s_chop = 10.0E-20;
+  up_chop = 0.0;
+  down_chop = 0.0;
+  strange_chop = 0.0;
+  charm_chop = 0.0;
 
   background_points = 0;
   greens_functions_points = 0;
@@ -278,6 +290,10 @@ void IO::Initialize()
 
   mapConfigParams["a_trento"] = atrento;
   mapConfigParams["s_chop"] = schop;
+  mapConfigParams["up_chop"] = upchop;
+  mapConfigParams["down_chop"] = downchop;
+  mapConfigParams["strange_chop"] = strangechop;
+  mapConfigParams["charm_chop"] = charmchop;
 
   mapConfigParams["background_points"] = backgroundpoints;
   mapConfigParams["greens_functions_points"] = greensfunctionspoints;
@@ -333,7 +349,11 @@ void IO::OutputConfig(string file_name)
     << "\nlambda_bym " << lambda_bym;
   output
     << "\n\na_trento " << a_trento
-    << "\ns_chop " << s_chop;
+    << "\ns_chop " << s_chop
+    << "\nup_chop " << up_chop
+    << "\ndown_chop " << down_chop
+    << "\nstrange_chop " << strange_chop
+    << "\ncharm_chop " << charm_chop;
 
     output
       << "\n\nbackground_attractor_file " << background_attractor_file
@@ -374,6 +394,11 @@ Event IO::InitializeEvent()
   event_in.grid_step = grid_step;
   event_in.grid_points = grid_points;
   event_in.test_ = test_;
+  event_in.up_chop = up_chop;
+  event_in.down_chop = down_chop;
+  event_in.strange_chop = strange_chop;
+  event_in.charm_chop = charm_chop;
+
 
   //  Initialize input grid to 0 with dimensions grid_points + 1
   event_in.initial_energy.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
@@ -873,10 +898,10 @@ Event IO::ReadEvent(Event event_in)
   ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
   event_in.total_initial_entropy = a_trento*event_in.total_initial_entropy/numpoints;
 
+  event_in.initial_energy_backup = event_in.initial_energy;
+
     if (test_ == "GreensFunction")
     {
-      event_in.initial_energy_backup = event_in.initial_energy;
-
   //    cout << "Reading in event" << endl;
       // This is where I want to preevolve the event energy density
 //      cout << "number of points " << event_in.valued_points.size() << endl;
