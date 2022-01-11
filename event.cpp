@@ -311,6 +311,7 @@ bool Event::UpdateDensity(Quarks quark_density)
 
     original_energy = GetOriginalEnergy();
 
+    cout << total_initial_energy << " original_energy " << original_energy << " up_chop " << up_chop << endl;
     if (quark_density.GetCharge()[0] == 0.0023)
     {
       if (original_energy < up_chop) {  return true;  }
