@@ -73,6 +73,11 @@ void Event::CopyEvent(const Event &e)
   out_sample = e.out_sample;
   seed = e.seed;
 
+  up_chop = e.up_chop;
+  down_chop = e.down_chop;
+  strange_chop = e.strange_chop;
+  charm_chop = e.charm_chop;
+
   evolution = e.evolution;
   w_tilde = e.w_tilde;
   tau_hydro = e.tau_hydro;
