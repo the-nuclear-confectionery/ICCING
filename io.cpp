@@ -99,13 +99,15 @@ IO::IO(string configFile)
 
   grid_points = 2*(grid_max/grid_step); //  Calculate # grid_points
 
+cout << freezeout_thresh << endl;
   //  Calculate e_thresh using an energy correlating to a freezeout temperature
-  if (freezeout_thresh =! 0.0)
+  if (freezeout_thresh != 0.0)
   {
     //  e_thresh = freezeout_energy*M_PI*qluon_radius^2*tau_0*d/eta
     //  d/eta (per unit rapidity) = 1
     e_thresh = freezeout_thresh*M_PI*pow(rad_, 2)*tau_0*1;
   }
+  cout << freezeout_thresh << endl;
 
   // Output all values, specified and unspecified, used by run of code
   OutputConfig(output_dir + "run_parameters" + to_string(current_event) + ".dat");
