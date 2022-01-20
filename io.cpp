@@ -75,6 +75,7 @@ IO::IO(string configFile)
       case gridstep:  input >> grid_step; break;
       case tau0:  input >> tau_0; break;
       case ethresh:  input >> e_thresh; break;
+      case freezeoutthresh:  input >> freezeout_thresh; break;
       case chargetype:  input >> charge_type; break;
 
       //  Error statement, triggered if unknown parameter is specified in config, exits program
@@ -97,6 +98,14 @@ IO::IO(string configFile)
   current_event = first_event;  //  Set current_event to first_event
 
   grid_points = 2*(grid_max/grid_step); //  Calculate # grid_points
+
+  //  Calculate e_thresh using an energy correlating to a freezeout temperature
+  if (freezeout_thresh =! 0.0)
+  {
+    //  e_thresh = freezeout_energy*M_PI*qluon_radius^2*tau_0*d/eta
+    //  d/eta (per unit rapidity) = 1
+    e_thresh = freezeout_thresh*M_PI*pow(rad_, 2)*tau_0*1;
+  }
 
   // Output all values, specified and unspecified, used by run of code
   OutputConfig(output_dir + "run_parameters" + to_string(current_event) + ".dat");
@@ -165,6 +174,7 @@ void IO::CopyIO(const IO &e)
   grid_step = e.grid_step;
   tau_0 = e.tau_0;
   e_thresh = e.e_thresh;
+  freezeoutthresh = e.freezeout_thresh;
   charge_type = e.charge_type;
   //#CONFIGPARAM
 
@@ -250,6 +260,7 @@ void IO::Initialize()
   grid_step = 0.06;
   tau_0 = 0.6;
   e_thresh = 0.25;
+  freezeout_thresh = 0.0;
   charge_type = "BSQ";
   //#CONFIGPARAM
 
@@ -306,6 +317,7 @@ void IO::Initialize()
   mapConfigParams["grid_step"] = gridstep;
   mapConfigParams["tau_0"] = tau0;
   mapConfigParams["e_thresh"] = ethresh;
+  mapConfigParams["freezeout_thresh"] = freezeoutthresh;
   mapConfigParams["charge_type"] = chargetype;
   //#CONFIGPARAM
 }
@@ -370,6 +382,8 @@ void IO::OutputConfig(string file_name)
     << "\ngrid_step " << grid_step
     << "\ntau_0 " << tau_0
     << "\ne_thresh " << e_thresh
+    << "\nfreezeout_thresh " << freezeout_thresh
+
     << "\ncharge_type " << charge_type;
     //#CONFIGPARAM
 

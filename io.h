@@ -80,6 +80,7 @@ private:
     gridstep,
     tau0,
     ethresh,
+    freezeoutthresh,
     chargetype,
 
     backgroundpoints,
@@ -160,6 +161,7 @@ private:
   double grid_step;
   double tau_0; //  EOS, Event, Splitting
   double e_thresh; // Splitting and event
+  double freezeout_thresh;
   string charge_type; //  Flag for tracking BSQ or UDS charges
 
   int tracked_charge;
