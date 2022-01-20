@@ -151,7 +151,6 @@ Sample Event::GetGlue()
 double Event::GetOriginalEnergy()
 {
   double e_tot;
-  int total_points = 0;
 
   //  Get bounds of gluon using center point as defined by SampleEnergy
   //    Makes sure calculations are only done on points in initial_energy
@@ -166,16 +165,11 @@ double Event::GetOriginalEnergy()
 
       //  Sum up total energy from gluon region
       e_tot += initial_energy_backup[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
-
-      if(gluon_dist[i][j] == 1)
-      {
-        total_points++; //  Calculate total for normalization of q_s
-      }
     }
   }
 
   //  Set normalized q_s and e_tot for output
-  e_tot = pow(grid_step,2)*tau_0*e_tot/total_points;
+  e_tot = pow(grid_step,2)*tau_0*e_tot;
 
   return e_tot;
 }
