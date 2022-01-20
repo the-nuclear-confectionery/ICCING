@@ -350,11 +350,10 @@ bool Event::UpdateDensity(Quarks quark_density)
       ofstream output;
       output.open(output_dir + "hotspottracking.dat", ios::app);  //  Append event to end of file
       output << quark_density.GetCharge()[0] << " ";
-
-      int total_points_gluon = 0;
-      double gluon_energy = 0;
     }
 
+    int total_points_gluon = 0;
+    double gluon_energy = 0;
 
     //******************************************************************************************
     //  Update Total energies and initial_energy
