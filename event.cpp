@@ -48,6 +48,7 @@ void Event::CopyEvent(const Event &e)
   grid_points = e.grid_points;
   test_ = e.test_;
   get_grid_point = e.get_grid_point;
+  output_dir = e.output_dir;
 
   initial_energy = e.initial_energy;
   t_a = e.t_a;
@@ -150,6 +151,7 @@ Sample Event::GetGlue()
 double Event::GetOriginalEnergy()
 {
   double e_tot;
+  int total_points = 0;
 
   //  Get bounds of gluon using center point as defined by SampleEnergy
   //    Makes sure calculations are only done on points in initial_energy
@@ -164,11 +166,16 @@ double Event::GetOriginalEnergy()
 
       //  Sum up total energy from gluon region
       e_tot += initial_energy_backup[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
+
+      if(gluon_dist[i][j] == 1)
+      {
+        total_points++; //  Calculate total for normalization of q_s
+      }
     }
   }
 
   //  Set normalized q_s and e_tot for output
-  e_tot = pow(grid_step,2)*tau_0*e_tot;
+  e_tot = pow(grid_step,2)*tau_0*e_tot/total_points;
 
   return e_tot;
 }
@@ -314,29 +321,40 @@ bool Event::UpdateDensity(Quarks quark_density)
     }
 
 
-    original_energy = GetOriginalEnergy();
+//    original_energy = GetOriginalEnergy();
 
 //    cout << total_initial_energy << " original_energy " << original_energy << " up_chop " << up_chop << endl;
     if (quark_density.GetCharge()[0] == 0.0023)
     {
-      if (original_energy < up_chop) {  return true;  }
+  //    if (original_energy < up_chop) {  return true;  }
       number_up++;
     }
     else if (quark_density.GetCharge()[0] == 0.0048)
     {
-      if (original_energy < down_chop) {  return true;  }
+//      if (original_energy < down_chop) {  return true;  }
       number_down++;
     }
     else if (quark_density.GetCharge()[0] == 0.095)
     {
-      if (original_energy < strange_chop) {  return true;  }
+//      if (original_energy < strange_chop) {  return true;  }
       number_strange++;
     }
     else if (quark_density.GetCharge()[0] == 1.29)
     {
-      if (original_energy < charm_chop) {  return true;  }
+//      if (original_energy < charm_chop) {  return true;  }
       number_charm++;
     }
+
+    if (test_ == "hotspots")
+    {
+      ofstream output;
+      output.open(output_dir + "hotspottracking.dat", ios::app);  //  Append event to end of file
+      output << quark_density.GetCharge()[0] << " ";
+
+      int total_points_gluon = 0;
+      double gluon_energy = 0;
+    }
+
 
     //******************************************************************************************
     //  Update Total energies and initial_energy
@@ -355,6 +373,11 @@ bool Event::UpdateDensity(Quarks quark_density)
         total_energy += energy;
         initial_energy[temp_x][temp_y] -= energy;
 
+        if (test_ == "hotspots")
+        {
+          gluon_energy += energy;
+          if(gluon_dist[i][j] == 1) { total_points_gluon++; }
+        }
         // This removes the gluon from the final state which was chosen to split and is now being redistributed
         if (test_ == "GreensFunction")
         {
@@ -366,6 +389,13 @@ bool Event::UpdateDensity(Quarks quark_density)
       }
     }
 
+    if (test_ == "hotspots")
+    {
+      output << GetOriginalEnergy() << " " << GetOriginalEnergy()/total_points_gluon << " ";
+      output << out_sample.e_tot << " " << out_sample.e_tot/total_points_gluon << " ";
+      output << gluon_energy << " " << gluon_energy/total_points_gluon << endl;
+      output.close();
+    }
     //******************************************************************************************
     //  Update Output Densities
     //******************************************************************************************

@@ -414,7 +414,7 @@ Event IO::InitializeEvent()
   event_in.down_chop = down_chop;
   event_in.strange_chop = strange_chop;
   event_in.charm_chop = charm_chop;
-
+  event_in.output_dir = output_dir;
 
   //  Initialize input grid to 0 with dimensions grid_points + 1
   event_in.initial_energy.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
