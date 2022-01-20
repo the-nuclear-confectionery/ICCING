@@ -174,7 +174,7 @@ void IO::CopyIO(const IO &e)
   grid_step = e.grid_step;
   tau_0 = e.tau_0;
   e_thresh = e.e_thresh;
-  freezeoutthresh = e.freezeout_thresh;
+  freezeout_thresh = e.freezeout_thresh;
   charge_type = e.charge_type;
   //#CONFIGPARAM
 
