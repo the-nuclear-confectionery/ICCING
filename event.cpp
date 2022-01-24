@@ -168,9 +168,6 @@ double Event::GetOriginalEnergy()
     }
   }
 
-  //  Set normalized q_s and e_tot for output
-  e_tot = pow(grid_step,2)*tau_0*e_tot;
-
   return e_tot;
 }
 //__________________________________________________________________________________________
@@ -385,7 +382,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     if (test_ == "hotspots")
     {
       output << GetOriginalEnergy() << " " << GetOriginalEnergy()/total_points_gluon << " ";
-      output << out_sample.e_tot << " " << out_sample.e_tot/total_points_gluon << " ";
+      output << out_sample.e_tot/(pow(grid_step,2)*tau_0) << " " << out_sample.e_tot/(total_points_gluon*pow(grid_step,2)*tau_0) << " ";
       output << gluon_energy << " " << gluon_energy/total_points_gluon << endl;
       output.close();
     }
