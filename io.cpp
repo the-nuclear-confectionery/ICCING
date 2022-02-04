@@ -843,6 +843,39 @@ void IO::OutputQuarkCounts(double total_entropy, int gluon, int up, int down, in
 
 //__________________________________________________________________________________________
 //##########################################################################################
+//  Print current grids
+//##########################################################################################
+void OutputSparseCurrentGrids(vector<vector<vector<vector<double>>>> &current_grid, vector<vector<vector<double>>> &density_grid, double tot_energy, string file_name)
+{
+  ofstream output;
+  output.open(file_name);
+
+  output << current_event << " " << grid_step << " " << grid_step << " " << tot_energy << " " << -grid_max << " " << -grid_max << endl;
+
+  double x, y;
+  for (int i = 0; i < density_grid[0].size(); i++)
+  {
+    for (int j = 0; j < density_grid[0][0].size(); j++)
+    {
+      if (density_grid[0][i][j] != 0)
+      {
+        x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
+        y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
+        output << x << " " << y << " "
+        << current_grid[0][i][j][0] << " " << current_grid[0][i][j][1] << " "
+        << current_grid[1][i][j][0] << " " << current_grid[1][i][j][1] << " "
+        << current_grid[2][i][j][0] << " " << current_grid[2][i][j][1] << " "
+        << current_grid[3][i][j][0] << " " << current_grid[3][i][j][1] << endl;
+      }
+    }
+  }
+
+  output.close();
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
 //  Read Event specific Energy densities
 //    Create Event and set densities and variables
 //    (Assumes sparse file with only valued points, need to generalize this)
@@ -1089,7 +1122,7 @@ void IO::WriteEvent(Event event)
   //******************************************************************************************
   else if (output_type == 1)
   {
-    OutputSparseDensityGrids(event.initial_energy, output_dir + "ic_converted" + to_string(current_event) + ".dat");
+    OutputSparseDensityGrids(event.initial_energy_backup, output_dir + "ic_converted" + to_string(current_event) + ".dat");
 
     OutputSparseDensityGrids(event.density, event.total_energy, output_dir + "densities" + to_string(current_event) + ".dat");
 
@@ -1101,6 +1134,11 @@ void IO::WriteEvent(Event event)
     {
       OutputSparseDensityGrids(event.t_b, output_dir + "tb" + to_string(current_event) + ".dat");
     }
+  }
+
+  if (test_ == "GreensFunction")
+  {
+    OutputSparseCurrentGrids(event.momentum, event.density, event.total_energy, output_dir + "currents" + to_string(current_event) + ".dat");
   }
 
   OutputEccentricities(event.total_initial_entropy, event.eccentricities[0], "Energy", output_dir + "energy_eccentricities");
