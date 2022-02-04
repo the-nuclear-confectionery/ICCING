@@ -84,16 +84,24 @@ void GreensFunctions::CopyGreensFunctions(const GreensFunctions &e)
   // GSL INTERPOLATION OBJECTS //
   FsswTAcc = e.FsswTAcc;
   GsswTAcc = e.GsswTAcc;
+  FsvwTAcc = e.FsvwTAcc;
+  GsvwTAcc = e.GsvwTAcc;
   FssdXdTAcc = e.FssdXdTAcc;
   GssdXdTAcc = e.GssdXdTAcc;
+  FsvdXdTAcc = e.FsvdXdTAcc;
+  GsvdXdTAcc = e.GsvdXdTAcc;
   FssInt = e.FssInt;
   GssInt = e.GssInt;
+  FsvInt = e.FsvInt;
+  GsvInt = e.GsvInt;
 
   wTValues = e.wTValues;
   dXdTValues = e.dXdTValues;
 
   FssValues = e.FssValues;
   GssValues = e.GssValues;
+  FsvValues = e.FsvValues;
+  GsvValues = e.GsvValues;
 
   // GSL INTERPOLATION OBJECTS //
   EAcc = e.EAcc;
@@ -185,15 +193,21 @@ void GreensFunctions::SetupGreensFunctions()
 
   FssValues = new double[greens_functions_chuncks*greens_functions_points];
   GssValues = new double[greens_functions_chuncks*greens_functions_points];
+  FsvValues = new double[greens_functions_chuncks*greens_functions_points];
+  GsvValues = new double[greens_functions_chuncks*greens_functions_points];
 
   // SETUP GSL INTERPOLATION //
   int NumberOfOpenMPThreads = omp_get_max_threads();
 
   FsswTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
   GsswTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
+  FsvwTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
+  GsvwTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
 
   FssdXdTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
   GssdXdTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
+  FsvdXdTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
+  GsvdXdTAcc = new gsl_interp_accel*[NumberOfOpenMPThreads];
 
   #pragma omp parallel for
   for (int i = 0; i < NumberOfOpenMPThreads; i++)
@@ -201,17 +215,25 @@ void GreensFunctions::SetupGreensFunctions()
 
       FsswTAcc[i] = gsl_interp_accel_alloc();
       GsswTAcc[i] = gsl_interp_accel_alloc();
+      FsvwTAcc[i] = gsl_interp_accel_alloc();
+      GsvwTAcc[i] = gsl_interp_accel_alloc();
 
       FssdXdTAcc[i] = gsl_interp_accel_alloc();
       GssdXdTAcc[i] = gsl_interp_accel_alloc();
+      FsvdXdTAcc[i] = gsl_interp_accel_alloc();
+      GsvdXdTAcc[i] = gsl_interp_accel_alloc();
   }
 
   FssInt = gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
   GssInt = gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
+  FsvInt = gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
+  GsvInt = gsl_spline2d_alloc(gsl_interp2d_bilinear, greens_functions_chuncks, greens_functions_points);
 
   //  SetValues Function
   double FssVal[greens_functions_chuncks*greens_functions_points];
   double GssVal[greens_functions_chuncks*greens_functions_points];
+  double FsvVal[greens_functions_chuncks*greens_functions_points];
+  double GsvVal[greens_functions_chuncks*greens_functions_points];
 
 //  cout << "Reading in Greens Function" << endl;
 
@@ -256,6 +278,8 @@ void GreensFunctions::SetupGreensFunctions()
       // WRITE VALUES OF GREENS FUNCTIONS INTO ARRAYS //
       FssVal[wCounter] = Fss;
       GssVal[wCounter] = Gss;
+      FsvVal[wCounter] = Fsv;
+      GsvVal[wCounter] = Gsv;
 
 
       wCounter++;
@@ -285,6 +309,8 @@ void GreensFunctions::SetupGreensFunctions()
 
           gsl_spline2d_set(FssInt, FssValues, wTIndex, xIndex, FssVal[FIndex]);
           gsl_spline2d_set(GssInt, GssValues, wTIndex, xIndex, GssVal[FIndex]);
+          gsl_spline2d_set(FsvInt, FsvValues, wTIndex, xIndex, FsvVal[FIndex]);
+          gsl_spline2d_set(GsvInt, GsvValues, wTIndex, xIndex, GsvVal[FIndex]);
 
           FIndex++;
 
@@ -302,6 +328,8 @@ void GreensFunctions::SetupGreensFunctions()
   // INITIALIZE INTERPOLATOR //
   gsl_spline2d_init(FssInt, wTValues, dXdTValues, FssValues, greens_functions_chuncks, greens_functions_points);
   gsl_spline2d_init(GssInt, wTValues, dXdTValues, GssValues, greens_functions_chuncks, greens_functions_points);
+  gsl_spline2d_init(FsvInt, wTValues, dXdTValues, FsvValues, greens_functions_chuncks, greens_functions_points);
+  gsl_spline2d_init(GsvInt, wTValues, dXdTValues, GsvValues, greens_functions_chuncks, greens_functions_points);
 
   // CLEAN-UP //
   delete[] wTValues;
@@ -309,7 +337,8 @@ void GreensFunctions::SetupGreensFunctions()
 
   delete[] FssValues;
   delete[] GssValues;
-
+  delete[] FsvValues;
+  delete[] GsvValues;
 }
 //__________________________________________________________________________________________
 
@@ -433,6 +462,33 @@ double GreensFunctions::Fss(double wT, double dXdT)
   return FssScalingCurve(wT, dXdT);
 } // Fss
 
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::FsvScalingCurve(double wT, double dXdT)
+{
+    int tID = omp_get_thread_num();
+
+    if (dXdT < dXdTMin)
+    {
+      return 0.0;
+    }
+    else
+    {
+      EVALUATE_GSL_INTERPOLATOR_2D(FsvInt, wT, dXdT, FsvwTAcc[tID], FsvdXdTAcc[tID], wTMin, wTMax, dXdTMin, dXdTMax);
+    }
+
+} // FsvScalingCurve
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::Fsv(double wT, double dXdT)
+{
+  return FsvScalingCurve(wT, dXdT);
+} // Fsv
 
 //__________________________________________________________________________________________
 //##########################################################################################
@@ -481,8 +537,34 @@ double GreensFunctions::Gss(double wT, double dXdT)
   return GssScalingCurve(wT, dXdT);
 } // Gss
 
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::GsvScalingCurve(double wT, double dXdT)
+{
+  int tID = omp_get_thread_num();
 
+  if (dXdT < dXdTMin)
+  {
+    return 0.0;
+  }
+  else
+  {
+    EVALUATE_GSL_INTERPOLATOR_2D(GsvInt, wT, dXdT, GsvwTAcc[tID], GsvdXdTAcc[tID], wTMin, wTMax, dXdTMin, dXdTMax);
+  }
 
+} // GsvScalingCurve
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//
+//##########################################################################################
+double GreensFunctions::Gsv(double wT, double dXdT)
+{
+//  cout << "Gss " << wT << " " << dXdT << endl;
+  return GsvScalingCurve(wT, dXdT);
+} // Gsv
 
 //__________________________________________________________________________________________
 //##########################################################################################

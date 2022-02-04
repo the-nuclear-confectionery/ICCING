@@ -419,9 +419,13 @@ Event IO::InitializeEvent()
   //  Initialize input grid to 0 with dimensions grid_points + 1
   event_in.initial_energy.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
 
+  vector<double> mom;
+  mom.resize(grid_points + 1, vector<double>(grid_points + 1, vector<double>(2, 0.)));
+
   for (int i = 0; i < 4; i++)
   {
     event_in.density.push_back(event_in.initial_energy);
+    event_in.momentum.push_back(mom);
   }
 
   //******************************************************************************************

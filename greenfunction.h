@@ -50,14 +50,13 @@ private:
   double dXdTMin, dXdTMax, wTMin, wTMax;
 
   // GSL INTERPOLATION OBJECTS //
-  gsl_interp_accel **FsswTAcc, **GsswTAcc;
-  gsl_interp_accel **FssdXdTAcc, **GssdXdTAcc;
-  gsl_spline2d *FssInt, *GssInt;
+  gsl_interp_accel **FsswTAcc, **GsswTAcc, **FsvwTAcc, **GsvwTAcc;
+  gsl_interp_accel **FssdXdTAcc, **GssdXdTAcc, **FsvdXdTAcc, **GsvdXdTAcc;
+  gsl_spline2d *FssInt, *GssInt, *FsvInt, *GsvInt;
 
   double *wTValues,*dXdTValues;
 
-  double *FssValues;
-  double *GssValues;
+  double *FssValues, *GssValues, *FsvValues, *GsvValues;
 
   // GSL INTERPOLATION OBJECTS //
   gsl_interp_accel **EAcc;
@@ -83,12 +82,11 @@ private:
 
   double FssScalingCurve(double wT, double dXdT);
 
-
-
-
   double GssScalingCurve(double wT, double dXdT);
 
+  double FsvScalingCurve(double wT, double dXdT);
 
+  double GsvScalingCurve(double wT, double dXdT);
 
   double E(double wT);
   //__________________________________________________________________________________________
@@ -115,6 +113,8 @@ public:
 
   double Fss(double wT, double dXdT);
   double Gss(double wT, double dXdT);
+  double Fsv(double wT, double dXdT);
+  double Gsv(double wT, double dXdT);
   //__________________________________________________________________________________________
 };
 #endif
