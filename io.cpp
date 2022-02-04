@@ -845,7 +845,7 @@ void IO::OutputQuarkCounts(double total_entropy, int gluon, int up, int down, in
 //##########################################################################################
 //  Print current grids
 //##########################################################################################
-void OutputSparseCurrentGrids(vector<vector<vector<vector<double>>>> &current_grid, vector<vector<vector<double>>> &density_grid, double tot_energy, string file_name)
+void IO::OutputSparseCurrentGrids(vector<vector<vector<vector<double>>>> &current_grid, vector<vector<vector<double>>> &density_grid, double tot_energy, string file_name)
 {
   ofstream output;
   output.open(file_name);
