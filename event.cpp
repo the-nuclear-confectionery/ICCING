@@ -405,26 +405,29 @@ bool Event::UpdateDensity(Quarks quark_density)
           density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
                                         *(final_energy_backup[quark_x][quark_y]/initial_energy_backup[quark_x][quark_y])
                                         *evolution.Gss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
-          momentum[0][temp_x][temp_y][0] += (quark_x - temp_x)/quark_distance*evolution.Gsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
-          momentum[0][temp_x][temp_y][1] += (quark_y - temp_y)/quark_distance*evolution.Gsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+          momentum[0][temp_x][temp_y][0] -= (quark_x - temp_x)/quark_distance*evolution.Gsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+          momentum[0][temp_x][temp_y][1] -= (quark_y - temp_y)/quark_distance*evolution.Gsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 
           //  Baryon = baron_number*quark_dist
           density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
-          momentum[1][temp_x][temp_y][0] += (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
-          momentum[1][temp_x][temp_y][1] += (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+          momentum[1][temp_x][temp_y][0] -= (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+          momentum[1][temp_x][temp_y][1] -= (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 
           //  Strangeness = strangeness*quark_dist
           density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));;
-          momentum[2][temp_x][temp_y][0] += (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
-          momentum[2][temp_x][temp_y][1] += (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+          if (quark_density.GetCharge()[0] == 0.095)
+          {
+            momentum[2][temp_x][temp_y][0] -= (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+            momentum[2][temp_x][temp_y][1] -= (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+          }
 
           //  EM_charge = em_charge*quark_dist
           density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
-          momentum[3][temp_x][temp_y][0] += (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
-          momentum[3][temp_x][temp_y][1] += (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+          momentum[3][temp_x][temp_y][0] -= (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
+          momentum[3][temp_x][temp_y][1] -= (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 
           //  Deposit Anti-Quark Energy and Charges
           temp_x = antiquark_x - greens_rad + i;
@@ -435,26 +438,29 @@ bool Event::UpdateDensity(Quarks quark_density)
           density[0][temp_x][temp_y] += (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
                                         *(final_energy_backup[antiquark_x][antiquark_y]/initial_energy_backup[antiquark_x][antiquark_y])
                                         *evolution.Gss(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
-          momentum[0][temp_x][temp_y][0] += (antiquark_x - temp_x)/quark_distance*evolution.Gsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
-          momentum[0][temp_x][temp_y][1] += (antiquark_y - temp_y)/quark_distance*evolution.Gsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+          momentum[0][temp_x][temp_y][0] -= (antiquark_x - temp_x)/quark_distance*evolution.Gsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+          momentum[0][temp_x][temp_y][1] -= (antiquark_y - temp_y)/quark_distance*evolution.Gsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
 
           //  Baryon = baron_number*quark_dist
           density[1][temp_x][temp_y] -= quark_density.GetCharge()[1]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
-          momentum[1][temp_x][temp_y][0] += (antiquark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
-          momentum[1][temp_x][temp_y][1] += (antiquark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+          momentum[1][temp_x][temp_y][0] -= (antiquark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+          momentum[1][temp_x][temp_y][1] -= (antiquark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
 
           //  Strangeness = strangeness*quark_dist
           density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
-          momentum[2][temp_x][temp_y][0] += (antiquark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
-          momentum[2][temp_x][temp_y][1] += (antiquark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+          if (quark_density.GetCharge()[0] == 0.095)
+          {
+            momentum[2][temp_x][temp_y][0] -= (antiquark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+            momentum[2][temp_x][temp_y][1] -= (antiquark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+          }
 
           //  EM_charge = em_charge*quark_dist
           density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*evolution.Fss(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
-          momentum[3][temp_x][temp_y][0] += (antiquark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
-          momentum[3][temp_x][temp_y][1] += (antiquark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+          momentum[3][temp_x][temp_y][0] -= (antiquark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
+          momentum[3][temp_x][temp_y][1] -= (antiquark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
         }
         else
         {
