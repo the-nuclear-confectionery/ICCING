@@ -175,6 +175,66 @@ double Event::GetOriginalEnergy()
 
 //__________________________________________________________________________________________
 //##########################################################################################
+//  Get energy of all possible gluons
+//##########################################################################################
+vector<vector<double>> Event::GetAllGlue()
+{
+  double e_tot;
+  vector<vector<double>> all_gluons;
+
+  all_gluons.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
+
+  for (int n = 0; n < valued_points.size(); n++)
+  {
+    //  Get bounds of gluon using center point as defined by SampleEnergy
+    //    Makes sure calculations are only done on points in initial_energy
+    vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, valued_points[n][0], valued_points[n][1]);
+
+    //  Loop over gluon_dist using gluon_bounds
+    for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
+    {
+      for (int j = gluon_bounds[1]; j < gluon_bounds[3]; j++)
+      {
+        //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
+
+        //  Sum up total energy from gluon region
+        e_tot += initial_energy_backup[valued_points[n][0] - gluon_rad + i][valued_points[n][0] - gluon_rad + j]*gluon_dist[i][j];
+      }
+    }
+
+    all_gluons[valued_points[n][0]][valued_points[n][1]] = e_tot;
+  }
+
+  return all_gluons;
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Get number of points in gluon mask
+//##########################################################################################
+int Event::GetMaskPoints()
+{
+  int num_points = 0;
+
+  //  Loop over gluon_dist using gluon_bounds
+  for (int i = 0; i < gluon_dist.size(); i++)
+  {
+    for (int j = 0; j < gluon_dist.size(); j++)
+    {
+      //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
+
+      if (gluon_dist[i][j] == 1)
+        num_points++;
+    }
+  }
+
+  return num_points;
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
 //  Sample Initial Energy for ICCING algorithm
 //##########################################################################################
 Sample Event::SampleEnergy()

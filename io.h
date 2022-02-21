@@ -191,6 +191,7 @@ private:
   void OutputEccentricities(double total_entropy, vector<vector<double>> eccentricities, string density_type, string file_name); //  Prints eccentricities
   void OutputQuarkCounts(double total_entropy, int gluon, int up, int down, int strange, int charm, string file_name); //  Prints quark counts
   void OutputSparseCurrentGrids(vector<vector<vector<vector<double>>>> &current_grid, vector<vector<vector<double>>> &density_grid, double tot_energy, string file_name);  //  Only prints valued points
+  void OutputSparseGluonGrids(vector<vector<double>> &density_grid, int num_points, tring file_name);  //  Only prints valued points
 //__________________________________________________________________________________________
 
 public:

@@ -876,6 +876,35 @@ void IO::OutputSparseCurrentGrids(vector<vector<vector<vector<double>>>> &curren
 
 //__________________________________________________________________________________________
 //##########################################################################################
+// Print Gluon Grids without filler 0s
+//##########################################################################################
+void IO::OutputSparseGluonGrids(vector<vector<double>> &density_grid, int num_points, string file_name)
+{
+  ofstream output;
+  output.open(file_name);
+
+  double x, y, value;
+
+  for (int i = 0; i < density_grid.size(); i++)
+  {
+    for (int j = 0; j < density_grid[0].size(); j++)
+    {
+      if (density_grid[i][j] != 0)
+      {
+        x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
+        y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
+        value = density_grid[i][j];
+        output << x << " " << y << " " << value << value/num_points << endl;
+      }
+    }
+  }
+
+  output.close();
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
 //  Read Event specific Energy densities
 //    Create Event and set densities and variables
 //    (Assumes sparse file with only valued points, need to generalize this)
@@ -1084,6 +1113,11 @@ Event IO::ReadEvent(Event event_in)
       }
     }
     input.close();  //  Close input stream
+  }
+
+  if (test_ == "AllGlue")
+  {
+      OutputAllGluons(event_in.GetAllGlue(), event_in.GetMaskPoints(), output_dir + "all_gluons" + to_string(current_event) + ".dat";
   }
 
   return event_in;  //  Return event with data

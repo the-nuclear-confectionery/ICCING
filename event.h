@@ -113,6 +113,10 @@ private:
   //  Select energy of area
   double GetOriginalEnergy();
 
+  //  Calculate energy of all possible gluons
+  vector<vector<double>> GetAllGlue();
+  int GetMaskPoints();
+
   //  Gets intigration bounds for density grid manipulations
   vector<int> GetIntegrationBounds(int size, double raduis, double xcenter, double ycenter);
 
