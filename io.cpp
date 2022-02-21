@@ -977,8 +977,8 @@ Event IO::ReadEvent(Event event_in)
 
   input.close();  //  Close input stream
 
-  ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
   event_in.total_initial_entropy = a_trento*event_in.total_initial_entropy/numpoints;
+  ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
 
   event_in.initial_energy_backup = event_in.initial_energy;
 
@@ -1115,11 +1115,6 @@ Event IO::ReadEvent(Event event_in)
     input.close();  //  Close input stream
   }
 
-  if (test_ == "AllGlue")
-  {
-      OutputSparseGluonGrids(event_in.GetAllGlue(), event_in.GetMaskPoints(), output_dir + "all_gluons" + to_string(current_event) + ".dat");
-  }
-
   return event_in;  //  Return event with data
 }
 //__________________________________________________________________________________________
@@ -1173,6 +1168,11 @@ void IO::WriteEvent(Event event)
   if (test_ == "GreensFunction")
   {
     OutputSparseCurrentGrids(event.momentum, event.density, event.total_energy, output_dir + "currents" + to_string(current_event) + ".dat");
+  }
+
+  if (test_ == "AllGlue")
+  {
+      OutputSparseGluonGrids(event.GetAllGlue(), event.GetMaskPoints(), output_dir + "all_gluons" + to_string(current_event) + ".dat");
   }
 
   OutputEccentricities(event.total_initial_entropy, event.eccentricities[0], "Energy", output_dir + "energy_eccentricities");
