@@ -108,7 +108,7 @@ Event& Event::operator= (const Event& original)
 //##########################################################################################
 Sample Event::GetGlue()
 {
-  double q_s, e_tot;
+  double q_s = 0, e_tot = 0;
   Sample samp;
   int total_points = 0;
 
@@ -179,7 +179,6 @@ double Event::GetOriginalEnergy()
 //##########################################################################################
 vector<vector<double>> Event::GetAllGlue()
 {
-  double e_tot;
   vector<vector<double>> all_gluons;
 
   all_gluons.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
@@ -198,12 +197,10 @@ vector<vector<double>> Event::GetAllGlue()
         //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
         //  Sum up total energy from gluon region
-        e_tot += initial_energy_backup[valued_points[n][0] - gluon_rad + i][valued_points[n][0] - gluon_rad + j]*gluon_dist[i][j];
+        all_gluons[valued_points[n][0]][valued_points[n][1]] += initial_energy_backup[valued_points[n][0] - gluon_rad + i][valued_points[n][0] - gluon_rad + j]*gluon_dist[i][j];
       }
     }
 
-    all_gluons[valued_points[n][0]][valued_points[n][1]] = e_tot;
-    e_tot = 0;
   }
 
   return all_gluons;
