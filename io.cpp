@@ -1117,7 +1117,7 @@ Event IO::ReadEvent(Event event_in)
 
   if (test_ == "AllGlue")
   {
-      OutputAllGluons(event_in.GetAllGlue(), event_in.GetMaskPoints(), output_dir + "all_gluons" + to_string(current_event) + ".dat");
+      OutputSparseGluonGrids(event_in.GetAllGlue(), event_in.GetMaskPoints(), output_dir + "all_gluons" + to_string(current_event) + ".dat");
   }
 
   return event_in;  //  Return event with data
