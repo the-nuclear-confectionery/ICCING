@@ -203,6 +203,7 @@ vector<vector<double>> Event::GetAllGlue()
     }
 
     all_gluons[valued_points[n][0]][valued_points[n][1]] = e_tot;
+    e_tot = 0;
   }
 
   return all_gluons;
