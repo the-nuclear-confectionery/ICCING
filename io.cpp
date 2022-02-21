@@ -878,7 +878,7 @@ void IO::OutputSparseCurrentGrids(vector<vector<vector<vector<double>>>> &curren
 //##########################################################################################
 // Print Gluon Grids without filler 0s
 //##########################################################################################
-void IO::OutputSparseGluonGrids(vector<vector<double>> &density_grid, int num_points, string file_name)
+void IO::OutputSparseGluonGrids(vector<vector<double>> density_grid, int num_points, string file_name)
 {
   ofstream output;
   output.open(file_name);
