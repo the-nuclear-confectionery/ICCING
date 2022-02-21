@@ -197,7 +197,7 @@ vector<vector<double>> Event::GetAllGlue()
         //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
         //  Sum up total energy from gluon region
-        all_gluons[valued_points[n][0]][valued_points[n][1]] += initial_energy_backup[valued_points[n][0] - gluon_rad + i][valued_points[n][0] - gluon_rad + j]*gluon_dist[i][j];
+        all_gluons[valued_points[n][0]][valued_points[n][1]] += initial_energy[valued_points[n][0] - gluon_rad + i][valued_points[n][0] - gluon_rad + j]*gluon_dist[i][j];
       }
     }
 
