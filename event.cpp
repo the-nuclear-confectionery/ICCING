@@ -183,11 +183,15 @@ vector<vector<double>> Event::GetAllGlue()
 
   all_gluons.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
 
-  for (int n = 0; n < valued_points.size(); n++)
+  for (int x = 0; x < initial_energy_backup.size(); x++)
   {
+    for (int y = 0; y < initial_energy_backup[0].size(); y++)
+    {
     //  Get bounds of gluon using center point as defined by SampleEnergy
     //    Makes sure calculations are only done on points in initial_energy
-    vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, valued_points[n][0], valued_points[n][1]);
+    if (initial_energy_backup[x][y] != 0)
+    {
+    vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x, y);
 
     //  Loop over gluon_dist using gluon_bounds
     for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
@@ -197,10 +201,11 @@ vector<vector<double>> Event::GetAllGlue()
         //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
         //  Sum up total energy from gluon region
-        all_gluons[valued_points[n][0]][valued_points[n][1]] += initial_energy_backup[valued_points[n][0] - gluon_rad + i][valued_points[n][0] - gluon_rad + j]*gluon_dist[i][j];
+        all_gluons[x][y] += initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j]*gluon_dist[i][j];
       }
     }
-
+    }
+  }
   }
 
   return all_gluons;
