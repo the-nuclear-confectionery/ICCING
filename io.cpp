@@ -270,6 +270,7 @@ void IO::Initialize()
   //#CONFIGPARAM
 
   tracked_charge = 0;
+  rep_event = 0;
   current_event = 0;
   grid_points = 0;
 
