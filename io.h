@@ -55,6 +55,7 @@ private:
     eventlabel,
     firstevent,
     lastevent,
+    repeatevent,
     ta,
     tb,
 
@@ -113,6 +114,7 @@ private:
   string event_label;
   int first_event;  //  First event to be read i.e. 0
   int last_event; //  Last event to be read
+  int repeat_event; // How many times to repeat event
   bool t_a; // Is T_a read in
   bool t_b; // Is T_b read in
 
@@ -166,6 +168,7 @@ private:
 
   int tracked_charge;
   int current_event;  //  Tracks what event is being handled
+  int rep_event;  // Tracks which repetition of event the code is on
   int grid_points;  // This is calculated to be 2*(grid_max/grid_step)
   //#CONFIGPARAM
 //__________________________________________________________________________________________

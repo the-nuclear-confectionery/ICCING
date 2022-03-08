@@ -43,6 +43,7 @@ IO::IO(string configFile)
       case eventlabel: input >> event_label; break;
       case firstevent: input >> first_event; break;
       case lastevent: input >> last_event; break;
+      case repeatevent: input >> repeat_event; break;
       case ta:  input >> t_a; break;
       case tb:  input >> t_b; break;
 
@@ -144,6 +145,7 @@ void IO::CopyIO(const IO &e)
   event_label = e.event_label;
   first_event = e.first_event;
   last_event = e.last_event;
+  repeat_event = e.repeat_event;
   t_a = e.t_a;
   t_b = e.t_b;
 
@@ -230,6 +232,7 @@ void IO::Initialize()
   event_label = "";
   first_event = 0;
   last_event = 0;
+  repeat_event = 0;
   t_a = false;
   t_b = true;
 
@@ -287,6 +290,7 @@ void IO::Initialize()
   mapConfigParams["event_label"] = eventlabel;
   mapConfigParams["first_event"] = firstevent;
   mapConfigParams["last_event"] = lastevent;
+  mapConfigParams["repeat_event"] = repeatevent;
   mapConfigParams["t_a"] = ta;
   mapConfigParams["t_b"] = tb;
 
@@ -346,6 +350,7 @@ void IO::OutputConfig(string file_name)
     << "\n\nevent_label " << event_label
     << "\nfirst_event " << first_event
     << "\nlast_event " << last_event
+    << "\nrepeat_event " << repeat_event
     << "\nt_a " << t_a
     << "\nt_b " << t_b;
 
@@ -1127,23 +1132,30 @@ Event IO::ReadEvent(Event event_in)
 void IO::WriteEvent(Event event)
 {
 
+  string event_number;
+
+  if (repeat_event > 0)
+  { event_number = to_string(current_event) + "_" + to_string(rep_event); }
+  else
+  { event_number = to_string(current_event); }
+
   //******************************************************************************************
   //  Output Full Density Grids
   //******************************************************************************************
   if (output_type == 0)
   {
-    OutputFullDensityGrids(event.density[0], output_dir + "energy_density_" + to_string(current_event) + ".dat");
-    OutputFullDensityGrids(event.density[1], output_dir + "baryon_density_" + to_string(current_event) + ".dat");
-    OutputFullDensityGrids(event.density[2], output_dir + "strange_density_" + to_string(current_event) + ".dat");
-    OutputFullDensityGrids(event.density[3], output_dir + "charge_density_" + to_string(current_event) + ".dat");
+    OutputFullDensityGrids(event.density[0], output_dir + "energy_density_" + event_number + ".dat");
+    OutputFullDensityGrids(event.density[1], output_dir + "baryon_density_" + event_number + ".dat");
+    OutputFullDensityGrids(event.density[2], output_dir + "strange_density_" + event_number + ".dat");
+    OutputFullDensityGrids(event.density[3], output_dir + "charge_density_" + event_number + ".dat");
 
     if (t_a)  //  Output T_a if flag is true
     {
-      OutputFullDensityGrids(event.t_a, output_dir + "ta" + to_string(current_event) + ".dat");
+      OutputFullDensityGrids(event.t_a, output_dir + "ta" + event_number + ".dat");
     }
     if (t_b)  //  Output T_b if flag is true
     {
-      OutputFullDensityGrids(event.t_b, output_dir + "tb" + to_string(current_event) + ".dat");
+      OutputFullDensityGrids(event.t_b, output_dir + "tb" + event_number + ".dat");
     }
   }
   //******************************************************************************************
@@ -1151,28 +1163,28 @@ void IO::WriteEvent(Event event)
   //******************************************************************************************
   else if (output_type == 1)
   {
-    OutputSparseDensityGrids(event.initial_energy_backup, output_dir + "ic_converted" + to_string(current_event) + ".dat");
+    OutputSparseDensityGrids(event.initial_energy_backup, output_dir + "ic_converted" + event_number + ".dat");
 
-    OutputSparseDensityGrids(event.density, event.total_energy, output_dir + "densities" + to_string(current_event) + ".dat");
+    OutputSparseDensityGrids(event.density, event.total_energy, output_dir + "densities" + event_number + ".dat");
 
     if (t_a)  //  Output T_a if flag is true
     {
-      OutputSparseDensityGrids(event.t_a, output_dir + "ta" + to_string(current_event) + ".dat");
+      OutputSparseDensityGrids(event.t_a, output_dir + "ta" + event_number + ".dat");
     }
     if (t_b)  //  Output T_b if flag is true
     {
-      OutputSparseDensityGrids(event.t_b, output_dir + "tb" + to_string(current_event) + ".dat");
+      OutputSparseDensityGrids(event.t_b, output_dir + "tb" + event_number + ".dat");
     }
   }
 
   if (test_ == "GreensFunction")
   {
-    OutputSparseCurrentGrids(event.momentum, event.density, event.total_energy, output_dir + "currents" + to_string(current_event) + ".dat");
+    OutputSparseCurrentGrids(event.momentum, event.density, event.total_energy, output_dir + "currents" + event_number + ".dat");
   }
 
   if (test_ == "AllGlue")
   {
-      OutputSparseGluonGrids(event.GetAllGlue(), event.GetMaskPoints(), output_dir + "all_gluons" + to_string(current_event) + ".dat");
+      OutputSparseGluonGrids(event.GetAllGlue(), event.GetMaskPoints(), output_dir + "all_gluons" + event_number + ".dat");
   }
 
   OutputEccentricities(event.total_initial_entropy, event.eccentricities[0], "Energy", output_dir + "energy_eccentricities");
@@ -1180,7 +1192,17 @@ void IO::WriteEvent(Event event)
   OutputEccentricities(event.total_initial_entropy, event.eccentricities[2], "Charge", output_dir + "strange_eccentricities");
   OutputEccentricities(event.total_initial_entropy, event.eccentricities[3], "Charge", output_dir + "charge_eccentricities");
   OutputQuarkCounts(event.total_initial_entropy, event.number_gluon, event.number_up, event.number_down, event.number_strange, event.number_charm, output_dir + "quark_counts.dat");
-  current_event++;  //  Used for tracking which event has been processed
+
+  //  Used for tracking which event has been processed
+  if (rep_event < repeat_event)
+  {
+    rep_event++;
+  }
+  else
+  {
+    rep_event = 0;
+    current_event++;
+  }
 }
 //__________________________________________________________________________________________
 
