@@ -50,7 +50,10 @@ private:
     inputtype,
     outputtype,
     seed,
+
     test,
+    subtest,
+    greensevolution,
 
     eventlabel,
     firstevent,
@@ -106,8 +109,11 @@ private:
   int input_type; //  Type of input: 0 = Full Density Grid, 1 = Sparse Density Grid
   int output_type;  // Type of output: 0 = Full Density Grids, 1 = Sparse Density Grids
   int seed_;
-  string test_;
 
+  string test_;
+  string sub_test;
+  bool greens_evolution;
+  
   //******************************************************************************************
   //  Internal Config parameters
   //******************************************************************************************

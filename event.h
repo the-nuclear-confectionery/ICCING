@@ -48,6 +48,7 @@ private:
   double e_thresh;
   int grid_points;
   string test_;
+  bool greens_evolution;
   double up_chop;
   double down_chop;
   double strange_chop;

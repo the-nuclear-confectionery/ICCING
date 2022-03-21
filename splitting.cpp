@@ -155,11 +155,11 @@ Charge Splitter::RollFlavor(double Qs)
   else
   { create_charge.Charm(charge_type);  }
 
-//  if (test_ == "GreensFunction")
-//  {
-//    create_charge.Strange(charge_type);
+  if (test_ == "SingleQuark")
+  {
+    create_charge.Strange(charge_type);
 //    cout << "Created strange quarks " << create_charge.GetCharge()[0] << endl;
-//}
+  }
 
   //  Return charge of sample
   return create_charge;
@@ -260,10 +260,12 @@ Quarks Splitter::SplitSample(Sample sampled_energy)
   //  Get fraction of energy for gluon
   gluon_energy_frac = RollGlue(sampled_energy.e_tot);
 
+  if (test_ == "SingleQuark")
+  { sampled_energy.q_s = 2; }
+
   //  Get flavor of gluon
   set_charge = RollFlavor(sampled_energy.q_s);
-//  if (test_ == "GreensFunction")
-//  { sampled_energy.q_s = 2; }
+
 //  cout << sampled_energy.e_tot << sampled_energy.q_s << endl;
   //  If there is not enough energy to create 2 quarks of given flavor,
   //  go back to SampleEnergy and find new center point

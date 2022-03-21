@@ -47,6 +47,7 @@ void Event::CopyEvent(const Event &e)
   e_thresh = e.e_thresh;
   grid_points = e.grid_points;
   test_ = e.test_;
+  greens_evolution = e.greens_evolution;
   get_grid_point = e.get_grid_point;
   output_dir = e.output_dir;
 
@@ -278,7 +279,7 @@ Sample Event::SampleEnergy()
           for (int j = 0; j < initial_energy.size(); j++)
           {
 
-            if (test_ == "GreensFunction")
+            if (greens_evolution)
             {
               // skip this since all of the energy is already copied over
               initial_energy[i][j] = 0;
@@ -343,7 +344,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     //  Test if Quark is in bounds
     //******************************************************************************************
 
-    if (test_ == "GreensFunction")
+    if (greens_evolution)
     {
 //      cout << "test 1" << endl;
       quark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad, quark_x, quark_y);
@@ -361,7 +362,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     //  Test if Anti-Quark is in bounds
     //******************************************************************************************
 
-    if (test_ == "GreensFunction")
+    if (greens_evolution)
     {
 //      cout << "test 2" << endl;
       antiquark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad, antiquark_x, antiquark_y);
@@ -433,7 +434,7 @@ bool Event::UpdateDensity(Quarks quark_density)
           if(gluon_dist[i][j] == 1) { total_points_gluon++; }
         }
         // This removes the gluon from the final state which was chosen to split and is now being redistributed
-        if (test_ == "GreensFunction")
+        if (greens_evolution)
         {
           double evolved_energy = 0, wtilde = 0;
           evolution.GetValues(tau_0*energy, tau_hydro, eta_over_s, evolved_energy, wtilde);
@@ -458,7 +459,7 @@ bool Event::UpdateDensity(Quarks quark_density)
       for (int j = quark_bounds[1]; j < quark_bounds[3]; j++)
       {
 
-        if (test_ == "GreensFunction")
+        if (greens_evolution)
         {
           //  Deposit Quark Energy and Charges
           temp_x = quark_x - greens_rad + i;
@@ -585,7 +586,7 @@ void Event::UpdateEnergy(double ratio)
   {
     for (int j = gluon_bounds[1]; j < gluon_bounds[3]; j++)
     {
-      if (test_ == "GreensFunction")
+      if (greens_evolution)
       {
         // this must be updated to only subtract energy from the initial condition since the energy is already present in the output
         //  Change energy totals to reflect change in energy grids
@@ -647,8 +648,8 @@ vector<int> Event::GetIntegrationBounds(int size, double raduis, double xcenter,
 bool Event::IsEventDone()
 {
 
-//  if (test_ == "GreensFunction" && number_strange == 1)
-//  { return true;  }
+  if (test_ == "SingleQuark" && number_strange == 1)
+  { return true;  }
 
   if (test_ == "SChop")
   {

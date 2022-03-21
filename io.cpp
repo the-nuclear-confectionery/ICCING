@@ -38,7 +38,10 @@ IO::IO(string configFile)
       case inputtype: input >> input_type; break;
       case outputtype:  input >> output_type; break;
       case seed: input >> seed_; break;
+
       case test: input >> test_; break;
+      case subtest: input >> sub_test; break;
+      case greensevolution: input >> greens_evolution; break;
 
       case eventlabel: input >> event_label; break;
       case firstevent: input >> first_event; break;
@@ -140,7 +143,10 @@ void IO::CopyIO(const IO &e)
   input_type = e.input_type;
   output_type = e.output_type;
   seed_ = e.seed_;
+
   test_ = e.test_;
+  sub_test = e.sub_test;
+  greens_evolution = e.greens_evolution;
 
   event_label = e.event_label;
   first_event = e.first_event;
@@ -227,7 +233,10 @@ void IO::Initialize()
   input_type = 1;
   output_type = 1;
   seed_ = 0;
+
   test_ = "";
+  sub_test = "";
+  greens_evolution = false;
 
   event_label = "";
   first_event = 0;
@@ -286,7 +295,10 @@ void IO::Initialize()
   mapConfigParams["input_type"] = inputtype;
   mapConfigParams["output_type"] = outputtype;
   mapConfigParams["seed_"] = seed;
+
   mapConfigParams["test_"] = test;
+  mapConfigParams["sub_test"] = subtest;
+  mapConfigParams["greens_evolution"] = greensevolution;
 
   mapConfigParams["event_label"] = eventlabel;
   mapConfigParams["first_event"] = firstevent;
@@ -345,7 +357,9 @@ void IO::OutputConfig(string file_name)
     << "\ninput_type " << input_type
     << "\noutput_type " << output_type
     << "\nseed_ " << seed_
-    << "\ntest_ " << test_;
+    << "\ntest_ " << test_
+    << "\nsub_test " << sub_test
+    << "\ngreens_evolution " << greens_evolution;
 
   output
     << "\n\nevent_label " << event_label
@@ -416,6 +430,7 @@ Event IO::InitializeEvent()
   event_in.grid_step = grid_step;
   event_in.grid_points = grid_points;
   event_in.test_ = test_;
+  event_in.greens_evolution = greens_evolution;
   event_in.up_chop = up_chop;
   event_in.down_chop = down_chop;
   event_in.strange_chop = strange_chop;
@@ -437,7 +452,7 @@ Event IO::InitializeEvent()
   //******************************************************************************************
   //  Define Greens Functions Used for pre hydro evolution
   //******************************************************************************************
-  if (test_ == "GreensFunction")
+  if (greens_evolution)
   {
     event_in.tau_hydro = tau_hydro;
     event_in.eta_over_s = eta_over_s;
@@ -966,6 +981,9 @@ Event IO::ReadEvent(Event event_in)
         //  Read in point from energy density
         input >> readx >> ready >> value;
 
+        if (sub_test == "SmoothProfile")
+        { value = 20; }
+
         //  Take physical point and convert x and y values into grid indicies
         x = (int)round((readx + grid_max)/grid_step);
         y = (int)round((ready + grid_max)/grid_step);
@@ -988,7 +1006,7 @@ Event IO::ReadEvent(Event event_in)
 
   event_in.initial_energy_backup = event_in.initial_energy;
 
-    if (test_ == "GreensFunction")
+    if (greens_evolution)
     {
   //    cout << "Reading in event" << endl;
       // This is where I want to preevolve the event energy density
@@ -1178,7 +1196,7 @@ void IO::WriteEvent(Event event)
     }
   }
 
-  if (test_ == "GreensFunction")
+  if (greens_evolution)
   {
     OutputSparseCurrentGrids(event.momentum, event.density, event.total_energy, output_dir + "currents" + event_number + ".dat");
   }
