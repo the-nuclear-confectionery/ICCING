@@ -233,6 +233,9 @@ vector<double> Splitter::RollLocation(double mass, double Qs)
 
   }
 
+  if (test_ == "SingleQuark")
+  { r_final = 2; }
+
   //  Get random phi to calculate the x and y displacement for the quark pair
   phi = get_phi(get_random_number);
 
