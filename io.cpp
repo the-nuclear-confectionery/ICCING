@@ -14,7 +14,7 @@ IO::IO(string configFile)
   input.open(configFile);
 
   string var_type;  //  Used to record parameter type read from file
-
+cout << "test 1" << endl;
   //******************************************************************************************
   //  Loop through config file
   //******************************************************************************************
@@ -115,6 +115,7 @@ cout << freezeout_thresh << endl;
 
   // Output all values, specified and unspecified, used by run of code
   OutputConfig(output_dir + "run_parameters" + to_string(current_event) + ".dat");
+  cout << "test 2" << endl;
 }// End of Class constructor
 //__________________________________________________________________________________________
 
@@ -1003,7 +1004,7 @@ Event IO::ReadEvent(Event event_in)
 
   event_in.total_initial_entropy = a_trento*event_in.total_initial_entropy/numpoints;
   ConvertEvent(event_in.initial_energy, event_in.total_initial_energy);
-
+cout << "test 3" << endl;
   event_in.initial_energy_backup = event_in.initial_energy;
 
     if (greens_evolution)
