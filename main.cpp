@@ -95,6 +95,8 @@ int main (int argc, char *argv[])
 	  	//******************************************************************************************
 			while (!currentEvent.IsEventDone())
 			{
+				if (inOut.GetTest() == "ConvertEvent")	{	break;	}
+				
 				bool successful_density_update;
 				//	Declare Sample and Quarks for individual event processing
 				Sample currentSample;
