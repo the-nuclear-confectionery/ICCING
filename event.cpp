@@ -262,7 +262,7 @@ Sample Event::SampleEnergy()
     if (test_ == "SingleQuark")
     {
       x_center = initial_energy.size()/2;
-      y_center = initial_energy.size()/2;  
+      y_center = initial_energy.size()/2;
     }
 
     //  Get the total energy and q_s using center picked above
@@ -349,7 +349,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     //******************************************************************************************
     //  Test if Quark is in bounds
     //******************************************************************************************
-
+cout << "this is greens_evolution " << greens_evolution << endl;
     if (greens_evolution)
     {
 //      cout << "test 1" << endl;
