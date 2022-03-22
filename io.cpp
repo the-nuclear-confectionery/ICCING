@@ -235,14 +235,14 @@ void IO::Initialize()
 
   test_ = "";
   sub_test = "";
-  greens_evolution = false;
+  greens_evolution = 0;
 
   event_label = "";
   first_event = 0;
   last_event = 0;
   repeat_event = 0;
-  t_a = false;
-  t_b = true;
+  t_a = 0;
+  t_b = 1;
 
   kappa_ = 1.0;
   rad_ = 0.5;
@@ -451,7 +451,7 @@ Event IO::InitializeEvent()
   //******************************************************************************************
   //  Define Greens Functions Used for pre hydro evolution
   //******************************************************************************************
-  if (greens_evolution)
+  if (greens_evolution == 1)
   {
     event_in.tau_hydro = tau_hydro;
     event_in.eta_over_s = eta_over_s;
@@ -1005,7 +1005,7 @@ Event IO::ReadEvent(Event event_in)
 
   event_in.initial_energy_backup = event_in.initial_energy;
 
-    if (greens_evolution)
+    if (greens_evolution == 1)
     {
   //    cout << "Reading in event" << endl;
       // This is where I want to preevolve the event energy density
@@ -1035,7 +1035,7 @@ Event IO::ReadEvent(Event event_in)
   //******************************************************************************************
   //  If method requires T_a energy density, read it into event
   //******************************************************************************************
-  if (t_a)
+  if (t_a == 1)
   {
     //  Open T_a energy density file
     input.open(trento_input_dir + "TA" + to_string(current_event) + ".dat");
@@ -1089,7 +1089,7 @@ Event IO::ReadEvent(Event event_in)
   //******************************************************************************************
   //  If method requires T_b energy density, read it into event
   //******************************************************************************************
-  if (t_b)
+  if (t_b == 1)
   {
     //  Open T_a energy density file
     input.open(trento_input_dir + "TB" + to_string(current_event) + ".dat");
@@ -1167,11 +1167,11 @@ void IO::WriteEvent(Event event)
     OutputFullDensityGrids(event.density[2], output_dir + "strange_density_" + event_number + ".dat");
     OutputFullDensityGrids(event.density[3], output_dir + "charge_density_" + event_number + ".dat");
 
-    if (t_a)  //  Output T_a if flag is true
+    if (t_a == 1)  //  Output T_a if flag is true
     {
       OutputFullDensityGrids(event.t_a, output_dir + "ta" + event_number + ".dat");
     }
-    if (t_b)  //  Output T_b if flag is true
+    if (t_b == 1)  //  Output T_b if flag is true
     {
       OutputFullDensityGrids(event.t_b, output_dir + "tb" + event_number + ".dat");
     }
@@ -1185,17 +1185,17 @@ void IO::WriteEvent(Event event)
 
     OutputSparseDensityGrids(event.density, event.total_energy, output_dir + "densities" + event_number + ".dat");
 
-    if (t_a)  //  Output T_a if flag is true
+    if (t_a == 1)  //  Output T_a if flag is true
     {
       OutputSparseDensityGrids(event.t_a, output_dir + "ta" + event_number + ".dat");
     }
-    if (t_b)  //  Output T_b if flag is true
+    if (t_b == 1)  //  Output T_b if flag is true
     {
       OutputSparseDensityGrids(event.t_b, output_dir + "tb" + event_number + ".dat");
     }
   }
 
-  if (greens_evolution)
+  if (greens_evolution == 1)
   {
     OutputSparseCurrentGrids(event.momentum, event.density, event.total_energy, output_dir + "currents" + event_number + ".dat");
   }

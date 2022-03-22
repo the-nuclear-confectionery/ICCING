@@ -112,8 +112,8 @@ private:
 
   string test_;
   string sub_test;
-  bool greens_evolution;
-  
+  int greens_evolution;
+
   //******************************************************************************************
   //  Internal Config parameters
   //******************************************************************************************
@@ -121,8 +121,8 @@ private:
   int first_event;  //  First event to be read i.e. 0
   int last_event; //  Last event to be read
   int repeat_event; // How many times to repeat event
-  bool t_a; // Is T_a read in
-  bool t_b; // Is T_b read in
+  int t_a; // Is T_a read in
+  int t_b; // Is T_b read in
 
   //******************************************************************************************
   //  Event Config parameters

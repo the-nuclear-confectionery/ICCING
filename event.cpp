@@ -285,7 +285,7 @@ Sample Event::SampleEnergy()
           for (int j = 0; j < initial_energy.size(); j++)
           {
 
-            if (greens_evolution)
+            if (greens_evolution == 1)
             {
               // skip this since all of the energy is already copied over
               initial_energy[i][j] = 0;
@@ -350,7 +350,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     //  Test if Quark is in bounds
     //******************************************************************************************
 cout << "this is greens_evolution " << greens_evolution << endl;
-    if (greens_evolution)
+    if (greens_evolution == 1)
     {
 //      cout << "test 1" << endl;
       quark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad, quark_x, quark_y);
@@ -368,7 +368,7 @@ cout << "this is greens_evolution " << greens_evolution << endl;
     //  Test if Anti-Quark is in bounds
     //******************************************************************************************
 
-    if (greens_evolution)
+    if (greens_evolution == 1)
     {
 //      cout << "test 2" << endl;
       antiquark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad, antiquark_x, antiquark_y);
@@ -440,7 +440,7 @@ cout << "this is greens_evolution " << greens_evolution << endl;
           if(gluon_dist[i][j] == 1) { total_points_gluon++; }
         }
         // This removes the gluon from the final state which was chosen to split and is now being redistributed
-        if (greens_evolution)
+        if (greens_evolution == 1)
         {
           double evolved_energy = 0, wtilde = 0;
           evolution.GetValues(tau_0*energy, tau_hydro, eta_over_s, evolved_energy, wtilde);
@@ -465,7 +465,7 @@ cout << "this is greens_evolution " << greens_evolution << endl;
       for (int j = quark_bounds[1]; j < quark_bounds[3]; j++)
       {
 
-        if (greens_evolution)
+        if (greens_evolution == 1)
         {
           //  Deposit Quark Energy and Charges
           temp_x = quark_x - greens_rad + i;
@@ -592,7 +592,7 @@ void Event::UpdateEnergy(double ratio)
   {
     for (int j = gluon_bounds[1]; j < gluon_bounds[3]; j++)
     {
-      if (greens_evolution)
+      if (greens_evolution == 1)
       {
         // this must be updated to only subtract energy from the initial condition since the energy is already present in the output
         //  Change energy totals to reflect change in energy grids
