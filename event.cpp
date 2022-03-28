@@ -439,7 +439,8 @@ cout << "this is greens_evolution " << greens_evolution << endl;
           gluon_energy += energy;
           if(gluon_dist[i][j] == 1) { total_points_gluon++; }
         }
-        // This removes the gluon from the final state which was chosen to split and is now being redistributed
+
+/*        // This removes the gluon from the final state which was chosen to split and is now being redistributed
         if (greens_evolution == 1)
         {
           double evolved_energy = 0, wtilde = 0;
@@ -447,6 +448,7 @@ cout << "this is greens_evolution " << greens_evolution << endl;
 
           density[0][temp_x][temp_y] -= evolved_energy;
         }
+*/
       }
     }
 
@@ -467,6 +469,16 @@ cout << "this is greens_evolution " << greens_evolution << endl;
 
         if (greens_evolution == 1)
         {
+          //  Subtract Gluon Energy
+          temp_x = x_center - greens_rad + i;
+          temp_y = y_center - greens_rad + j;
+          double quark_distance = sqrt(pow((x_center - temp_x)*grid_step, 2) + pow((y_center - temp_y)*grid_step, 2));
+
+          density[0][temp_x][temp_y] += (quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
+                                        *(final_energy_backup[x_center][y_center]/initial_energy_backup[x_center][y_center])
+                                        *evolution.Gss(w_tilde[x_center][y_center], quark_distance/(tau_hydro - tau_0));
+
+
           //  Deposit Quark Energy and Charges
           temp_x = quark_x - greens_rad + i;
           temp_y = quark_y - greens_rad + j;
