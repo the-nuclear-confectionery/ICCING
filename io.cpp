@@ -981,7 +981,7 @@ Event IO::ReadEvent(Event event_in)
         input >> readx >> ready >> value;
 
         if (sub_test == "SmoothProfile")
-        { value = 0.2; }
+        { value = 0.06; }
 
         //  Take physical point and convert x and y values into grid indicies
         x = (int)round((readx + grid_max)/grid_step);
