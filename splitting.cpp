@@ -238,7 +238,7 @@ vector<double> Splitter::RollLocation(double mass, double Qs)
   phi = get_phi(get_random_number);
   if (test_ == "SingleQuark")
   {
-    r_final = 4;
+    r_final = 1.0;
     phi = 0;
   }
 
