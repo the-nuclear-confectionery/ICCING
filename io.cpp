@@ -552,7 +552,7 @@ Event IO::InitializeEvent()
       normalization += exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2))));  //  Add value at poinnt to a normalization factor
     }
   }
-cout << "test" << endl;
+
   //  Loop through only points in radius of greens distribution and set to 1
   for (int i = -event_in.greens_rad; i <= event_in.greens_rad; i++) //  This goes -radius to radius in x
   {
@@ -565,7 +565,7 @@ cout << "test" << endl;
       if (greens_evolution == 1)
       {
         //  Calculate value of gaussian at point in circle
-        event_in.greens_dist[i + ox_quark][j + oy_quark] = 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2))));
+        event_in.greens_dist[i + ox_greens][j + oy_greens] = 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2))));
       }
       else if (greens_evolution == 2)
       {
@@ -575,7 +575,6 @@ cout << "test" << endl;
     }
 
   }
-  cout << "test2" << endl;
 
   return event_in;
 }
