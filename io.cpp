@@ -552,7 +552,7 @@ Event IO::InitializeEvent()
       normalization += exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2))));  //  Add value at poinnt to a normalization factor
     }
   }
-
+cout << "test" << endl;
   //  Loop through only points in radius of greens distribution and set to 1
   for (int i = -event_in.greens_rad; i <= event_in.greens_rad; i++) //  This goes -radius to radius in x
   {
@@ -575,6 +575,7 @@ Event IO::InitializeEvent()
     }
 
   }
+  cout << "test2" << endl;
 
   return event_in;
 }
