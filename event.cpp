@@ -349,7 +349,6 @@ bool Event::UpdateDensity(Quarks quark_density)
     //******************************************************************************************
     //  Test if Quark is in bounds
     //******************************************************************************************
-cout << "this is greens_evolution " << greens_evolution << endl;
     if (greens_evolution != 0)
     {
 //      cout << "test 1" << endl;
@@ -512,6 +511,7 @@ cout << "this is greens_evolution " << greens_evolution << endl;
           //  Baryon = baron_number*quark_dist
           density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*greens_dist[i][j]
                                         *(tau_0/tau_hydro)*quark_charge_greensfunction;
+          cout << quark_density.GetCharge()[1]*greens_dist[i][j] << " " << (tau_0/tau_hydro) << " " << quark_charge_greensfunction << endl;
 //          momentum[1][temp_x][temp_y][0] -= (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 //          momentum[1][temp_x][temp_y][1] -= (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 
