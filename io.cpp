@@ -564,7 +564,9 @@ Event IO::InitializeEvent()
       {
         //  Calculate value of gaussian at point in circle
         event_in.greens_dist[i + ox_greens][j + oy_greens] = 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2))));
-        cout << event_in.greens_dist[i + ox_greens][j + oy_greens] << endl;
+        cout << (normalization*pow(grid_step,2)*tau_hydro) << " " << exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
+        cout << (normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
+        cout << 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
       }
       else if (greens_evolution == 2)
       {
