@@ -531,7 +531,7 @@ Event IO::InitializeEvent()
 
   event_in.greens_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of greens distribution
   //  Set size of greens_dist grid used to distribute according to greens functions
-  event_in.greens_dist.resize(2*event_in.greens_rad + 1, vector<int>(2*event_in.greens_rad + 1, 0));
+  event_in.greens_dist.resize(2*event_in.greens_rad + 1, vector<double>(2*event_in.greens_rad + 1, 0));
 
   //  Initialize greens distribution
   int ox_greens = event_in.greens_rad;  //  x-value of greens_dist center
