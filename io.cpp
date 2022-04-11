@@ -490,7 +490,7 @@ Event IO::InitializeEvent()
   //******************************************************************************************
   event_in.quark_rad = round(qrad_/grid_step); //  Set radius of quarks
   //  Set size of quark_dist grid used to create quarks
-  event_in.quark_dist.resize(2*event_in.quark_rad + 1, vector<double>(2*event_in.quark_rad + 1, 0.));
+  event_in.quark_dist.resize(2*event_in.quark_rad + 1, vector<double>(2*event_in.quark_rad + 1, 0.0));
 
   //  Initialize quark distribution
   int ox_quark = event_in.quark_rad;  //  x-value of quark_dist center
@@ -564,9 +564,9 @@ Event IO::InitializeEvent()
       {
         //  Calculate value of gaussian at point in circle
         event_in.greens_dist[i + ox_greens][j + oy_greens] = 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2))));
-        cout << (normalization*pow(grid_step,2)*tau_hydro) << " " << exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
-        cout << (normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
-        cout << 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
+//        cout << (normalization*pow(grid_step,2)*tau_hydro) << " " << exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
+//        cout << (normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
+//        cout << 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
       }
       else if (greens_evolution == 2)
       {

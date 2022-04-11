@@ -95,7 +95,7 @@ private:
   double tau_hydro;
   double eta_over_s;
   double greens_rad;
-  vector<vector<int>> greens_dist;  //  Used to distribute using greens functions
+  vector<vector<double>> greens_dist;  //  Used to distribute using greens functions
   vector<vector<double>> initial_energy_backup;  //  Input Energy density backup for use with greens functions
   vector<vector<double>> final_energy_backup;  //  Final Energy density backup for use with greens functions
   vector<vector<vector<vector<double>>>> momentum; //  Momentum Information form Greens Functions: 0(gluon), 1(baryon), 2(em_charge), 3(strange), 4(charm)
