@@ -176,6 +176,34 @@ double Event::GetOriginalEnergy()
 
 //__________________________________________________________________________________________
 //##########################################################################################
+//  Select energy of gluon
+//##########################################################################################
+double Event::GetQs()
+{
+  double q_s;
+
+  //  Get bounds of gluon using center point as defined by SampleEnergy
+  //    Makes sure calculations are only done on points in initial_energy
+  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x_center, y_center);
+
+  //  Loop over gluon_dist using gluon_bounds
+  for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
+  {
+    for (int j = gluon_bounds[1]; j < gluon_bounds[3]; j++)
+    {
+      //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
+
+      //  Sum up total energy from gluon region
+      q_s += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist[i][j];
+    }
+  }
+
+  return q_s;
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
 //  Get energy of all possible gluons
 //##########################################################################################
 vector<vector<double>> Event::GetAllGlue()
@@ -455,7 +483,8 @@ bool Event::UpdateDensity(Quarks quark_density)
     {
       output << GetOriginalEnergy() << " " << GetOriginalEnergy()/total_points_gluon << " ";
       output << out_sample.e_tot/(pow(grid_step,2)*tau_0) << " " << out_sample.e_tot/(total_points_gluon*pow(grid_step,2)*tau_0) << " ";
-      output << gluon_energy << " " << gluon_energy/total_points_gluon << endl;
+      output << gluon_energy << " " << gluon_energy/total_points_gluon << " ";
+      output << GetQs() << " " << GetQs()/total_points_gluon << endl;
       output.close();
     }
     //******************************************************************************************

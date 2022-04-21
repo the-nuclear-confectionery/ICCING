@@ -114,6 +114,9 @@ private:
   //  Select energy of area
   double GetOriginalEnergy();
 
+  //  Select qs of area
+  double GetQs();
+
   //  Calculate energy of all possible gluons
   vector<vector<double>> GetAllGlue();
   int GetMaskPoints();

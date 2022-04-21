@@ -45,7 +45,12 @@ void Splitter::CopySplitter(const Splitter &e)
   e_thresh = e.e_thresh;
   lambda_ = e.lambda_;
   grid_step = e.grid_step;
+  up_chem = e.up_chem;
+  down_chem = e.down_chem;
+  strange_chem = e.strange_chem;
+  charm_chem = e.charm_chem;
   test_ = e.test_;
+  sub_test = e.sub_test;
   output_dir = e.output_dir;
 
   Model_Correlator = e.Model_Correlator;
@@ -123,15 +128,25 @@ double Splitter::RollGlue(double e_tot)
 Charge Splitter::RollFlavor(double Qs)
 {
   Charge create_charge;
-
+  double u, d, s, c;
   //  Initialize distribution for selecting quark flavor probability
   uniform_real_distribution<double> get_flavor(0, 1);
 
   //  For given Qs, probabilities to get each flavor are extrapolated
-  double u = alpha_s*InterpolateValue(FindRange(flavor_chemistry[0], Qs), Qs);
-  double d = alpha_s*InterpolateValue(FindRange(flavor_chemistry[1], Qs), Qs);
-  double s = alpha_s*InterpolateValue(FindRange(flavor_chemistry[2], Qs), Qs);
-  double c = alpha_s*InterpolateValue(FindRange(flavor_chemistry[3], Qs), Qs);
+  if (up_chem == 0.0 && down_chem == 0.0 && strange_chem == 0.0 && charm_chem == 0.0)
+  {
+    u = alpha_s*InterpolateValue(FindRange(flavor_chemistry[0], Qs), Qs);
+    d = alpha_s*InterpolateValue(FindRange(flavor_chemistry[1], Qs), Qs);
+    s = alpha_s*InterpolateValue(FindRange(flavor_chemistry[2], Qs), Qs);
+    c = alpha_s*InterpolateValue(FindRange(flavor_chemistry[3], Qs), Qs);
+  }
+  else
+  {
+    u = up_chem;
+    d = down_chem;
+    s = strange_chem;
+    c = charm_chem;
+  }
 
   //  Get probability to get gluon for given Qs
   double g = 1 - u - d - s - c;

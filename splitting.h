@@ -52,7 +52,12 @@ private:
 	double e_thresh;
 	double lambda_;
 	double grid_step;
+	double up_chem;
+	double down_chem;
+	double strange_chem;
+	double charm_chem;
 	string test_;
+	string sub_test;
 	string output_dir;
 
 	Correlator Model_Correlator = Correlator("", 0.0, 0.0);

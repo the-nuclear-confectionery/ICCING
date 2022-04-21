@@ -59,6 +59,10 @@ IO::IO(string configFile)
       case alphamin:  input >> alpha_min; break;
       case rmax:  input >> r_max; break;
       case lambdabym: input >> lambda_bym; break;
+      case upchem:  input >> up_chem; break;
+      case downchem:  input >> down_chem; break;
+      case strangechem:  input >> strange_chem; break;
+      case charmchem:  input >> charm_chem; break;
 
       case atrento:  input >> a_trento; break;
       case schop:  input >> s_chop; break;
@@ -162,6 +166,10 @@ void IO::CopyIO(const IO &e)
   alpha_min = e.alpha_min;
   r_max = e.r_max;
   lambda_bym = e.lambda_bym;
+  up_chem = e.up_chem;
+  down_chem = e.down_chem;
+  strange_chem = e.strange_chem;
+  charm_chem = e.charm_chem;
 
   a_trento = e.a_trento;
   s_chop = e.s_chop;
@@ -252,6 +260,10 @@ void IO::Initialize()
   alpha_min = 0.01;
   r_max = 1.0;
   lambda_bym = 0.0;
+  up_chem = 0.0;
+  down_chem = 0.0;
+  strange_chem = 0.0;
+  charm_chem = 0.0;
 
   a_trento = 119.0;
   s_chop = 10.0E-20;
@@ -314,6 +326,10 @@ void IO::Initialize()
   mapConfigParams["alpha_min"] = alphamin;
   mapConfigParams["r_max"] = rmax;
   mapConfigParams["lambda_bym"] = lambdabym;
+  mapConfigParams["up_chem"] = upchem;
+  mapConfigParams["down_chem"] = downchem;
+  mapConfigParams["strange_chem"] = strangechem;
+  mapConfigParams["charm_chem"] = charmchem;
 
   mapConfigParams["a_trento"] = atrento;
   mapConfigParams["s_chop"] = schop;
@@ -377,7 +393,12 @@ void IO::OutputConfig(string file_name)
     << "\nalpha_s " << alpha_s
     << "\nalpha_min " << alpha_min
     << "\nr_max " << r_max
-    << "\nlambda_bym " << lambda_bym;
+    << "\nlambda_bym " << lambda_bym
+    << "\nup_chem " << up_chem
+    << "\ndown_chem " << down_chem
+    << "\nstrange_chem " << strange_chem
+    << "\ncharm_chem " << charm_chem;
+
   output
     << "\n\na_trento " << a_trento
     << "\ns_chop " << s_chop
@@ -599,47 +620,54 @@ Splitter IO::InitializeSplitter()
   init_splitter.e_thresh = e_thresh;
   init_splitter.lambda_ = lambda_;
   init_splitter.grid_step = grid_step;
+  init_splitter.up_chem = up_chem;
+  init_splitter.down_chem = down_chem;
+  init_splitter.strange_chem = strange_chem;
+  init_splitter.charm_chem = charm_chem;
   init_splitter.test_ = test_;
+  init_splitter.sub_test = sub_test;
   init_splitter.output_dir = output_dir;
 
   //  Initialization of correlator function with correct dipole_model
   init_splitter.Model_Correlator = Correlator(dipole_model, lambda_bym, alpha_s);
 
-  //******************************************************************************************
-  //  Read in quark chemistry file for use in splitting probabilities
-  //    This is an interpolation function used to get the splitting probability for a given
-  //    quark and q_s.
-  //******************************************************************************************
-  double value;
-  vector<double> ratio_q_s;
-  vector<vector<double>> ratio_quarks(4); // 0 = up, 1 = down, 2 = strange, 3 = charm
-  init_splitter.flavor_chemistry.resize(4);
-
-  ifstream input;
-  input.open(quark_input_file);
-
-  //  Read each line of file and add flavor probabilities for given q_s at specified index
-  while (!input.eof())
+  if (up_chem == 0.0 && down_chem == 0.0 && strange_chem == 0.0 && charm_chem == 0.0)
   {
-    //  Read in q_s value and add to the end of q_s list
-    input >> value;
-    ratio_q_s.push_back(value);
+    //******************************************************************************************
+    //  Read in quark chemistry file for use in splitting probabilities
+    //    This is an interpolation function used to get the splitting probability for a given
+    //    quark and q_s.
+    //******************************************************************************************
+    double value;
+    vector<double> ratio_q_s;
+    vector<vector<double>> ratio_quarks(4); // 0 = up, 1 = down, 2 = strange, 3 = charm
+    init_splitter.flavor_chemistry.resize(4);
 
-    //  Read in the 4 different flavor probabilities and add them to the end of their
-    //  respective lists
+    ifstream input;
+    input.open(quark_input_file);
+
+    //  Read each line of file and add flavor probabilities for given q_s at specified index
+    while (!input.eof())
+    {
+      //  Read in q_s value and add to the end of q_s list
+      input >> value;
+      ratio_q_s.push_back(value);
+
+      //  Read in the 4 different flavor probabilities and add them to the end of their
+      //  respective lists
+      for (int i = 0; i < 4; i++)
+      {
+        input >> value;
+        ratio_quarks[i].push_back(value);
+      }
+    }
+
+    //  Initialize Cubic Spline interpolators for each set of flavor with the same list of q_s
     for (int i = 0; i < 4; i++)
     {
-      input >> value;
-      ratio_quarks[i].push_back(value);
+      init_splitter.flavor_chemistry[i] = CubicSpline(ratio_q_s, ratio_quarks[i]);
     }
   }
-
-  //  Initialize Cubic Spline interpolators for each set of flavor with the same list of q_s
-  for (int i = 0; i < 4; i++)
-  {
-    init_splitter.flavor_chemistry[i] = CubicSpline(ratio_q_s, ratio_quarks[i]);
-  }
-
 
   return init_splitter;
 }

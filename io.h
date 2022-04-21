@@ -72,6 +72,10 @@ private:
     alphamin,
     rmax,
     lambdabym,
+    upchem,
+    downchem,
+    strangechem,
+    charmchem,
 
     atrento,
     schop,
@@ -140,6 +144,10 @@ private:
   double alpha_min;
   double r_max;
   double lambda_bym;
+  double up_chem;
+  double down_chem;
+  double strange_chem;
+  double charm_chem;
 
   //******************************************************************************************
   //  EOS Config parameters
