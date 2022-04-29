@@ -1260,7 +1260,7 @@ void IO::WriteEvent(Event event)
   }
 
   OutputEccentricities(event.total_initial_entropy, event.initial_eccentricities, "Energy", output_dir + "initial_eccentricities");
-  if (test_ =! "ConvertEvent")
+  if (test_ != "ConvertEvent")
   {
       OutputEccentricities(event.total_initial_entropy, event.eccentricities[0], "Energy", output_dir + "energy_eccentricities");
       OutputEccentricities(event.total_initial_entropy, event.eccentricities[1], "Charge", output_dir + "baryon_eccentricities");
@@ -1268,7 +1268,7 @@ void IO::WriteEvent(Event event)
       OutputEccentricities(event.total_initial_entropy, event.eccentricities[3], "Charge", output_dir + "charge_eccentricities");
       OutputQuarkCounts(event.total_initial_entropy, event.number_gluon, event.number_up, event.number_down, event.number_strange, event.number_charm, output_dir + "quark_counts.dat");
   }
-  
+
   //  Used for tracking which event has been processed
   if (rep_event < repeat_event)
   {
