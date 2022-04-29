@@ -240,7 +240,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
 }
 //__________________________________________________________________________________________
 
-vector<vector<double>> CalculateInitialEccentricities(int grid_max, double grid_step, vector<vector<double>> initial_energy)
+vector<vector<double>> Eccentricity::CalculateInitialEccentricities(int grid_max, double grid_step, vector<vector<double>> initial_energy)
 {
   double x, y, energy = 0;
 
