@@ -96,7 +96,7 @@ int main (int argc, char *argv[])
 			while (!currentEvent.IsEventDone())
 			{
 				if (inOut.GetTest() == "ConvertEvent")	{	break;	}
-				
+				cout << "test 1" << endl;
 				bool successful_density_update;
 				//	Declare Sample and Quarks for individual event processing
 				Sample currentSample;
@@ -132,14 +132,18 @@ int main (int argc, char *argv[])
 				if (!successful_density_update) { cout << "Grid is too small. Quarks out of bounds." << endl;	exit(0); }
 
 			}
+			cout << "test 2" << endl;
 
 		//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 		//	Calculate Eccentricities of event
 		currentEvent.CalculateEccentricities();
+		cout << "test 3" << endl;
 
 		//	Write event data to files
 		inOut.WriteEvent(currentEvent);
 		//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+		cout << "test 4" << endl;
+
 	}
 
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!

@@ -649,8 +649,10 @@ void Event::CalculateEccentricities()
 {
   initial_eccentricities = ecc.CalculateInitialEccentricities(grid_max, grid_step, initial_energy_backup);
   cout << "1st testing eccentricities " << initial_eccentricities[0][0] << " " << initial_eccentricities[0][1] << " " << initial_eccentricities[0][2] << endl;
-  if (test_ == "ConvertEvent") { return; }
-  eccentricities = ecc.CalculateEccentricities(grid_max, grid_step, density);
+  if (test_ != "ConvertEvent")
+  {
+    eccentricities = ecc.CalculateEccentricities(grid_max, grid_step, density);
+  }
 }
 //__________________________________________________________________________________________
 
