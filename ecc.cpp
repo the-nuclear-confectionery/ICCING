@@ -240,6 +240,39 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
 }
 //__________________________________________________________________________________________
 
+vector<vector<double>> CalculateInitialEccentricities(int grid_max, double grid_step, vector<vector<double>> initial_energy)
+{
+  double x, y, energy = 0;
+
+  //******************************************************************************************
+  //  Take full density grid and convert to sparse density structure for easy and quick processing
+  //******************************************************************************************
+  for (int i = 0; i < initial_energy.size(); i++)
+  {
+    for (int j = 0; j < initial_energy[0].size(); j++)
+    {
+      if (initial_energy[i][j] != 0)
+      {
+        x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
+        y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
+
+        x_center_of_mass += x*initial_energy[i][j];
+        y_center_of_mass += y*initial_energy[i][j];
+        energy += initial_energy[i][j];
+        sparse_density.push_back({x, y, initial_energy[i][j], 0, 0, 0});
+      }
+    }
+  }
+
+  x_center_of_mass /= energy;
+  y_center_of_mass /= energy;
+
+  //******************************************************************************************
+  //  Calculate eccentricities and return in structure for easy output
+  //******************************************************************************************
+  return {StandardCalculation("Energy",2,2), StandardCalculation("Energy",3,3), StandardCalculation("Energy",4,4), StandardCalculation("Energy",5,5)};
+
+}
 //__________________________________________________________________________________________
 //##########################################################################################
 //  Clean class

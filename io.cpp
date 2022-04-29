@@ -1259,6 +1259,7 @@ void IO::WriteEvent(Event event)
       OutputSparseGluonGrids(event.GetAllGlue(), event.GetMaskPoints(), output_dir + "all_gluons" + event_number + ".dat");
   }
 
+  OutputEccentricities(event.total_initial_entropy, event.initial_eccentricities, "Energy", output_dir + "initial_eccentricities");
   OutputEccentricities(event.total_initial_entropy, event.eccentricities[0], "Energy", output_dir + "energy_eccentricities");
   OutputEccentricities(event.total_initial_entropy, event.eccentricities[1], "Charge", output_dir + "baryon_eccentricities");
   OutputEccentricities(event.total_initial_entropy, event.eccentricities[2], "Charge", output_dir + "strange_eccentricities");
