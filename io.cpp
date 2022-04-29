@@ -1258,7 +1258,7 @@ void IO::WriteEvent(Event event)
   {
       OutputSparseGluonGrids(event.GetAllGlue(), event.GetMaskPoints(), output_dir + "all_gluons" + event_number + ".dat");
   }
-
+  cout << "testing eccentricities " << event.initial_eccentricities[0] << " " << event.initial_eccentricities[1] << " " << event.initial_eccentricities[2] << endl;
   OutputEccentricities(event.total_initial_entropy, event.initial_eccentricities, "Energy", output_dir + "initial_eccentricities");
   if (test_ != "ConvertEvent")
   {

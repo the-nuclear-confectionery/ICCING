@@ -648,6 +648,7 @@ bool Event::UpdateDensity(Quarks quark_density)
 void Event::CalculateEccentricities()
 {
   initial_eccentricities = ecc.CalculateInitialEccentricities(grid_max, grid_step, initial_energy_backup);
+  cout << "1st testing eccentricities " << initial_eccentricities[0] << " " << initial_eccentricities[1] << " " << initial_eccentricities[2] << endl;
   if (test_ == "ConvertEvent") { return; }
   eccentricities = ecc.CalculateEccentricities(grid_max, grid_step, density);
 }
