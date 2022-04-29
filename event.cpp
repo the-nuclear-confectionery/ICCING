@@ -58,6 +58,7 @@ void Event::CopyEvent(const Event &e)
   gluon_dist = e.gluon_dist;
   quark_dist = e.quark_dist;
   valued_points = e.valued_points;
+  initial_eccentricities = e.initial_eccentricities;
   eccentricities = e.eccentricities;
   ecc = e.ecc;
   number_gluon = e.number_gluon;
@@ -648,7 +649,7 @@ bool Event::UpdateDensity(Quarks quark_density)
 void Event::CalculateEccentricities()
 {
   initial_eccentricities = ecc.CalculateInitialEccentricities(grid_max, grid_step, initial_energy_backup);
-  cout << "1st testing eccentricities " << initial_eccentricities[0][0] << " " << initial_eccentricities[0][1] << " " << initial_eccentricities[0][2] << endl;
+//  cout << "1st testing eccentricities " << initial_eccentricities[0][0] << " " << initial_eccentricities[0][1] << " " << initial_eccentricities[0][2] << endl;
   if (test_ != "ConvertEvent")
   {
     eccentricities = ecc.CalculateEccentricities(grid_max, grid_step, density);
