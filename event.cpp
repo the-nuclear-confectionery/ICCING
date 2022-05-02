@@ -399,7 +399,7 @@ bool Event::UpdateDensity(Quarks quark_density)
         initial_energy_backup[quark_bounds[0]][quark_bounds[1]] < 0 ||
         initial_energy_backup[quark_bounds[0]][quark_bounds[3]] < 0 ||
         initial_energy_backup[quark_bounds[2]][quark_bounds[1]] < 0 ||
-        initial_energy_backup[quark_bounds[2]][quark_bounds[3]] < 0 ||
+        initial_energy_backup[quark_bounds[2]][quark_bounds[3]] < 0
       )
       { return false; }
     }
@@ -427,7 +427,7 @@ bool Event::UpdateDensity(Quarks quark_density)
         initial_energy_backup[antiquark_bounds[0]][antiquark_bounds[1]] < 0 ||
         initial_energy_backup[antiquark_bounds[0]][antiquark_bounds[3]] < 0 ||
         initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[1]] < 0 ||
-        initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[3]] < 0 ||
+        initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[3]] < 0
       )
       { return false; }
     }
@@ -477,7 +477,7 @@ bool Event::UpdateDensity(Quarks quark_density)
         initial_energy_backup[gluon_bounds[0]][gluon_bounds[1]] < 0 ||
         initial_energy_backup[gluon_bounds[0]][gluon_bounds[3]] < 0 ||
         initial_energy_backup[gluon_bounds[2]][gluon_bounds[1]] < 0 ||
-        initial_energy_backup[gluon_bounds[2]][gluon_bounds[3]] < 0 ||
+        initial_energy_backup[gluon_bounds[2]][gluon_bounds[3]] < 0 
       )
       { return false; }
     }
