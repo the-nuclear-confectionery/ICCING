@@ -66,6 +66,7 @@ private:
     rad,
     qrad,
     lambda,
+    perturbativeregime,
 
     dipolemodel,
     alphas,
