@@ -53,6 +53,7 @@ IO::IO(string configFile)
       case rad:  input >> rad_; break;
       case qrad:  input >> qrad_; break;
       case lambda:  input >> lambda_; break;
+      case perturbativeregime: input >> perturbative_regime; break;
 
       case dipolemodel:  input >> dipole_model; break;
       case alphas:  input >> alpha_s; break;
@@ -160,6 +161,7 @@ void IO::CopyIO(const IO &e)
   rad_ = e.rad_;
   qrad_ = e.qrad_;
   lambda_ = e.lambda_;
+  perturbative_regime = e.perturbative_regime;
 
   dipole_model = e.dipole_model;
   alpha_s = e.alpha_s;
@@ -254,6 +256,7 @@ void IO::Initialize()
   rad_ = 0.5;
   qrad_ = 0.5;
   lambda_ = 1.0;
+  perturbative_regime = 1.0;
 
   dipole_model = "";
   alpha_s = 0.3;
@@ -320,6 +323,7 @@ void IO::Initialize()
   mapConfigParams["rad_"] = rad;
   mapConfigParams["qrad_"] = qrad;
   mapConfigParams["lambda_"] = lambda;
+  mapConfigParams["perturbative_regime"] = perturbativeregime;
 
   mapConfigParams["dipole_model"] = dipolemodel;
   mapConfigParams["alpha_s"] = alphas;
@@ -386,7 +390,8 @@ void IO::OutputConfig(string file_name)
     << "\n\nkappa_ " << kappa_
     << "\nrad_ " << rad_
     << "\nqrad_ " << qrad_
-    << "\nlambda_ " << lambda_;
+    << "\nlambda_ " << lambda_
+    << "\nperturbative_regime " << perturbative_regime;
 
   output
     << "\n\ndipole_model " << dipole_model
@@ -453,6 +458,7 @@ Event IO::InitializeEvent()
   event_in.down_chop = down_chop;
   event_in.strange_chop = strange_chop;
   event_in.charm_chop = charm_chop;
+  event_in.perturbative_regime = perturbative_regime;
   event_in.output_dir = output_dir;
 
   //  Initialize input grid to 0 with dimensions grid_points + 1

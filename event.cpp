@@ -49,6 +49,7 @@ void Event::CopyEvent(const Event &e)
   test_ = e.test_;
   greens_evolution = e.greens_evolution;
   get_grid_point = e.get_grid_point;
+  perturbative_regime = e.perturbative_regime;
   output_dir = e.output_dir;
 
   initial_energy = e.initial_energy;
@@ -392,6 +393,16 @@ bool Event::UpdateDensity(Quarks quark_density)
       { return false; }
     }
 
+    if (perturbative_regime < 1.0)
+    {
+      if (
+        initial_energy_backup[quark_bounds[0]][quark_bounds[1]] < 0 ||
+        initial_energy_backup[quark_bounds[0]][quark_bounds[3]] < 0 ||
+        initial_energy_backup[quark_bounds[2]][quark_bounds[1]] < 0 ||
+        initial_energy_backup[quark_bounds[2]][quark_bounds[3]] < 0 ||
+      )
+      { return false; }
+    }
     //******************************************************************************************
     //  Test if Anti-Quark is in bounds
     //******************************************************************************************
@@ -410,6 +421,16 @@ bool Event::UpdateDensity(Quarks quark_density)
       { return false; }
     }
 
+    if (perturbative_regime < 1.0)
+    {
+      if (
+        initial_energy_backup[antiquark_bounds[0]][antiquark_bounds[1]] < 0 ||
+        initial_energy_backup[antiquark_bounds[0]][antiquark_bounds[3]] < 0 ||
+        initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[1]] < 0 ||
+        initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[3]] < 0 ||
+      )
+      { return false; }
+    }
 
 //    original_energy = GetOriginalEnergy();
 
@@ -449,6 +470,17 @@ bool Event::UpdateDensity(Quarks quark_density)
     //  Update Total energies and initial_energy
     //******************************************************************************************
     vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x_center, y_center);
+
+    if (perturbative_regime < 1.0)
+    {
+      if (
+        initial_energy_backup[gluon_bounds[0]][gluon_bounds[1]] < 0 ||
+        initial_energy_backup[gluon_bounds[0]][gluon_bounds[3]] < 0 ||
+        initial_energy_backup[gluon_bounds[2]][gluon_bounds[1]] < 0 ||
+        initial_energy_backup[gluon_bounds[2]][gluon_bounds[3]] < 0 ||
+      )
+      { return false; }
+    }
 
     for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
     {

@@ -53,6 +53,7 @@ private:
   double down_chop;
   double strange_chop;
   double charm_chop;
+  double perturbative_regime;
   string output_dir;
   uniform_int_distribution<int> get_grid_point;
   //__________________________________________________________________________________________

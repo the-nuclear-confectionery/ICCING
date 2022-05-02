@@ -135,6 +135,7 @@ private:
   double rad_;
   double qrad_;
   double lambda_;
+  double perturbative_regime;
 
   //******************************************************************************************
   //  Splitter Config parameters
