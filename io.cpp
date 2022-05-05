@@ -532,8 +532,8 @@ Event IO::InitializeEvent()
     int height = round(sqrt(event_in.quark_rad*event_in.quark_rad - i*i));
     for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
     {
-      point = sqrt(pow((i),2) + pow((j),2));  //  Get distance of point from center of circle
-      normalization += exp(-((pow(point,2))/(2*pow(event_in.quark_rad,2))));  //  Add value at poinnt to a normalization factor
+      point = sqrt(pow((i*grid_step),2) + pow((j*grid_step),2));  //  Get distance of point from center of circle
+      normalization += exp(-((pow(point,2))/(2*pow(event_in.quark_rad*grid_step,2))));  //  Add value at poinnt to a normalization factor
     }
   }
 
@@ -544,9 +544,9 @@ Event IO::InitializeEvent()
     int height = round(sqrt(event_in.quark_rad*event_in.quark_rad - i*i));
     for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
     {
-      point = sqrt(pow(i,2) + pow(j,2));  //  Get distance of point from center of circle
+      point = sqrt(pow(i*grid_step,2) + pow(j*grid_step,2));  //  Get distance of point from center of circle
       //  Calculate value of gaussian at point in circle
-      event_in.quark_dist[i + ox_quark][j + oy_quark] = 1/(normalization*pow(grid_step,2)*tau_0)*exp(-((pow(point,2))/(2*pow(event_in.quark_rad,2))));
+      event_in.quark_dist[i + ox_quark][j + oy_quark] = 1/(normalization*pow(grid_step,2)*tau_0)*exp(-((pow(point,2))/(2*pow(event_in.quark_rad*grid_step,2))));
     }
 
   }
