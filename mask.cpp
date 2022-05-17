@@ -12,6 +12,7 @@ Mask::Mask(string type, double rad, double gridstep, double tau)
   grid_step = gridstep;
   tau_ = tau;
 
+  cout << mask_type << " " << dist_rad << " " << tau_ << " " << endl;
   if (mask_type == "Uniform")
   {
     UniformMask();
@@ -29,6 +30,12 @@ Mask::Mask(string type, double rad, double gridstep, double tau)
     GreensFunctionMask();
   }
 
+  for (int i=0; i <dist_mask.size(); i++)
+  {
+    for (int j=0; j <dist_mask.size(); j++)
+    cout << dist_mask[i][j] << " ";
+  }
+  cout << endl;
 }
 //__________________________________________________________________________________________
 
