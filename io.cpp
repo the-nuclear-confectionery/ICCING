@@ -504,11 +504,11 @@ Event IO::InitializeEvent()
   //    there is no need to repeat the normalization and profile calculation.
   //    This mask gets weighted by quark charges and energy for deposit in output.
   //******************************************************************************************
-  if (mask_type != "Greens")
+  if (density_profile_type != "Greens")
   {
     event_in.quark_rad = round(qrad_/grid_step); //  Set radius of quarks
     //  Set size of quark_dist grid used to create quarks
-    event_in.quark_dist = Mask(mask_type, event_in.quark_rad, grid_step, tau_0);
+    event_in.quark_dist = Mask(density_profile_type, event_in.quark_rad, grid_step, tau_0);
   }
   else
   {
@@ -520,7 +520,7 @@ Event IO::InitializeEvent()
     }
     else if (greens_evolution == 2)
     {
-      event_in.quark_dist = Mask(mask_type, event_in.quark_rad, grid_step, tau_hydro);
+      event_in.quark_dist = Mask(density_profile_type, event_in.quark_rad, grid_step, tau_hydro);
     }
   }
 
