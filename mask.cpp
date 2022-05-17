@@ -188,15 +188,15 @@ void Mask::KernelMask()
   int oy = dist_rad;  //  y-value of gluon_dist center
   double point;
   double normalization = 0;
+  cout << "test 1" << endl;
 
-  if (mask_type == "Kernel")
-  {
     for (int i = -dist_rad; i <= dist_rad; i++)  //  This goes -radius to radius in x
     {
       for (int j = -dist_rad; j <= dist_rad; j++)  //  This goes -radius to radius in x
       {
         double q = sqrt(pow(i, 2) + pow(j, 2))/(dist_rad*0.5);
         double norm = 10.0/(7.0*M_PI*pow(dist_rad*0.5, 2));
+        cout << "test 2" << endl;
 
         if (q >= 2.0)
         { dist_mask[i][j] = 0.0; }
@@ -210,8 +210,7 @@ void Mask::KernelMask()
         }
       }
     }
-    return;
-  }
+    cout << "test 3" << endl;
 
 }
 //__________________________________________________________________________________________
