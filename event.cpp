@@ -391,7 +391,7 @@ bool Event::UpdateDensity(Quarks quark_density)
       if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.GetMaskSize() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.GetMaskSize())
       { return false; }
     }
-cout << "Test 1" << endl;
+//cout << "Test 1" << endl;
     if (perturbative_regime < 1.0)
     {
       if (
@@ -405,7 +405,7 @@ cout << "Test 1" << endl;
     //******************************************************************************************
     //  Test if Anti-Quark is in bounds
     //******************************************************************************************
-    cout << "Test 2" << endl;
+//    cout << "Test 2" << endl;
 
     if (greens_evolution != 0)
     {
@@ -416,13 +416,13 @@ cout << "Test 1" << endl;
     }
     else
     {
-      cout << quark_dist.GetMaskSize() << " " << quark_rad << " " << antiquark_x << " " << antiquark_y << endl;
+//      cout << quark_dist.GetMaskSize() << " " << quark_rad << " " << antiquark_x << " " << antiquark_y << endl;
       antiquark_bounds = GetIntegrationBounds(quark_dist.GetMaskSize() , quark_rad, antiquark_x, antiquark_y);
-      cout << quark_dist.GetMaskSize() << " " << antiquark_bounds[0] - antiquark_bounds[2] << " " << antiquark_bounds[1] - antiquark_bounds[3] << endl;
-      if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.GetMaskSize() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.GetMaskSize())
+//      cout << quark_dist.GetMaskSize() << " " << antiquark_bounds[0] - antiquark_bounds[2] << " " << antiquark_bounds[1] - antiquark_bounds[3] << endl;
+      if (abs(antiquark_bounds[0] - antiquark_bounds[2]) < quark_dist.GetMaskSize() || abs(antiquark_bounds[1] - antiquark_bounds[3]) < quark_dist.GetMaskSize())
       { return false; }
     }
-    cout << "Test 3" << endl;
+//    cout << "Test 3" << endl;
 
     if (perturbative_regime < 1.0)
     {
@@ -434,7 +434,7 @@ cout << "Test 1" << endl;
       )
       { return true; }
     }
-    cout << "Test 4" << endl;
+//    cout << "Test 4" << endl;
 
 //    original_energy = GetOriginalEnergy();
 
@@ -464,7 +464,7 @@ cout << "Test 1" << endl;
       )
       { return true; }
     }
-    cout << "Test 5" << endl;
+//    cout << "Test 5" << endl;
 
     for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
     {
