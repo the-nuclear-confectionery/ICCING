@@ -418,6 +418,7 @@ cout << "Test 1" << endl;
     {
       cout << quark_dist.GetMaskSize() << " " << quark_rad << " " << antiquark_x << " " << antiquark_y << endl;
       antiquark_bounds = GetIntegrationBounds(quark_dist.GetMaskSize() , quark_rad, antiquark_x, antiquark_y);
+      cout << quark_dist.GetMaskSize() << " " << antiquark_bounds[0] - antiquark_bounds[2] << " " << antiquark_bounds[1] - antiquark_bounds[3] << endl;
       if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.GetMaskSize() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.GetMaskSize())
       { return false; }
     }
