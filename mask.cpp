@@ -196,7 +196,7 @@ void Mask::KernelMask()
       {
         double q = sqrt(pow(i, 2) + pow(j, 2))/(dist_rad*0.5);
         double norm = 10.0/(7.0*M_PI*pow(dist_rad*0.5, 2));
-        cout << "test 2" << endl;
+        cout << "test 2 q: "  << q << endl;
 
         if (q >= 2.0)
         { dist_mask[i][j] = 0.0; }
