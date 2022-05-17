@@ -33,9 +33,10 @@ Mask::Mask(string type, double rad, double gridstep, double tau)
   for (int i=0; i <dist_mask.size(); i++)
   {
     for (int j=0; j <dist_mask.size(); j++)
-    cout << dist_mask[i][j] << " ";
+    {cout << dist_mask[i][j] << " ";}
+
+    cout << endl;
   }
-  cout << endl;
 }
 //__________________________________________________________________________________________
 
