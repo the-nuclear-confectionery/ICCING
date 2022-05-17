@@ -117,7 +117,7 @@ Sample Event::GetGlue()
 
   //  Get bounds of gluon using center point as defined by SampleEnergy
   //    Makes sure calculations are only done on points in initial_energy
-  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x_center, y_center);
+  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x_center, y_center);
 
   //  Loop over gluon_dist using gluon_bounds
   for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
@@ -128,12 +128,12 @@ Sample Event::GetGlue()
 
       //  Sum up q_s of gluon region
       // think about shifting calculation of qs to here
-      q_s += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist[i][j];
+      q_s += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
 
       //  Sum up total energy from gluon region
-      e_tot += initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
+      e_tot += initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist.GetMaskValue(i, j);
 
-      if(gluon_dist[i][j] == 1)
+      if(gluon_dist.GetMaskValue(i, j) == 1)
       {
         total_points++; //  Calculate total for normalization of q_s
       }
@@ -158,7 +158,7 @@ double Event::GetOriginalEnergy()
 
   //  Get bounds of gluon using center point as defined by SampleEnergy
   //    Makes sure calculations are only done on points in initial_energy
-  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x_center, y_center);
+  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x_center, y_center);
 
   //  Loop over gluon_dist using gluon_bounds
   for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
@@ -168,7 +168,7 @@ double Event::GetOriginalEnergy()
       //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
       //  Sum up total energy from gluon region
-      e_tot += initial_energy_backup[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist[i][j];
+      e_tot += initial_energy_backup[x_center - gluon_rad + i][y_center - gluon_rad + j]*gluon_dist.GetMaskValue(i, j);
     }
   }
 
@@ -186,7 +186,7 @@ double Event::GetQs()
 
   //  Get bounds of gluon using center point as defined by SampleEnergy
   //    Makes sure calculations are only done on points in initial_energy
-  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x_center, y_center);
+  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x_center, y_center);
 
   //  Loop over gluon_dist using gluon_bounds
   for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
@@ -196,7 +196,7 @@ double Event::GetQs()
       //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
       //  Sum up total energy from gluon region
-      q_s += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist[i][j];
+      q_s += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
     }
   }
 
@@ -222,7 +222,7 @@ vector<vector<double>> Event::GetAllGlue()
     //    Makes sure calculations are only done on points in initial_energy
     if (initial_energy_backup[x][y] != 0)
     {
-    vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x, y);
+    vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x, y);
 
     //  Loop over gluon_dist using gluon_bounds
     for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
@@ -232,7 +232,7 @@ vector<vector<double>> Event::GetAllGlue()
         //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
         //  Sum up total energy from gluon region
-        all_gluons[x][y] += initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j]*gluon_dist[i][j];
+        all_gluons[x][y] += initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j]*gluon_dist.GetMaskValue(i, j);
       }
     }
     }
@@ -252,13 +252,13 @@ int Event::GetMaskPoints()
   int num_points = 0;
 
   //  Loop over gluon_dist using gluon_bounds
-  for (int i = 0; i < gluon_dist.size(); i++)
+  for (int i = 0; i < gluon_dist.GetMaskSize(); i++)
   {
-    for (int j = 0; j < gluon_dist.size(); j++)
+    for (int j = 0; j < gluon_dist.GetMaskSize(); j++)
     {
       //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
-      if (gluon_dist[i][j] == 1)
+      if (gluon_dist.GetMaskValue(i, j) == 1)
         num_points++;
     }
   }
@@ -382,14 +382,14 @@ bool Event::UpdateDensity(Quarks quark_density)
     if (greens_evolution != 0)
     {
 //      cout << "test 1" << endl;
-      quark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad, quark_x, quark_y);
-      if (abs(quark_bounds[0] - quark_bounds[2]) < greens_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < greens_dist.size())
+      quark_bounds = GetIntegrationBounds(quark_dist.GetMaskSize(), greens_rad, quark_x, quark_y);
+      if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.GetMaskSize() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.GetMaskSize())
       { return false; }
     }
     else
     {
-      quark_bounds = GetIntegrationBounds(quark_dist.size(), quark_rad, quark_x, quark_y);
-      if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.size() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.size())
+      quark_bounds = GetIntegrationBounds(quark_dist.GetMaskSize(), quark_rad, quark_x, quark_y);
+      if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.GetMaskSize() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.GetMaskSize())
       { return false; }
     }
 
@@ -410,14 +410,14 @@ bool Event::UpdateDensity(Quarks quark_density)
     if (greens_evolution != 0)
     {
 //      cout << "test 2" << endl;
-      antiquark_bounds = GetIntegrationBounds(greens_dist.size(), greens_rad, antiquark_x, antiquark_y);
-      if (abs(antiquark_bounds[0] - antiquark_bounds[2]) < greens_dist.size() || abs(antiquark_bounds[1] - antiquark_bounds[3]) < greens_dist.size())
+      antiquark_bounds = GetIntegrationBounds(quark_dist.GetMaskSize(), greens_rad, antiquark_x, antiquark_y);
+      if (abs(antiquark_bounds[0] - antiquark_bounds[2]) < quark_dist.GetMaskSize() || abs(antiquark_bounds[1] - antiquark_bounds[3]) < quark_dist.GetMaskSize())
       { return false; }
     }
     else
     {
-      antiquark_bounds = GetIntegrationBounds(quark_dist.size() , quark_rad, antiquark_x, antiquark_y);
-      if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.size() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.size())
+      antiquark_bounds = GetIntegrationBounds(quark_dist.GetMaskSize() , quark_rad, antiquark_x, antiquark_y);
+      if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.GetMaskSize() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.GetMaskSize())
       { return false; }
     }
 
@@ -469,7 +469,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     //******************************************************************************************
     //  Update Total energies and initial_energy
     //******************************************************************************************
-    vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x_center, y_center);
+    vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x_center, y_center);
 
     if (perturbative_regime < 1.0)
     {
@@ -488,7 +488,7 @@ bool Event::UpdateDensity(Quarks quark_density)
       {
         temp_x = x_center - gluon_rad + i;
         temp_y = y_center - gluon_rad + j;
-        energy = gluon_dist[i][j]*quark_density.GetEnergyFraction()*initial_energy[temp_x][temp_y];
+        energy = gluon_dist.GetMaskValue(i, j)*quark_density.GetEnergyFraction()*initial_energy[temp_x][temp_y];
 
         total_initial_energy -= energy;
         total_energy += energy;
@@ -497,7 +497,7 @@ bool Event::UpdateDensity(Quarks quark_density)
         if (test_ == "hotspots")
         {
           gluon_energy += energy;
-          if(gluon_dist[i][j] == 1) { total_points_gluon++; }
+          if(gluon_dist.GetMaskValue(i, j) == 1) { total_points_gluon++; }
         }
 
 /*        // This removes the gluon from the final state which was chosen to split and is now being redistributed
@@ -541,7 +541,7 @@ bool Event::UpdateDensity(Quarks quark_density)
           else if (greens_evolution == 2)
           { gluon_greensfunction = evolution.Gss(w_tilde[x_center][y_center], gluon_distance/(tau_hydro - tau_0));  }
 
-          density[0][temp_x][temp_y] -= (quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
+          density[0][temp_x][temp_y] -= (quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                                         *(final_energy_backup[x_center][y_center]/initial_energy_backup[x_center][y_center])
                                         *gluon_greensfunction;
 
@@ -564,21 +564,21 @@ bool Event::UpdateDensity(Quarks quark_density)
             quark_charge_greensfunction = evolution.Fss(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
           }
 
-          density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
+          density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                                         *(final_energy_backup[quark_x][quark_y]/initial_energy_backup[quark_x][quark_y])
                                         *quark_energy_greensfunction;
 //          momentum[0][temp_x][temp_y][0] -= (quark_x - temp_x)/quark_distance*evolution.Gsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 //          momentum[0][temp_x][temp_y][1] -= (quark_y - temp_y)/quark_distance*evolution.Gsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 
           //  Baryon = baron_number*quark_dist
-          density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*greens_dist[i][j]
+          density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*quark_dist.GetMaskValue(i, j)
                                         *(tau_0/tau_hydro)*quark_charge_greensfunction;
 //          cout << quark_density.GetCharge()[1] << " " << greens_dist[i][j] << " " << (tau_0/tau_hydro) << " " << quark_charge_greensfunction << endl;
 //          momentum[1][temp_x][temp_y][0] -= (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 //          momentum[1][temp_x][temp_y][1] -= (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 
           //  Strangeness = strangeness*quark_dist
-          density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*greens_dist[i][j]
+          density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*quark_dist.GetMaskValue(i, j)
                                         *(tau_0/tau_hydro)*quark_charge_greensfunction;
 //          if (quark_density.GetCharge()[0] == 0.095)
 //          {
@@ -587,7 +587,7 @@ bool Event::UpdateDensity(Quarks quark_density)
 //          }
 
           //  EM_charge = em_charge*quark_dist
-          density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*greens_dist[i][j]
+          density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*quark_dist.GetMaskValue(i, j)
                                         *(tau_0/tau_hydro)*quark_charge_greensfunction;
 //          momentum[3][temp_x][temp_y][0] -= (quark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
 //          momentum[3][temp_x][temp_y][1] -= (quark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[quark_x][quark_y], quark_distance/(tau_hydro - tau_0));
@@ -611,20 +611,20 @@ bool Event::UpdateDensity(Quarks quark_density)
           }
 
           //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
-          density[0][temp_x][temp_y] += (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*greens_dist[i][j]
+          density[0][temp_x][temp_y] += (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                                         *(final_energy_backup[antiquark_x][antiquark_y]/initial_energy_backup[antiquark_x][antiquark_y])
                                         *antiquark_energy_greensfunction;
 //          momentum[0][temp_x][temp_y][0] -= (antiquark_x - temp_x)/quark_distance*evolution.Gsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
 //          momentum[0][temp_x][temp_y][1] -= (antiquark_y - temp_y)/quark_distance*evolution.Gsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
 
           //  Baryon = baron_number*quark_dist
-          density[1][temp_x][temp_y] -= quark_density.GetCharge()[1]*greens_dist[i][j]
+          density[1][temp_x][temp_y] -= quark_density.GetCharge()[1]*quark_dist.GetMaskValue(i, j)
                                         *(tau_0/tau_hydro)*antiquark_charge_greensfunction;
 //          momentum[1][temp_x][temp_y][0] -= (antiquark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
 //          momentum[1][temp_x][temp_y][1] -= (antiquark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
 
           //  Strangeness = strangeness*quark_dist
-          density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*greens_dist[i][j]
+          density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*quark_dist.GetMaskValue(i, j)
                                         *(tau_0/tau_hydro)*antiquark_charge_greensfunction;
 //          if (quark_density.GetCharge()[0] == 0.095)
 //          {
@@ -633,7 +633,7 @@ bool Event::UpdateDensity(Quarks quark_density)
 //          }
 
           //  EM_charge = em_charge*quark_dist
-          density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*greens_dist[i][j]
+          density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*quark_dist.GetMaskValue(i, j)
                                         *(tau_0/tau_hydro)*antiquark_charge_greensfunction;
 //          momentum[3][temp_x][temp_y][0] -= (antiquark_x - temp_x)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
 //          momentum[3][temp_x][temp_y][1] -= (antiquark_y - temp_y)/quark_distance*evolution.Fsv(w_tilde[antiquark_x][antiquark_y], antiquark_distance/(tau_hydro - tau_0));
@@ -645,25 +645,25 @@ bool Event::UpdateDensity(Quarks quark_density)
           temp_y = quark_y - quark_rad + j;
 
           //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
-          density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist[i][j];
+          density[0][temp_x][temp_y] += quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j);
           //  Baryon = baron_number*quark_dist
-          density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*quark_dist[i][j];
+          density[1][temp_x][temp_y] += quark_density.GetCharge()[1]*quark_dist.GetMaskValue(i, j);
           //  Strangeness = strangeness*quark_dist
-          density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*quark_dist[i][j];
+          density[2][temp_x][temp_y] += quark_density.GetCharge()[2]*quark_dist.GetMaskValue(i, j);
           //  EM_charge = em_charge*quark_dist
-          density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*quark_dist[i][j];
+          density[3][temp_x][temp_y] += quark_density.GetCharge()[3]*quark_dist.GetMaskValue(i, j);
 
           //  Deposit Anti-Quark Energy and Charges
           temp_x = antiquark_x - quark_rad + i;
           temp_y = antiquark_y - quark_rad + j;
           //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
-          density[0][temp_x][temp_y] += (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist[i][j];
+          density[0][temp_x][temp_y] += (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j);
           //  Baryon = baron_number*quark_dist
-          density[1][temp_x][temp_y] -= quark_density.GetCharge()[1]*quark_dist[i][j];
+          density[1][temp_x][temp_y] -= quark_density.GetCharge()[1]*quark_dist.GetMaskValue(i, j);
           //  Strangeness = strangeness*quark_dist
-          density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*quark_dist[i][j];
+          density[2][temp_x][temp_y] -= quark_density.GetCharge()[2]*quark_dist.GetMaskValue(i, j);
           //  EM_charge = em_charge*quark_dist
-          density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*quark_dist[i][j];
+          density[3][temp_x][temp_y] -= quark_density.GetCharge()[3]*quark_dist.GetMaskValue(i, j);
         }
 
       }
@@ -697,7 +697,7 @@ void Event::UpdateEnergy(double ratio)
 {
   //  Get bounds of gluon using center point as defined by SampleEnergy
   //    Makes sure calculations are only done on points in initial_energy
-  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.size(), gluon_rad, x_center, y_center);
+  vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x_center, y_center);
 
   for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
   {
@@ -707,22 +707,22 @@ void Event::UpdateEnergy(double ratio)
       {
         // this must be updated to only subtract energy from the initial condition since the energy is already present in the output
         //  Change energy totals to reflect change in energy grids
-        total_initial_energy -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
-        total_energy += gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+        total_initial_energy -= gluon_dist.GetMaskValue(i, j)*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+        total_energy += gluon_dist.GetMaskValue(i, j)*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
 
         //  Subtract energy proportional to ratio from initial_energy and add it to density[0]
-        initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j] -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+        initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j] -= gluon_dist.GetMaskValue(i, j)*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
 
         continue;
       }
 
       //  Change energy totals to reflect change in energy grids
-      total_initial_energy -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
-      total_energy += gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+      total_initial_energy -= gluon_dist.GetMaskValue(i, j)*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+      total_energy += gluon_dist.GetMaskValue(i, j)*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
 
       //  Subtract energy proportional to ratio from initial_energy and add it to density[0]
-      density[0][x_center - gluon_rad + i][y_center - gluon_rad + j] += gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
-      initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j] -= gluon_dist[i][j]*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+      density[0][x_center - gluon_rad + i][y_center - gluon_rad + j] += gluon_dist.GetMaskValue(i, j)*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
+      initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j] -= gluon_dist.GetMaskValue(i, j)*ratio*initial_energy[x_center - gluon_rad + i][y_center - gluon_rad + j];
     }
   }
 }

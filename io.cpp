@@ -40,6 +40,7 @@ IO::IO(string configFile)
 
       case test: input >> test_; break;
       case subtest: input >> sub_test; break;
+      case densityprofiletype: input >> density_profile_type; break;
       case greensevolution: input >> greens_evolution; break;
 
       case eventlabel: input >> event_label; break;
@@ -148,6 +149,7 @@ void IO::CopyIO(const IO &e)
 
   test_ = e.test_;
   sub_test = e.sub_test;
+  density_profile_type = e.density_profile_type;
   greens_evolution = e.greens_evolution;
 
   event_label = e.event_label;
@@ -243,6 +245,7 @@ void IO::Initialize()
 
   test_ = "";
   sub_test = "";
+  density_profile_type = "Gaussian";
   greens_evolution = 0;
 
   event_label = "";
@@ -310,6 +313,7 @@ void IO::Initialize()
 
   mapConfigParams["test_"] = test;
   mapConfigParams["sub_test"] = subtest;
+  mapConfigParams["density_profile_type"] = densityprofiletype;
   mapConfigParams["greens_evolution"] = greensevolution;
 
   mapConfigParams["event_label"] = eventlabel;
@@ -376,6 +380,7 @@ void IO::OutputConfig(string file_name)
     << "\nseed_ " << seed_
     << "\ntest_ " << test_
     << "\nsub_test " << sub_test
+    << "\ndensity_profile_type " << density_profile_type
     << "\ngreens_evolution " << greens_evolution;
 
   output
@@ -491,23 +496,7 @@ Event IO::InitializeEvent()
   //******************************************************************************************
   event_in.gluon_rad = round(rad_/grid_step); //  Set radius of gluons in grid points
   //  Set size of gluon_dist grid used to sample energy from initial_energy
-  event_in.gluon_dist.resize(2*event_in.gluon_rad + 1, vector<int>(2*event_in.gluon_rad + 1, 0.));
-
-  //  Initialize gluon distribution
-  int ox = event_in.gluon_rad;  //  x-value of gluon_dist center
-  int oy = event_in.gluon_rad;  //  y-value of gluon_dist center
-
-  //  Loop through only points in radius of gluon and set to 1
-  for (int i = -event_in.gluon_rad; i <= event_in.gluon_rad; i++) //  This goes -radius to radius in x
-  {
-    // This calculates the hight of the gluon_dist at a given x-value
-    int height = round(sqrt(event_in.gluon_rad*event_in.gluon_rad - i*i));
-    for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
-    {
-      event_in.gluon_dist[i + ox][j + oy] = 1;  //  Set points in circle to 1 for calculations
-    }
-  }
-
+  event_in.gluon_dist = Mask("Uniform", event_in.gluon_rad, grid_step, tau_0);
 
   //******************************************************************************************
   //  Calculate Quark distribution for depositing densities
@@ -515,93 +504,24 @@ Event IO::InitializeEvent()
   //    there is no need to repeat the normalization and profile calculation.
   //    This mask gets weighted by quark charges and energy for deposit in output.
   //******************************************************************************************
-  event_in.quark_rad = round(qrad_/grid_step); //  Set radius of quarks
-  //  Set size of quark_dist grid used to create quarks
-  event_in.quark_dist.resize(2*event_in.quark_rad + 1, vector<double>(2*event_in.quark_rad + 1, 0.0));
-
-  //  Initialize quark distribution
-  int ox_quark = event_in.quark_rad;  //  x-value of quark_dist center
-  int oy_quark = event_in.quark_rad;  //  y-value of quark_dist center
-  double point;
-  double normalization = 0;
-
-  //  Loop through only points in radius of quark to get normalization factor
-  for (int i = -event_in.quark_rad; i <= event_in.quark_rad; i++)  //  This goes -radius to radius in x
+  if (mask_type != "Greens")
   {
-    // This calculates the hight of the quark_dist at a given x-value
-    int height = round(sqrt(event_in.quark_rad*event_in.quark_rad - i*i));
-    for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
-    {
-      point = sqrt(pow((i*grid_step),2) + pow((j*grid_step),2));  //  Get distance of point from center of circle
-      normalization += exp(-((pow(point,2))/(2*pow(event_in.quark_rad*grid_step,2))));  //  Add value at poinnt to a normalization factor
-    }
+    event_in.quark_rad = round(qrad_/grid_step); //  Set radius of quarks
+    //  Set size of quark_dist grid used to create quarks
+    event_in.quark_dist = Mask(mask_type, event_in.quark_rad, grid_step, tau_0);
   }
-
-  //  Loop through only points in radius of quark to get normalization factor
-  for (int i = -event_in.quark_rad; i <= event_in.quark_rad; i++)
+  else
   {
-    // This calculates the hight of the quark_dist at a given x-value
-    int height = round(sqrt(event_in.quark_rad*event_in.quark_rad - i*i));
-    for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
+    event_in.quark_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of quarks
+    //  Set size of quark_dist grid used to create quarks
+    if (greens_evolution == 1)
     {
-      point = sqrt(pow(i*grid_step,2) + pow(j*grid_step,2));  //  Get distance of point from center of circle
-      //  Calculate value of gaussian at point in circle
-      event_in.quark_dist[i + ox_quark][j + oy_quark] = 1/(normalization*pow(grid_step,2)*tau_0)*exp(-((pow(point,2))/(2*pow(event_in.quark_rad*grid_step,2))));
+      event_in.quark_dist = Mask("Uniform", event_in.quark_rad, grid_step, tau_hydro);
     }
-
-  }
-
-
-  //******************************************************************************************
-  //  Initialze Circle for use with Greens Functions
-  //******************************************************************************************
-
-  event_in.greens_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of greens distribution
-  //  Set size of greens_dist grid used to distribute according to greens functions
-  event_in.greens_dist.resize(2*event_in.greens_rad + 1, vector<double>(2*event_in.greens_rad + 1, 0));
-
-  //  Initialize greens distribution
-  int ox_greens = event_in.greens_rad;  //  x-value of greens_dist center
-  int oy_greens = event_in.greens_rad;  //  y-value of greens_dist center
-
-  normalization = 0;
-
-  //  Loop through only points in radius of quark to get normalization factor
-  for (int i = -event_in.greens_rad; i <= event_in.greens_rad; i++)  //  This goes -radius to radius in x
-  {
-    // This calculates the hight of the quark_dist at a given x-value
-    int height = round(sqrt(event_in.greens_rad*event_in.greens_rad - i*i));
-    for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
+    else if (greens_evolution == 2)
     {
-      point = sqrt(pow((i),2) + pow((j),2));  //  Get distance of point from center of circle
-      normalization += exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2))));  //  Add value at poinnt to a normalization factor
+      event_in.quark_dist = Mask(mask_type, event_in.quark_rad, grid_step, tau_hydro);
     }
-  }
-//cout << normalization << endl;
-  //  Loop through only points in radius of greens distribution and set to 1
-  for (int i = -event_in.greens_rad; i <= event_in.greens_rad; i++) //  This goes -radius to radius in x
-  {
-    // This calculates the hight of the greens_dist at a given x-value
-    int height = round(sqrt(event_in.greens_rad*event_in.greens_rad - i*i));
-    for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
-    {
-      point = sqrt(pow(i,2) + pow(j,2));  //  Get distance of point from center of circle
-
-      if (greens_evolution == 1)
-      {
-        //  Calculate value of gaussian at point in circle
-        event_in.greens_dist[i + ox_greens][j + oy_greens] = 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2))));
-//        cout << (normalization*pow(grid_step,2)*tau_hydro) << " " << exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
-//        cout << (normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
-//        cout << 1/(normalization*pow(grid_step,2)*tau_hydro)*exp(-((pow(point,2))/(2*pow(event_in.greens_rad,2)))) << endl;
-      }
-      else if (greens_evolution == 2)
-      {
-        event_in.greens_dist[i + ox_greens][j + oy_greens] = 1;  //  Set points in circle to 1 for calculations
-      }
-
-    }
-
   }
 
   return event_in;

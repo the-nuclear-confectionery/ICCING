@@ -4,9 +4,12 @@ CFLAGS = -std=c++17 -Wall -c -fopenmp `gsl-config --cflags` `gsl-config --libs` 
 LFLAGS = -Wall -fopenmp `gsl-config --cflags` `gsl-config --libs` $(DEBUG)
 MALLOC_CHECK = 2
 
-CPP_FILES = ecc.cpp event.cpp io.cpp functions.cpp main.cpp splitting.cpp correlation.cpp greenfunction.cpp
-HEADER_FILES = ecc.h event.h io.h functions.h splitting.h global.h correlation.h greenfunction.h
-OBJECT_FILES = ecc.o event.o io.o functions.o main.o splitting.o correlation.o greenfunction.o
+CPP_FILES = ecc.cpp event.cpp io.cpp functions.cpp main.cpp splitting.cpp correlation.cpp greenfunction.cpp mask.cpp
+HEADER_FILES = ecc.h event.h io.h functions.h splitting.h global.h correlation.h greenfunction.h mask.h
+OBJECT_FILES = ecc.o event.o io.o functions.o main.o splitting.o correlation.o greenfunction.o mask.o
+
+mask.o : mask.h mask.cpp
+	$(CC) $(CFLAGS) mask.cpp
 
 greenfunction.o : greenfunction.h greenfunction.cpp
 	$(CC) $(CFLAGS) greenfunction.cpp
@@ -14,13 +17,13 @@ greenfunction.o : greenfunction.h greenfunction.cpp
 ecc.o : ecc.h ecc.cpp
 	$(CC) $(CFLAGS) ecc.cpp
 
-event.o : event.h global.h ecc.h greenfunction.h event.cpp
+event.o : event.h global.h ecc.h greenfunction.h mask.h event.cpp
 	$(CC) $(CFLAGS) event.cpp
 
 correlation.o : correlation.h correlation.cpp
 	$(CC) $(CFLAGS) correlation.cpp
 
-io.o : io.h event.h correlation.h greenfunction.h io.cpp
+io.o : io.h event.h correlation.h greenfunction.h mask.h io.cpp
 	$(CC) $(CFLAGS) io.cpp
 
 functions.o : functions.h functions.cpp

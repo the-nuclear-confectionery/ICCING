@@ -24,6 +24,7 @@
 #include "functions.h"
 #include "correlation.h"
 #include "greenfunction.h"
+#include "mask.h"
 //__________________________________________________________________________________________
 
 using namespace std;
@@ -53,6 +54,7 @@ private:
 
     test,
     subtest,
+    densityprofiletype,
     greensevolution,
 
     eventlabel,
@@ -117,6 +119,7 @@ private:
 
   string test_;
   string sub_test;
+  string density_profile_type;
   int greens_evolution;
 
   //******************************************************************************************

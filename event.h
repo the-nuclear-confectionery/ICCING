@@ -19,6 +19,7 @@
 #include "global.h"
 #include "ecc.h"
 #include "greenfunction.h"
+#include "mask.h"
 //__________________________________________________________________________________________
 
 using namespace std;
@@ -66,8 +67,8 @@ private:
   vector<vector<double>> t_a; //  Target Input Energy density
   vector<vector<double>> t_b; //  Projectile Input Energy density
   vector<vector<vector<double>>> density; //  ICCING densities: 0(gluon), 1(baryon), 2(em_charge), 3(strange), 4(charm)
-  vector<vector<int>> gluon_dist;  //  Sample from initial_energy for ICCING algorithm
-  vector<vector<double>> quark_dist; //  Projectile Input Energy density
+  Mask gluon_dist = Mask("", 0.0, 0.0, 0.0);  //  Sample from initial_energy for ICCING algorithm
+  Mask quark_dist = Mask("", 0.0, 0.0, 0.0); //  Projectile Input Energy density
   vector<vector<int>> valued_points;
   vector<vector<double>> initial_eccentricities;
   vector<vector<vector<double>>> eccentricities;
@@ -97,7 +98,6 @@ private:
   double tau_hydro;
   double eta_over_s;
   double greens_rad;
-  vector<vector<double>> greens_dist;  //  Used to distribute using greens functions
   vector<vector<double>> initial_energy_backup;  //  Input Energy density backup for use with greens functions
   vector<vector<double>> final_energy_backup;  //  Final Energy density backup for use with greens functions
   vector<vector<vector<vector<double>>>> momentum; //  Momentum Information form Greens Functions: 0(gluon), 1(baryon), 2(em_charge), 3(strange), 4(charm)
