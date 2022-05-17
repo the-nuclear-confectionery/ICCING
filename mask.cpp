@@ -103,7 +103,7 @@ void Mask::UniformMask()
   for (int i = -dist_rad; i <= dist_rad; i++) //  This goes -radius to radius in x
   {
     // This calculates the hight of the gluon_dist at a given x-value
-    int height = round(sqrt(sqr(dist_rad, 2) - sqr(i, 2)));
+    int height = round(sqrt(pow(dist_rad, 2) - pow(i, 2)));
     for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
     {
       dist_mask[i + ox][j + oy] = 1;  //  Set points in circle to 1 for calculations
@@ -137,7 +137,7 @@ void Mask::GaussianMask()
   for (int i = -dist_rad; i <= dist_rad; i++)  //  This goes -radius to radius in x
   {
     // This calculates the hight of the quark_dist at a given x-value
-    int height = round(sqrt(sqr(dist_rad, 2) - sqr(i, 2)));
+    int height = round(sqrt(pow(dist_rad, 2) - pow(i, 2)));
     for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
     {
       point = sqrt(pow((i), 2) + pow((j), 2));  //  Get distance of point from center of circle
@@ -150,7 +150,7 @@ void Mask::GaussianMask()
   for (int i = -dist_rad; i <= dist_rad; i++) //  This goes -radius to radius in x
   {
     // This calculates the hight of the gluon_dist at a given x-value
-    int height = round(sqrt(sqr(dist_rad, 2) - sqr(i, 2)));
+    int height = round(sqrt(pow(dist_rad, 2) - pow(i, 2)));
     for (int j = -height; j <= height; j++) //  This loops over the points in circle at given x
     {
       point = sqrt(pow(i, 2) + pow(j, 2));  //  Get distance of point from center of circle
@@ -191,7 +191,7 @@ void Mask::KernelMask()
         double norm = 10.0/(7.0*M_PI*pow(dist_rad*0.5, 2));
 
         if (q >= 2.0)
-        { dist_mask[i][j] 0.0; }
+        { dist_mask[i][j] = 0.0; }
         else if (q >= 1.0)
         {
           dist_mask[i][j] = 0.25*norm*pow(2.0 - q, 3);
