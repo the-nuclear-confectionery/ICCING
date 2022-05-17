@@ -391,7 +391,7 @@ bool Event::UpdateDensity(Quarks quark_density)
       if (abs(quark_bounds[0] - quark_bounds[2]) < quark_dist.GetMaskSize() || abs(quark_bounds[1] - quark_bounds[3]) < quark_dist.GetMaskSize())
       { return false; }
     }
-
+cout << "Test 1" << endl;
     if (perturbative_regime < 1.0)
     {
       if (
@@ -400,11 +400,12 @@ bool Event::UpdateDensity(Quarks quark_density)
         final_energy_backup[quark_bounds[2]][quark_bounds[1]] < 0 ||
         final_energy_backup[quark_bounds[2]][quark_bounds[3]] < 0
       )
-      { return false; }
+      { return true; }
     }
     //******************************************************************************************
     //  Test if Anti-Quark is in bounds
     //******************************************************************************************
+    cout << "Test 2" << endl;
 
     if (greens_evolution != 0)
     {
@@ -419,6 +420,7 @@ bool Event::UpdateDensity(Quarks quark_density)
       if (antiquark_bounds[0] - antiquark_bounds[2] < quark_dist.GetMaskSize() || antiquark_bounds[1] - antiquark_bounds[3] < quark_dist.GetMaskSize())
       { return false; }
     }
+    cout << "Test 3" << endl;
 
     if (perturbative_regime < 1.0)
     {
@@ -428,32 +430,12 @@ bool Event::UpdateDensity(Quarks quark_density)
         final_energy_backup[antiquark_bounds[2]][antiquark_bounds[1]] < 0 ||
         final_energy_backup[antiquark_bounds[2]][antiquark_bounds[3]] < 0
       )
-      { return false; }
+      { return true; }
     }
+    cout << "Test 4" << endl;
 
 //    original_energy = GetOriginalEnergy();
 
-//    cout << total_initial_energy << " original_energy " << original_energy << " up_chop " << up_chop << endl;
-    if (quark_density.GetCharge()[0] == 0.0023)
-    {
-  //    if (original_energy < up_chop) {  return true;  }
-      number_up++;
-    }
-    else if (quark_density.GetCharge()[0] == 0.0048)
-    {
-//      if (original_energy < down_chop) {  return true;  }
-      number_down++;
-    }
-    else if (quark_density.GetCharge()[0] == 0.095)
-    {
-//      if (original_energy < strange_chop) {  return true;  }
-      number_strange++;
-    }
-    else if (quark_density.GetCharge()[0] == 1.29)
-    {
-//      if (original_energy < charm_chop) {  return true;  }
-      number_charm++;
-    }
 
     ofstream output;
     int total_points_gluon = 0;
@@ -478,8 +460,9 @@ bool Event::UpdateDensity(Quarks quark_density)
         final_energy_backup[gluon_bounds[2]][gluon_bounds[1]] < 0 ||
         final_energy_backup[gluon_bounds[2]][gluon_bounds[3]] < 0
       )
-      { return false; }
+      { return true; }
     }
+    cout << "Test 5" << endl;
 
     for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
     {
@@ -519,6 +502,30 @@ bool Event::UpdateDensity(Quarks quark_density)
       output << GetQs() << " " << GetQs()/total_points_gluon << endl;
       output.close();
     }
+
+
+    //    cout << total_initial_energy << " original_energy " << original_energy << " up_chop " << up_chop << endl;
+        if (quark_density.GetCharge()[0] == 0.0023)
+        {
+      //    if (original_energy < up_chop) {  return true;  }
+          number_up++;
+        }
+        else if (quark_density.GetCharge()[0] == 0.0048)
+        {
+    //      if (original_energy < down_chop) {  return true;  }
+          number_down++;
+        }
+        else if (quark_density.GetCharge()[0] == 0.095)
+        {
+    //      if (original_energy < strange_chop) {  return true;  }
+          number_strange++;
+        }
+        else if (quark_density.GetCharge()[0] == 1.29)
+        {
+    //      if (original_energy < charm_chop) {  return true;  }
+          number_charm++;
+        }
+
     //******************************************************************************************
     //  Update Output Densities
     //******************************************************************************************

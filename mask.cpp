@@ -12,7 +12,7 @@ Mask::Mask(string type, double rad, double gridstep, double tau)
   grid_step = gridstep;
   tau_ = tau;
 
-  cout << mask_type << " " << dist_rad << " " << tau_ << " " << endl;
+//  cout << mask_type << " " << dist_rad << " " << tau_ << " " << endl;
   if (mask_type == "Uniform")
   {
     UniformMask();
@@ -30,13 +30,13 @@ Mask::Mask(string type, double rad, double gridstep, double tau)
     GreensFunctionMask();
   }
 
-  for (int i=0; i <dist_mask.size(); i++)
-  {
-    for (int j=0; j <dist_mask.size(); j++)
-    {cout << dist_mask[i][j] << " ";}
+//  for (int i=0; i <dist_mask.size(); i++)
+//  {
+//    for (int j=0; j <dist_mask.size(); j++)
+//    {cout << dist_mask[i][j] << " ";}
 
-    cout << endl;
-  }
+//    cout << endl;
+//  }
 }
 //__________________________________________________________________________________________
 
@@ -188,7 +188,7 @@ void Mask::KernelMask()
   int oy = dist_rad;  //  y-value of gluon_dist center
   double point;
   double normalization = 0;
-  cout << "test 1" << endl;
+//  cout << "test 1" << endl;
 
     for (int i = -dist_rad; i <= dist_rad; i++)  //  This goes -radius to radius in x
     {
@@ -196,7 +196,7 @@ void Mask::KernelMask()
       {
         double q = sqrt(pow(i, 2) + pow(j, 2))/(dist_rad*0.5);
         double norm = 10.0/(7.0*M_PI*pow(dist_rad*0.5, 2));
-        cout << "test 2 q: "  << q << endl;
+//        cout << "test 2 q: "  << q << endl;
 
         if (q >= 2.0)
         { dist_mask[i + ox][j + oy] = 0.0; }
@@ -210,7 +210,7 @@ void Mask::KernelMask()
         }
       }
     }
-    cout << "test 3" << endl;
+//    cout << "test 3" << endl;
 
 }
 //__________________________________________________________________________________________
