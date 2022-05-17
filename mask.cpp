@@ -199,14 +199,14 @@ void Mask::KernelMask()
         cout << "test 2 q: "  << q << endl;
 
         if (q >= 2.0)
-        { dist_mask[i][j] = 0.0; }
+        { dist_mask[i + ox][j + oy] = 0.0; }
         else if (q >= 1.0)
         {
-          dist_mask[i][j] = 0.25*norm*pow(2.0 - q, 3);
+          dist_mask[i + ox][j + oy] = 0.25*norm*pow(2.0 - q, 3);
         }
         else
         {
-          dist_mask[i][j] = norm*(1 - 1.5*pow(q, 2) + 0.75*pow(q, 3));
+          dist_mask[i + ox][j + oy] = norm*(1 - 1.5*pow(q, 2) + 0.75*pow(q, 3));
         }
       }
     }
