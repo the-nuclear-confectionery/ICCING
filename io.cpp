@@ -517,11 +517,11 @@ Event IO::InitializeEvent()
     //  Set size of quark_dist grid used to create quarks
     if (greens_evolution == 1)
     {
-      event_in.quark_dist = Mask("Uniform", event_in.quark_rad, grid_step, tau_hydro);
+      event_in.quark_dist = Mask(density_profile_type, event_in.quark_rad, grid_step, tau_hydro);
     }
     else if (greens_evolution == 2)
     {
-      event_in.quark_dist = Mask(density_profile_type, event_in.quark_rad, grid_step, tau_hydro);
+      event_in.quark_dist = Mask("Uniform", event_in.quark_rad, grid_step, tau_hydro);
     }
   }
 
