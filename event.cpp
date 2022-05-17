@@ -87,7 +87,6 @@ void Event::CopyEvent(const Event &e)
   tau_hydro = e.tau_hydro;
   eta_over_s = e.eta_over_s;
   greens_rad = e.greens_rad;
-  greens_dist = e.greens_dist;
   initial_energy_backup = e.initial_energy_backup;
   final_energy_backup = e.final_energy_backup;
   momentum = e.momentum;
@@ -803,8 +802,6 @@ void Event::CleanEvent()
   t_a.clear();
   t_b.clear();
   density.clear();
-  gluon_dist.clear();
-  quark_dist.clear();
   eccentricities.clear();
   ecc.CleanEccentricity();
 
