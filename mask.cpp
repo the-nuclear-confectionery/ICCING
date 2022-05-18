@@ -195,7 +195,7 @@ void Mask::KernelMask()
       for (int j = -dist_rad; j <= dist_rad; j++)  //  This goes -radius to radius in x
       {
         double q = sqrt(pow(i, 2) + pow(j, 2))/(dist_rad*0.5);
-        double norm = 10.0/(7.0*M_PI*pow(dist_rad*0.5, 2));
+        double norm = 10.0/(7.0*M_PI*pow(dist_rad*0.5, 2)*pow(grid_step, 2)*tau_);
 //        cout << "test 2 q: "  << q << endl;
 
         if (q >= 2.0)
