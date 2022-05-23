@@ -78,6 +78,7 @@ IO::IO(string configFile)
       case greensfunctionschuncks: input >> greens_functions_chuncks;  break;
       case cinfinity: input >> c_infinity;  break;
       case etaovers: input >> eta_over_s;  break;
+      case omegatilde: input >> omega_tilde;  break;
       case tauhydro: input >> tau_hydro;  break;
 
       case gridmax: input >> grid_max;  break;
@@ -187,6 +188,7 @@ void IO::CopyIO(const IO &e)
   greens_functions_chuncks = e.greens_functions_chuncks;
   c_infinity = e.c_infinity;
   eta_over_s = e.eta_over_s;
+  omega_tilde = e.omega_tilde;
   tau_hydro = e.tau_hydro;
 
   grid_max = e.grid_max;
@@ -283,6 +285,7 @@ void IO::Initialize()
   greens_functions_chuncks = 0;
   c_infinity = 0.0;
   eta_over_s = 0.0;
+  omega_tilde = -1.0;
   tau_hydro = 0.0;
 
   grid_max = 12.0;
@@ -351,6 +354,7 @@ void IO::Initialize()
   mapConfigParams["greens_functions_chuncks"] = greensfunctionschuncks;
   mapConfigParams["c_infinity"] = cinfinity;
   mapConfigParams["eta_over_s"] = etaovers;
+  mapConfigParams["omega_tilde"] = omegatilde;
   mapConfigParams["tau_hydro"] = tauhydro;
 
   mapConfigParams["grid_max"] = gridmax;
@@ -425,6 +429,7 @@ void IO::OutputConfig(string file_name)
       << "\ngreens_functions_chuncks " << greens_functions_chuncks
       << "\nc_infinity " << c_infinity
       << "\neta_over_s " << eta_over_s
+      << "\nomega_tilde " << omega_tilde
       << "\ntau_hydro " << tau_hydro;
 
   output
@@ -485,6 +490,7 @@ Event IO::InitializeEvent()
   {
     event_in.tau_hydro = tau_hydro;
     event_in.eta_over_s = eta_over_s;
+    event_in.omega_tilde = omega_tilde;
     event_in.w_tilde.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
     event_in.evolution = GreensFunctions(background_attractor_file, greens_functions_file, background_points, greens_functions_points, greens_functions_chuncks, c_infinity, eta_over_s, tau_hydro);
   }

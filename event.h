@@ -97,6 +97,7 @@ private:
   vector<vector<double>> w_tilde;
   double tau_hydro;
   double eta_over_s;
+  double omega_tilde;
   double greens_rad;
   vector<vector<double>> initial_energy_backup;  //  Input Energy density backup for use with greens functions
   vector<vector<double>> final_energy_backup;  //  Final Energy density backup for use with greens functions

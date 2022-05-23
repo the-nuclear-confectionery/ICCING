@@ -99,6 +99,7 @@ private:
     greensfunctionschuncks,
     cinfinity,
     etaovers,
+    omegatilde,
     tauhydro
     //#CONFIGPARAM
   };
@@ -173,6 +174,7 @@ private:
   int greens_functions_chuncks;
   double c_infinity;
   double eta_over_s;
+  double omega_tilde;
   double tau_hydro;
 
   //******************************************************************************************
