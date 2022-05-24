@@ -456,7 +456,7 @@ bool Event::UpdateDensity(Quarks quark_density)
       )
       { return true; }
 
-/*      if (greens_evolution != 0)
+      if (greens_evolution != 0)
       {
         for (int i = quark_bounds[0]; i < quark_bounds[2]; i++)
         {
@@ -541,7 +541,7 @@ bool Event::UpdateDensity(Quarks quark_density)
           }
         }
       }
-*/
+
     }
 
 
