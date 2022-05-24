@@ -472,7 +472,7 @@ bool Event::UpdateDensity(Quarks quark_density)
               gluon_greensfunction = evolution.Gss(local_w_tilde, gluon_distance/(tau_hydro - tau_0));
             }
 
-            if (perturbative_regime*final_energy_backup[temp_x][temp_y] >=
+            if (perturbative_regime*final_energy_backup[temp_x][temp_y] <=
                 (quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                 *(final_energy_backup[x_center][y_center]/initial_energy_backup[x_center][y_center])
                 *gluon_greensfunction)
@@ -500,7 +500,7 @@ bool Event::UpdateDensity(Quarks quark_density)
                   quark_charge_greensfunction = evolution.Fss(local_w_tilde, quark_distance/(tau_hydro - tau_0));
                 }
 
-                if (perturbative_regime*final_energy_backup[temp_x][temp_y] >=
+                if (perturbative_regime*final_energy_backup[temp_x][temp_y] <=
                     quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                     *(final_energy_backup[quark_x][quark_y]/initial_energy_backup[quark_x][quark_y])
                     *quark_energy_greensfunction)
@@ -528,7 +528,7 @@ bool Event::UpdateDensity(Quarks quark_density)
                     }
 
                     //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
-                    if (perturbative_regime*final_energy_backup[temp_x][temp_y] >=
+                    if (perturbative_regime*final_energy_backup[temp_x][temp_y] <=
                         (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                         *(final_energy_backup[antiquark_x][antiquark_y]/initial_energy_backup[antiquark_x][antiquark_y])
                         *antiquark_energy_greensfunction)
