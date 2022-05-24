@@ -429,34 +429,34 @@ bool Event::UpdateDensity(Quarks quark_density)
     {
 //      temp_x = quark_x - greens_rad + i;
 //      temp_y = quark_y - greens_rad + j;
-      cout << quark_bounds[0] << " " << quark_bounds[1] << " " << quark_bounds[2] << " " << quark_bounds[3] << endl;
+//      cout << quark_bounds[0] << " " << quark_bounds[1] << " " << quark_bounds[2] << " " << quark_bounds[3] << endl;
       if (
-        initial_energy_backup[quark_bounds[0]][quark_bounds[1]] < 0 ||
-        initial_energy_backup[quark_bounds[0]][quark_bounds[3]] < 0 ||
-        initial_energy_backup[quark_bounds[2]][quark_bounds[1]] < 0 ||
-        initial_energy_backup[quark_bounds[2]][quark_bounds[3]] < 0
+        final_energy_backup[quark_x - greens_rad + quark_bounds[0]][quark_y - greens_rad + quark_bounds[1]] <= 0 ||
+        final_energy_backup[quark_x - greens_rad + quark_bounds[0]][quark_y - greens_rad + quark_bounds[3]] <= 0 ||
+        final_energy_backup[quark_x - greens_rad + quark_bounds[2]][quark_y - greens_rad + quark_bounds[1]] <= 0 ||
+        final_energy_backup[quark_x - greens_rad + quark_bounds[2]][quark_y - greens_rad + quark_bounds[3]] <= 0
       )
       { return true; }
 //      temp_x = antiquark_x - greens_rad + i;
 //      temp_y = antiquark_y - greens_rad + j;
       if (
-        initial_energy_backup[antiquark_bounds[0]][antiquark_bounds[1]] < 0 ||
-        initial_energy_backup[antiquark_bounds[0]][antiquark_bounds[3]] < 0 ||
-        initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[1]] < 0 ||
-        initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[3]] < 0
+        final_energy_backup[antiquark_x - greens_rad + antiquark_bounds[0]][antiquark_y - greens_rad + antiquark_bounds[1]] <= 0 ||
+        final_energy_backup[antiquark_x - greens_rad + antiquark_bounds[0]][antiquark_y - greens_rad + antiquark_bounds[3]] <= 0 ||
+        final_energy_backup[antiquark_x - greens_rad + antiquark_bounds[2]][antiquark_y - greens_rad + antiquark_bounds[1]] <= 0 ||
+        final_energy_backup[antiquark_x - greens_rad + antiquark_bounds[2]][antiquark_y - greens_rad + antiquark_bounds[3]] <= 0
       )
       { return true; }
 //      temp_x = x_center - greens_rad + i;
 //      temp_y = y_center - greens_rad + j;
       if (
-        initial_energy_backup[gluon_bounds[0]][gluon_bounds[1]] < 0 ||
-        initial_energy_backup[gluon_bounds[0]][gluon_bounds[3]] < 0 ||
-        initial_energy_backup[gluon_bounds[2]][gluon_bounds[1]] < 0 ||
-        initial_energy_backup[gluon_bounds[2]][gluon_bounds[3]] < 0
+        final_energy_backup[x_center - greens_rad + gluon_bounds[0]][y_center - greens_rad + gluon_bounds[1]] <= 0 ||
+        final_energy_backup[x_center - greens_rad + gluon_bounds[0]][y_center - greens_rad + gluon_bounds[3]] <= 0 ||
+        final_energy_backup[x_center - greens_rad + gluon_bounds[2]][y_center - greens_rad + gluon_bounds[1]] <= 0 ||
+        final_energy_backup[x_center - greens_rad + gluon_bounds[2]][y_center - greens_rad + gluon_bounds[3]] <= 0
       )
       { return true; }
 
-      if (greens_evolution != 0)
+/*      if (greens_evolution != 0)
       {
         for (int i = quark_bounds[0]; i < quark_bounds[2]; i++)
         {
@@ -541,7 +541,7 @@ bool Event::UpdateDensity(Quarks quark_density)
           }
         }
       }
-
+*/
     }
 
 
