@@ -427,29 +427,36 @@ bool Event::UpdateDensity(Quarks quark_density)
     //  Check if quark bounds are outside background
     if (perturbative_regime < 1.0)
     {
+//      temp_x = quark_x - greens_rad + i;
+//      temp_y = quark_y - greens_rad + j;
+      cout << quark_bounds[0] << " " << quark_bounds[1] << " " << quark_bounds[2] << " " << quark_bounds[3] << endl;
       if (
-        final_energy_backup[quark_bounds[0]][quark_bounds[1]] < 0 ||
-        final_energy_backup[quark_bounds[0]][quark_bounds[3]] < 0 ||
-        final_energy_backup[quark_bounds[2]][quark_bounds[1]] < 0 ||
-        final_energy_backup[quark_bounds[2]][quark_bounds[3]] < 0
+        initial_energy_backup[quark_bounds[0]][quark_bounds[1]] < 0 ||
+        initial_energy_backup[quark_bounds[0]][quark_bounds[3]] < 0 ||
+        initial_energy_backup[quark_bounds[2]][quark_bounds[1]] < 0 ||
+        initial_energy_backup[quark_bounds[2]][quark_bounds[3]] < 0
       )
       { return true; }
+//      temp_x = antiquark_x - greens_rad + i;
+//      temp_y = antiquark_y - greens_rad + j;
       if (
-        final_energy_backup[antiquark_bounds[0]][antiquark_bounds[1]] < 0 ||
-        final_energy_backup[antiquark_bounds[0]][antiquark_bounds[3]] < 0 ||
-        final_energy_backup[antiquark_bounds[2]][antiquark_bounds[1]] < 0 ||
-        final_energy_backup[antiquark_bounds[2]][antiquark_bounds[3]] < 0
+        initial_energy_backup[antiquark_bounds[0]][antiquark_bounds[1]] < 0 ||
+        initial_energy_backup[antiquark_bounds[0]][antiquark_bounds[3]] < 0 ||
+        initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[1]] < 0 ||
+        initial_energy_backup[antiquark_bounds[2]][antiquark_bounds[3]] < 0
       )
       { return true; }
+//      temp_x = x_center - greens_rad + i;
+//      temp_y = y_center - greens_rad + j;
       if (
-        final_energy_backup[gluon_bounds[0]][gluon_bounds[1]] < 0 ||
-        final_energy_backup[gluon_bounds[0]][gluon_bounds[3]] < 0 ||
-        final_energy_backup[gluon_bounds[2]][gluon_bounds[1]] < 0 ||
-        final_energy_backup[gluon_bounds[2]][gluon_bounds[3]] < 0
+        initial_energy_backup[gluon_bounds[0]][gluon_bounds[1]] < 0 ||
+        initial_energy_backup[gluon_bounds[0]][gluon_bounds[3]] < 0 ||
+        initial_energy_backup[gluon_bounds[2]][gluon_bounds[1]] < 0 ||
+        initial_energy_backup[gluon_bounds[2]][gluon_bounds[3]] < 0
       )
       { return true; }
 
-/*      if (greens_evolution != 0)
+      if (greens_evolution != 0)
       {
         for (int i = quark_bounds[0]; i < quark_bounds[2]; i++)
         {
@@ -473,9 +480,9 @@ bool Event::UpdateDensity(Quarks quark_density)
             }
 
             if (perturbative_regime*final_energy_backup[temp_x][temp_y] <=
-                (quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
+                abs((quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                 *(final_energy_backup[x_center][y_center]/initial_energy_backup[x_center][y_center])
-                *gluon_greensfunction)
+                *gluon_greensfunction))
                 { return true;  }
 
                 //  Deposit Quark Energy and Charges
@@ -497,13 +504,12 @@ bool Event::UpdateDensity(Quarks quark_density)
                   else {  local_w_tilde = omega_tilde;  }
 
                   quark_energy_greensfunction = evolution.Gss(local_w_tilde, quark_distance/(tau_hydro - tau_0));
-                  quark_charge_greensfunction = evolution.Fss(local_w_tilde, quark_distance/(tau_hydro - tau_0));
                 }
 
                 if (perturbative_regime*final_energy_backup[temp_x][temp_y] <=
-                    quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
+                    abs(quark_density.GetAlpha()*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                     *(final_energy_backup[quark_x][quark_y]/initial_energy_backup[quark_x][quark_y])
-                    *quark_energy_greensfunction)
+                    *quark_energy_greensfunction))
                     { return true;  }
 
                     temp_x = antiquark_x - greens_rad + i;
@@ -524,19 +530,18 @@ bool Event::UpdateDensity(Quarks quark_density)
                       else {  local_w_tilde = omega_tilde;  }
 
                       antiquark_energy_greensfunction = evolution.Gss(local_w_tilde, antiquark_distance/(tau_hydro - tau_0));
-                      antiquark_charge_greensfunction = evolution.Fss(local_w_tilde, antiquark_distance/(tau_hydro - tau_0));
                     }
 
                     //  Energy = alpha*(E_glueon/E_tot)*E_tot*quark_dist
                     if (perturbative_regime*final_energy_backup[temp_x][temp_y] <=
-                        (1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
+                        abs((1 - quark_density.GetAlpha())*(quark_density.GetEnergyFraction()*out_sample.e_tot)*quark_dist.GetMaskValue(i, j)
                         *(final_energy_backup[antiquark_x][antiquark_y]/initial_energy_backup[antiquark_x][antiquark_y])
-                        *antiquark_energy_greensfunction)
+                        *antiquark_energy_greensfunction))
                         { return true;  }
           }
         }
       }
-*/
+
     }
 
 
