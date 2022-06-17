@@ -271,6 +271,7 @@ vector<vector<double>> Event::GetAllQs()
         //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
         //  Sum up total energy from gluon region
+        cout << kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j]) << endl;
         all_qs[x][y] += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
       }
     }
