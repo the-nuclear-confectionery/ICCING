@@ -259,7 +259,7 @@ vector<vector<double>> Event::GetAllQs()
     {
     //  Get bounds of gluon using center point as defined by SampleEnergy
     //    Makes sure calculations are only done on points in initial_energy
-    if (t_b[x][y] != 0)
+    if (initial_energy_backup[x][y] != 0)
     {
     vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x, y);
 
@@ -271,12 +271,12 @@ vector<vector<double>> Event::GetAllQs()
         //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
         //  Sum up total energy from gluon region
-        cout << kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j]) << " " << gluon_dist.GetMaskValue(i, j) << endl;
+//        cout << kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j]) << " " << gluon_dist.GetMaskValue(i, j) << endl;
         all_qs[x][y] += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
       }
     }
-    }
     cout << all_qs[x][y] << endl;
+    }
   }
   }
 
