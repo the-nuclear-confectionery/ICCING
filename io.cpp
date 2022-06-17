@@ -1190,6 +1190,7 @@ void IO::WriteEvent(Event event)
   if (test_ == "AllGlue")
   {
       OutputSparseGluonGrids(event.GetAllGlue(), event.GetMaskPoints(), output_dir + "all_gluons" + event_number + ".dat");
+      OutputSparseGluonGrids(event.GetAllQs(), event.GetMaskPoints(), output_dir + "all_qs" + event_number + ".dat");
   }
 //  cout << "testing eccentricities " << event.initial_eccentricities[0][0] << " " << event.initial_eccentricities[0][1] << " " << event.initial_eccentricities[0][2] << endl;
   OutputEccentricities(event.total_initial_entropy, event.initial_eccentricities, "Energy", output_dir + "initial_eccentricities");

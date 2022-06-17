@@ -122,6 +122,7 @@ private:
 
   //  Calculate energy of all possible gluons
   vector<vector<double>> GetAllGlue();
+  vector<vector<double>> GetAllQs();
   int GetMaskPoints();
 
   //  Gets intigration bounds for density grid manipulations

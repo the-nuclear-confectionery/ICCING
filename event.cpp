@@ -245,6 +245,45 @@ vector<vector<double>> Event::GetAllGlue()
 
 //__________________________________________________________________________________________
 //##########################################################################################
+//  Get energy of all possible gluons
+//##########################################################################################
+vector<vector<double>> Event::GetAllQs()
+{
+  vector<vector<double>> all_qs;
+
+  all_qs.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
+
+  for (int x = 0; x < initial_energy_backup.size(); x++)
+  {
+    for (int y = 0; y < initial_energy_backup[0].size(); y++)
+    {
+    //  Get bounds of gluon using center point as defined by SampleEnergy
+    //    Makes sure calculations are only done on points in initial_energy
+    if (initial_energy_backup[x][y] != 0)
+    {
+    vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x, y);
+
+    //  Loop over gluon_dist using gluon_bounds
+    for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
+    {
+      for (int j = gluon_bounds[1]; j < gluon_bounds[3]; j++)
+      {
+        //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
+
+        //  Sum up total energy from gluon region
+        all_qs[x][y] += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
+      }
+    }
+    }
+  }
+  }
+
+  return all_qs;
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
 //  Get number of points in gluon mask
 //##########################################################################################
 int Event::GetMaskPoints()
@@ -578,7 +617,7 @@ bool Event::UpdateDensity(Quarks quark_density)
     {
       output << GetOriginalEnergy() << " " << GetOriginalEnergy()/total_points_gluon << " ";
       output << out_sample.e_tot/(pow(grid_step,2)*tau_0) << " " << out_sample.e_tot/(total_points_gluon*pow(grid_step,2)*tau_0) << " ";
-      output << gluon_energy << " " << gluon_energy/total_points_gluon << " ";
+      output << gluon_energy/(pow(grid_step,2)*tau_0) << " " << gluon_energy/(total_points_gluon*pow(grid_step,2)*tau_0) << " ";
       output << GetQs() << " " << GetQs()/total_points_gluon << endl;
       output.close();
     }
