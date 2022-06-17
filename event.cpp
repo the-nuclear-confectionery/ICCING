@@ -253,13 +253,13 @@ vector<vector<double>> Event::GetAllQs()
 
   all_qs.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
 
-  for (int x = 0; x < initial_energy_backup.size(); x++)
+  for (int x = 0; x < t_b.size(); x++)
   {
-    for (int y = 0; y < initial_energy_backup[0].size(); y++)
+    for (int y = 0; y < t_b[0].size(); y++)
     {
     //  Get bounds of gluon using center point as defined by SampleEnergy
     //    Makes sure calculations are only done on points in initial_energy
-    if (initial_energy_backup[x][y] != 0)
+    if (t_b[x][y] != 0)
     {
     vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x, y);
 
