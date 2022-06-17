@@ -211,9 +211,11 @@ double Event::GetQs()
 vector<vector<vector<double>>> Event::GetAllGlue()
 {
   vector<vector<vector<double>>> all_gluons;
+  vector<vector<double>> initializer;
 
-  all_gluons.push_back(vector<double>(grid_points + 1, vector<double>(grid_points + 1, 0.)));
-  all_gluons.push_back(vector<double>(grid_points + 1, vector<double>(grid_points + 1, 0.)));
+  initializer.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
+  all_gluons.push_back(initializer);
+  all_gluons.push_back(initializer);
 
   for (int x = 0; x < initial_energy_backup.size(); x++)
   {
