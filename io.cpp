@@ -885,24 +885,25 @@ void IO::OutputSparseCurrentGrids(vector<vector<vector<vector<double>>>> &curren
 //##########################################################################################
 // Print Gluon Grids without filler 0s
 //##########################################################################################
-void IO::OutputSparseGluonGrids(vector<vector<double>> density_grid, int num_points, string file_name)
+void IO::OutputSparseGluonGrids(vector<vector<vector<double>>> density_grid, int num_points, string file_name)
 {
   ofstream output;
   output.open(file_name);
 
-  double x, y, value;
+  double x, y, value, qs;
 
-  for (int i = 0; i < density_grid.size(); i++)
+  for (int i = 0; i < density_grid[0].size(); i++)
   {
-    for (int j = 0; j < density_grid[0].size(); j++)
+    for (int j = 0; j < density_grid[0][0].size(); j++)
     {
-      if (density_grid[i][j] != 0)
+      if (density_grid[0][i][j] != 0)
       {
         x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
         y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
-        value = density_grid[i][j];
+        value = density_grid[0][i][j];
+        qs = density_grid[1][i][j];
         cout << "printed " << value << endl;
-        output << x << " " << y << " " << value <<  " " << value/num_points << endl;
+        output << x << " " << y << " " << value <<  " " << value/num_points << " " << qs << " " << qs/num_points << endl;
       }
     }
   }
@@ -1191,7 +1192,7 @@ void IO::WriteEvent(Event event)
   if (test_ == "AllGlue")
   {
       OutputSparseGluonGrids(event.GetAllGlue(), event.GetMaskPoints(), output_dir + "all_gluons" + event_number + ".dat");
-      OutputSparseGluonGrids(event.GetAllQs(), event.GetMaskPoints(), output_dir + "all_qs" + event_number + ".dat");
+//      OutputSparseGluonGrids(event.GetAllQs(), event.GetMaskPoints(), output_dir + "all_qs" + event_number + ".dat");
   }
 //  cout << "testing eccentricities " << event.initial_eccentricities[0][0] << " " << event.initial_eccentricities[0][1] << " " << event.initial_eccentricities[0][2] << endl;
   OutputEccentricities(event.total_initial_entropy, event.initial_eccentricities, "Energy", output_dir + "initial_eccentricities");

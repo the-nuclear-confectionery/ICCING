@@ -208,11 +208,12 @@ double Event::GetQs()
 //##########################################################################################
 //  Get energy of all possible gluons
 //##########################################################################################
-vector<vector<double>> Event::GetAllGlue()
+vector<vector<vector<double>>> Event::GetAllGlue()
 {
-  vector<vector<double>> all_gluons;
+  vector<vector<vector<double>>> all_gluons;
 
-  all_gluons.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));
+  all_gluons.push_back(vector<double>(grid_points + 1, vector<double>(grid_points + 1, 0.)));
+  all_gluons.push_back(vector<double>(grid_points + 1, vector<double>(grid_points + 1, 0.)));
 
   for (int x = 0; x < initial_energy_backup.size(); x++)
   {
@@ -232,7 +233,8 @@ vector<vector<double>> Event::GetAllGlue()
         //  Reminder: gluon_dist is a circular mask of 1's for ease of calculation
 
         //  Sum up total energy from gluon region
-        all_gluons[x][y] += initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j]*gluon_dist.GetMaskValue(i, j);
+        all_gluons[0][x][y] += initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j]*gluon_dist.GetMaskValue(i, j);
+        all_gluons[1][x][y] += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
       }
     }
     }

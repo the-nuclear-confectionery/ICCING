@@ -121,7 +121,7 @@ private:
   double GetQs();
 
   //  Calculate energy of all possible gluons
-  vector<vector<double>> GetAllGlue();
+  vector<vector<vector<double>>> GetAllGlue();
   vector<vector<double>> GetAllQs();
   int GetMaskPoints();
 
