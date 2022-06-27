@@ -520,6 +520,7 @@ Event IO::InitializeEvent()
   {
     event_in.quark_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of quarks
     event_in.greens_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of quarks
+    cout << "greens radius = " << event_in.greens_rad << endl;
     //  Set size of quark_dist grid used to create quarks
     if (greens_evolution == 1)
     {
