@@ -7,6 +7,7 @@
 //##########################################################################################
 Eccentricity::Eccentricity()
 {
+  
 }
 //__________________________________________________________________________________________
 
@@ -301,8 +302,8 @@ vector<vector<double>> Eccentricity::CalculateInitialEccentricities(int grid_max
 //##########################################################################################
 void Eccentricity::CleanEccentricity()
 {
-  x_center_of_mass = 0;
-  y_center_of_mass = 0;
+  x_center_of_mass.clear();
+  y_center_of_mass.clear();
   sparse_density.clear();
 }
 //__________________________________________________________________________________________
