@@ -26,8 +26,8 @@ private:
 //  Internal Parameters
 //##########################################################################################
   // center of mass for initial condition, used in calculations
-  vector<double> x_center_of_mass(6, 0.0);
-  vector<double> y_center_of_mass(6, 0.0);
+  vector<double> x_center_of_mass = vector<double>(6, 0.0);
+  vector<double> y_center_of_mass = vector<double>(6, 0.0);
 
   //  Sparse density array, includes all densities, sparse array makes calculation faster
   vector<vector<double>> sparse_density;
