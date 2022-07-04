@@ -7,7 +7,7 @@
 //##########################################################################################
 Eccentricity::Eccentricity()
 {
-  
+
 }
 //__________________________________________________________________________________________
 
@@ -279,16 +279,16 @@ vector<vector<double>> Eccentricity::CalculateInitialEccentricities(int grid_max
         x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
         y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
 
-        x_center_of_mass += x*initial_energy[i][j];
-        y_center_of_mass += y*initial_energy[i][j];
+        x_center_of_mass[2] += x*initial_energy[i][j];
+        y_center_of_mass[2] += y*initial_energy[i][j];
         energy += initial_energy[i][j];
         sparse_density.push_back({x, y, initial_energy[i][j], 0, 0, 0});
       }
     }
   }
 
-  x_center_of_mass /= energy;
-  y_center_of_mass /= energy;
+  x_center_of_mass[2] /= energy;
+  y_center_of_mass[2] /= energy;
 
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
