@@ -73,8 +73,8 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
 
 	for (int s=0;s<max;s++)
   {
-	   x_component = (sparse_density[s][0] - x_center_of_mass);
-	   y_component = (sparse_density[s][1] - y_center_of_mass);
+	   x_component = (sparse_density[s][0] - x_center_of_mass[column]);
+	   y_component = (sparse_density[s][1] - y_center_of_mass[column]);
 	   distance_squared[s] = pow(x_component, 2) + pow(y_component, 2);
 
      weight = sparse_density[s][column]*pow(distance_squared[s], (m/2.));
@@ -134,8 +134,8 @@ vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
 
 	for (int s=0;s<max;s++)
   {
-	   x_component = (sparse_density[s][0] - x_center_of_mass);
-	   y_component = (sparse_density[s][1] - y_center_of_mass);
+	   x_component = (sparse_density[s][0] - x_center_of_mass[column]);
+	   y_component = (sparse_density[s][1] - y_center_of_mass[column]);
 	   distance_squared[s] = pow(x_component, 2) + pow(y_component, 2);
 
      weight = sparse_density[s][column]*pow(distance_squared[s], (m/2.));
@@ -205,7 +205,11 @@ vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
 //##########################################################################################
 vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_max, double grid_step, vector<vector<vector<double>>> density)
 {
-  double x, y, energy = 0;
+  double x, y;
+  double energy = 0;
+  double baryon = 0;
+  double strange = 0;
+  double charge = 0;
 
   //******************************************************************************************
   //  Take full density grid and convert to sparse density structure for easy and quick processing
@@ -219,16 +223,34 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
         y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
 
-        x_center_of_mass += x*density[0][i][j];
-        y_center_of_mass += y*density[0][i][j];
+        x_center_of_mass[2] += x*density[0][i][j];
+        y_center_of_mass[2] += y*density[0][i][j];
+
+        x_center_of_mass[3] += x*density[1][i][j];
+        y_center_of_mass[3] += y*density[1][i][j];
+        x_center_of_mass[4] += x*density[2][i][j];
+        y_center_of_mass[4] += y*density[2][i][j];
+        x_center_of_mass[5] += x*density[3][i][j];
+        y_center_of_mass[5] += y*density[3][i][j];
+
         energy += density[0][i][j];
+        baryon += density[1][i][j];
+        strange += density[2][i][j];
+        charge += density[3][i][j];
         sparse_density.push_back({x, y, density[0][i][j], density[1][i][j], density[2][i][j], density[3][i][j]});
       }
     }
   }
 
-  x_center_of_mass /= energy;
-  y_center_of_mass /= energy;
+  x_center_of_mass[2] /= energy;
+  y_center_of_mass[2] /= energy;
+
+  x_center_of_mass[3] /= baryon;
+  y_center_of_mass[3] /= baryon;
+  x_center_of_mass[4] /= strange;
+  y_center_of_mass[4] /= strange;
+  x_center_of_mass[5] /= charge;
+  y_center_of_mass[5] /= charge;
 
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
