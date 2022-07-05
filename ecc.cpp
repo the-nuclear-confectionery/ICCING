@@ -38,12 +38,13 @@ Eccentricity::Eccentricity(const Eccentricity &original)
 //##########################################################################################
 void Eccentricity::CopyEccentricity(const Eccentricity &e)
 {
+  cout << sparse_density.size() << endl;
+  sparse_density = e.sparse_density;
+  cout << "good?" << endl;
   x_center_of_mass = e.x_center_of_mass;
   y_center_of_mass = e.y_center_of_mass;
   charge_x_center_of_mass = e.charge_x_center_of_mass;
   charge_y_center_of_mass = e.charge_y_center_of_mass;
-  cout << sparse_density.size() << endl;
-  sparse_density = e.sparse_density;
 }
 //__________________________________________________________________________________________
 

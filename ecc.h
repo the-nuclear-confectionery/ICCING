@@ -29,11 +29,12 @@ private:
   double x_center_of_mass = 0.0;
   double y_center_of_mass = 0.0;
 
-  vector<double> charge_x_center_of_mass;
-  vector<double> charge_y_center_of_mass;
 
   //  Sparse density array, includes all densities, sparse array makes calculation faster
   vector<vector<double>> sparse_density;
+
+  vector<double> charge_x_center_of_mass;
+  vector<double> charge_y_center_of_mass;
 //__________________________________________________________________________________________
 
 //__________________________________________________________________________________________
