@@ -41,7 +41,7 @@ private:
 //  Internal Functions
 //##########################################################################################
   //  Copy function for Eccentricity class, called by operator= and implicit copy functions
-  void CopyEccentricity(Eccentricity &e);
+  void CopyEccentricity(const Eccentricity &e);
 
   //  Calculate eccentricity
   vector<double> StandardCalculation(string density_type, int m, int n);
