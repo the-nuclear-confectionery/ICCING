@@ -39,6 +39,8 @@ void Eccentricity::CopyEccentricity(const Eccentricity &e)
 {
   x_center_of_mass = e.x_center_of_mass;
   y_center_of_mass = e.y_center_of_mass;
+  charge_x_center_of_mass = e.charge_x_center_of_mass;
+  charge_y_center_of_mass = e.charge_y_center_of_mass;
   sparse_density = e.sparse_density;
 }
 //__________________________________________________________________________________________
@@ -74,8 +76,8 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
 
 	for (int s=0;s<max;s++)
   {
-	   x_component = (sparse_density[s][0] - x_center_of_mass[column]);
-	   y_component = (sparse_density[s][1] - y_center_of_mass[column]);
+	   x_component = (sparse_density[s][0] - x_center_of_mass);
+	   y_component = (sparse_density[s][1] - y_center_of_mass);
 	   distance_squared[s] = pow(x_component, 2) + pow(y_component, 2);
 
      weight = sparse_density[s][column]*pow(distance_squared[s], (m/2.));
@@ -118,7 +120,7 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
 //##########################################################################################
 vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
 {
-  int column;
+  int column, xCOM, yCOM;
   int max = sparse_density.size(), max_pos = 0, max_neg = 0;
   vector <double> distance_squared, phi;
   double psi_pos, psi_neg, radius_pos, radius_neg;
@@ -129,14 +131,23 @@ vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
   distance_squared.resize(max);
   phi.resize(max);
 
-  if (density_type == "Baryon") { column = 3; }
-  else if (density_type == "Strange") { column = 4; }
-  else if (density_type == "Charge") { column = 5; }
+  if (density_type == "Baryon") { column = 3; xCOM = 0; yCOM = 1; }
+  else if (density_type == "Strange") { column = 4; xCOM = 2; yCOM = 3; }
+  else if (density_type == "Charge") { column = 5; xCOM = 4; yCOM = 5; }
 
 	for (int s=0;s<max;s++)
   {
-	   x_component = (sparse_density[s][0] - x_center_of_mass[column]);
-	   y_component = (sparse_density[s][1] - y_center_of_mass[column]);
+    if (sparse_density[s][column] < 0)
+    {
+      x_component = (sparse_density[s][0] - charge_x_center_of_mass[xCOM]);
+      y_component = (sparse_density[s][1] - charge_y_center_of_mass[yCOM]);
+    }
+    else if (sparse_density[s][column] > 0)
+    {
+      x_component = (sparse_density[s][0] - charge_x_center_of_mass[xCOM]);
+      y_component = (sparse_density[s][1] - charge_y_center_of_mass[yCOM]);
+    }
+
 	   distance_squared[s] = pow(x_component, 2) + pow(y_component, 2);
 
      weight = sparse_density[s][column]*pow(distance_squared[s], (m/2.));
@@ -208,9 +219,9 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
 {
   double x, y;
   double energy = 0;
-  double baryon = 0;
-  double strange = 0;
-  double charge = 0;
+  vector<double> baryon(2, 0.);
+  vector<double> strange(2, 0.);
+  vector<double> charge(2, 0.);
 
   //******************************************************************************************
   //  Take full density grid and convert to sparse density structure for easy and quick processing
@@ -224,34 +235,44 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
         y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
 
-        x_center_of_mass[2] += x*density[0][i][j];
-        y_center_of_mass[2] += y*density[0][i][j];
-
-        x_center_of_mass[3] += x*density[1][i][j];
-        y_center_of_mass[3] += y*density[1][i][j];
-        x_center_of_mass[4] += x*density[2][i][j];
-        y_center_of_mass[4] += y*density[2][i][j];
-        x_center_of_mass[5] += x*density[3][i][j];
-        y_center_of_mass[5] += y*density[3][i][j];
-
+        x_center_of_mass += x*density[0][i][j];
+        y_center_of_mass += y*density[0][i][j];
         energy += density[0][i][j];
-        baryon += density[1][i][j];
-        strange += density[2][i][j];
-        charge += density[3][i][j];
+
+        if (density[1][i][j] < 0)
+        { charge_x_center_of_mass[0] += x*density[1][i][j]; baryon[0] += density[1][i][j];}
+        else
+        { charge_y_center_of_mass[1] += y*density[1][i][j];  baryon[1] += density[1][i][j];}
+        if (density[2][i][j] < 0)
+        { charge_x_center_of_mass[2] += x*density[2][i][j];  strange[0] += density[2][i][j];}
+        else
+        { charge_y_center_of_mass[3] += y*density[2][i][j];  strange[1] += density[2][i][j];}
+        if (density[2][i][j] < 0)
+        { charge_x_center_of_mass[4] += x*density[3][i][j];  charge[0] += density[3][i][j];}
+        else
+        { charge_y_center_of_mass[5] += y*density[3][i][j];  charge[1] += density[3][i][j];}
+
         sparse_density.push_back({x, y, density[0][i][j], density[1][i][j], density[2][i][j], density[3][i][j]});
       }
     }
   }
 
-  x_center_of_mass[2] /= energy;
-  y_center_of_mass[2] /= energy;
+  x_center_of_mass /= energy;
+  y_center_of_mass /= energy;
 
-  x_center_of_mass[3] /= baryon;
-  y_center_of_mass[3] /= baryon;
-  x_center_of_mass[4] /= strange;
-  y_center_of_mass[4] /= strange;
-  x_center_of_mass[5] /= charge;
-  y_center_of_mass[5] /= charge;
+  cout << charge_x_center_of_mass[0] << " " << baryon[0] << endl;
+  cout << charge_y_center_of_mass[1] << " " << baryon[1] << endl;
+  cout << charge_x_center_of_mass[2] << " " << strange[0] << endl;
+  cout << charge_y_center_of_mass[3] << " " << strange[1] << endl;
+  cout << charge_x_center_of_mass[4] << " " << charge[0] << endl;
+  cout << charge_y_center_of_mass[5] << " " << charge[1] << endl;
+
+  charge_x_center_of_mass[0] /= baryon[0];
+  charge_y_center_of_mass[1] /= baryon[1];
+  charge_x_center_of_mass[2] /= strange[0];
+  charge_y_center_of_mass[3] /= strange[1];
+  charge_x_center_of_mass[4] /= charge[0];
+  charge_y_center_of_mass[5] /= charge[1];
 
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
@@ -279,16 +300,16 @@ vector<vector<double>> Eccentricity::CalculateInitialEccentricities(int grid_max
         x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
         y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
 
-        x_center_of_mass[2] += x*initial_energy[i][j];
-        y_center_of_mass[2] += y*initial_energy[i][j];
+        x_center_of_mass += x*initial_energy[i][j];
+        y_center_of_mass += y*initial_energy[i][j];
         energy += initial_energy[i][j];
         sparse_density.push_back({x, y, initial_energy[i][j], 0, 0, 0});
       }
     }
   }
 
-  x_center_of_mass[2] /= energy;
-  y_center_of_mass[2] /= energy;
+  x_center_of_mass /= energy;
+  y_center_of_mass /= energy;
 
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
@@ -302,8 +323,6 @@ vector<vector<double>> Eccentricity::CalculateInitialEccentricities(int grid_max
 //##########################################################################################
 void Eccentricity::CleanEccentricity()
 {
-  x_center_of_mass.clear();
-  y_center_of_mass.clear();
   sparse_density.clear();
 }
 //__________________________________________________________________________________________
