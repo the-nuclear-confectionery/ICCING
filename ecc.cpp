@@ -7,7 +7,8 @@
 //##########################################################################################
 Eccentricity::Eccentricity()
 {
-
+  charge_x_center_of_mass.resize(6, 0.0);
+  charge_y_center_of_mass.resize(6, 0.0);
 }
 //__________________________________________________________________________________________
 
@@ -222,7 +223,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   vector<double> baryon(2, 0.);
   vector<double> strange(2, 0.);
   vector<double> charge(2, 0.);
-
+  cout << "test 1" << endl;
   //******************************************************************************************
   //  Take full density grid and convert to sparse density structure for easy and quick processing
   //******************************************************************************************
@@ -256,6 +257,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
       }
     }
   }
+  cout << "test 2" << endl;
 
   x_center_of_mass /= energy;
   y_center_of_mass /= energy;
@@ -266,6 +268,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   cout << charge_y_center_of_mass[3] << " " << strange[1] << endl;
   cout << charge_x_center_of_mass[4] << " " << charge[0] << endl;
   cout << charge_y_center_of_mass[5] << " " << charge[1] << endl;
+  cout << "test 3" << endl;
 
   charge_x_center_of_mass[0] /= baryon[0];
   charge_y_center_of_mass[1] /= baryon[1];
