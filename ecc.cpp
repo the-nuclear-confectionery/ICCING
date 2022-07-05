@@ -36,7 +36,7 @@ Eccentricity::Eccentricity(const Eccentricity &original)
 //##########################################################################################
 //  Eccentricity Copy Function
 //##########################################################################################
-void Eccentricity::CopyEccentricity(const Eccentricity &e)
+void Eccentricity::CopyEccentricity(Eccentricity &e)
 {
   x_center_of_mass = e.x_center_of_mass;
   y_center_of_mass = e.y_center_of_mass;
