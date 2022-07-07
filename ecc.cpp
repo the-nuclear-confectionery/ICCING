@@ -45,6 +45,7 @@ void Eccentricity::CopyEccentricity(const Eccentricity &e)
   y_center_of_mass = e.y_center_of_mass;
   charge_x_center_of_mass = e.charge_x_center_of_mass;
   charge_y_center_of_mass = e.charge_y_center_of_mass;
+  cout << "good2?" << endl;
 }
 //__________________________________________________________________________________________
 
