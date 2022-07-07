@@ -242,7 +242,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         y_center_of_mass += y*density[0][i][j];
         energy += density[0][i][j];
 
-        if (density[1][i][j] < 0)
+/*        if (density[1][i][j] < 0)
         { charge_x_center_of_mass[0] += x*density[1][i][j]; baryon[0] += density[1][i][j];}
         else
         { charge_y_center_of_mass[1] += y*density[1][i][j];  baryon[1] += density[1][i][j];}
@@ -254,7 +254,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         { charge_x_center_of_mass[4] += x*density[3][i][j];  charge[0] += density[3][i][j];}
         else
         { charge_y_center_of_mass[5] += y*density[3][i][j];  charge[1] += density[3][i][j];}
-
+*/
         sparse_density.push_back({x, y, density[0][i][j], density[1][i][j], density[2][i][j], density[3][i][j]});
       }
     }
@@ -264,7 +264,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   x_center_of_mass /= energy;
   y_center_of_mass /= energy;
 
-  cout << charge_x_center_of_mass[0] << " " << baryon[0] << endl;
+/*  cout << charge_x_center_of_mass[0] << " " << baryon[0] << endl;
   cout << charge_y_center_of_mass[1] << " " << baryon[1] << endl;
   cout << charge_x_center_of_mass[2] << " " << strange[0] << endl;
   cout << charge_y_center_of_mass[3] << " " << strange[1] << endl;
@@ -278,7 +278,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   charge_y_center_of_mass[3] /= strange[1];
   charge_x_center_of_mass[4] /= charge[0];
   charge_y_center_of_mass[5] /= charge[1];
-
+*/
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
   //******************************************************************************************
@@ -328,6 +328,6 @@ vector<vector<double>> Eccentricity::CalculateInitialEccentricities(int grid_max
 //##########################################################################################
 void Eccentricity::CleanEccentricity()
 {
-  sparse_density.clear();
+
 }
 //__________________________________________________________________________________________
