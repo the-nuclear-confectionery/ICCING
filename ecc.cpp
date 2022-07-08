@@ -38,19 +38,19 @@ Eccentricity::Eccentricity(const Eccentricity &original)
 //##########################################################################################
 void Eccentricity::CopyEccentricity(const Eccentricity &e)
 {
-  cout << sparse_density.size() << endl;
-  cout << e.sparse_density.size() << endl;
+//  cout << sparse_density.size() << endl;
+//  cout << e.sparse_density.size() << endl;
   sparse_density = e.sparse_density;
-  cout << "good?" << endl;
+//  cout << "good?" << endl;
   x_center_of_mass = e.x_center_of_mass;
   y_center_of_mass = e.y_center_of_mass;
-  cout << "charge_x " << charge_x_center_of_mass.size() << endl;
-  cout << "charge_y " << charge_y_center_of_mass.size() << endl;
-  cout << "e.charge_x " << e.charge_x_center_of_mass.size() << endl;
-  cout << "e.charge_y " << e.charge_y_center_of_mass.size() << endl;
+//  cout << "charge_x " << charge_x_center_of_mass.size() << endl;
+//  cout << "charge_y " << charge_y_center_of_mass.size() << endl;
+//  cout << "e.charge_x " << e.charge_x_center_of_mass.size() << endl;
+//  cout << "e.charge_y " << e.charge_y_center_of_mass.size() << endl;
   charge_x_center_of_mass = e.charge_x_center_of_mass;
   charge_y_center_of_mass = e.charge_y_center_of_mass;
-  cout << "good2?" << endl;
+//  cout << "good2?" << endl;
 }
 //__________________________________________________________________________________________
 
@@ -231,7 +231,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   vector<double> baryon(2, 0.);
   vector<double> strange(2, 0.);
   vector<double> charge(2, 0.);
-  cout << "test 1" << endl;
+//  cout << "test 1" << endl;
   //******************************************************************************************
   //  Take full density grid and convert to sparse density structure for easy and quick processing
   //******************************************************************************************
@@ -248,7 +248,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         y_center_of_mass += y*density[0][i][j];
         energy += density[0][i][j];
 
-/*        if (density[1][i][j] < 0)
+        if (density[1][i][j] < 0)
         { charge_x_center_of_mass[0] += x*density[1][i][j]; baryon[0] += density[1][i][j];}
         else
         { charge_y_center_of_mass[1] += y*density[1][i][j];  baryon[1] += density[1][i][j];}
@@ -260,12 +260,12 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         { charge_x_center_of_mass[4] += x*density[3][i][j];  charge[0] += density[3][i][j];}
         else
         { charge_y_center_of_mass[5] += y*density[3][i][j];  charge[1] += density[3][i][j];}
-*/
+
         sparse_density.push_back({x, y, density[0][i][j], density[1][i][j], density[2][i][j], density[3][i][j]});
       }
     }
   }
-  cout << "test 2" << endl;
+//  cout << "test 2" << endl;
 
   x_center_of_mass /= energy;
   y_center_of_mass /= energy;
@@ -277,14 +277,14 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   cout << charge_x_center_of_mass[4] << " " << charge[0] << endl;
   cout << charge_y_center_of_mass[5] << " " << charge[1] << endl;
   cout << "test 3" << endl;
-
+*/
   charge_x_center_of_mass[0] /= baryon[0];
   charge_y_center_of_mass[1] /= baryon[1];
   charge_x_center_of_mass[2] /= strange[0];
   charge_y_center_of_mass[3] /= strange[1];
   charge_x_center_of_mass[4] /= charge[0];
   charge_y_center_of_mass[5] /= charge[1];
-*/
+
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
   //******************************************************************************************

@@ -1,5 +1,5 @@
 CC = g++
-DEBUG = -g -O0 -D_GLIBCXX_CONCEPT_CHECKS -D_GLIBCXX_DEBUG -D_GLIBCXX_DEBUG_PEDANTIC
+DEBUG = -g -O0 
 CFLAGS = -std=c++17 -Wall -c -fopenmp `gsl-config --cflags` `gsl-config --libs` $(DEBUG)
 LFLAGS = -Wall -fopenmp `gsl-config --cflags` `gsl-config --libs` $(DEBUG)
 MALLOC_CHECK = 2
