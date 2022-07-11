@@ -129,7 +129,7 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
 //##########################################################################################
 vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
 {
-  int column, xCOM, yCOM;
+  int column, negCOM, posCOM;
   int max = sparse_density.size(), max_pos = 0, max_neg = 0;
   vector <double> distance_squared, phi;
   double psi_pos, psi_neg, radius_pos, radius_neg;
@@ -140,21 +140,21 @@ vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
   distance_squared.resize(max);
   phi.resize(max);
 
-  if (density_type == "Baryon") { column = 3; xCOM = 0; yCOM = 1; }
-  else if (density_type == "Strange") { column = 4; xCOM = 2; yCOM = 3; }
-  else if (density_type == "Charge") { column = 5; xCOM = 4; yCOM = 5; }
+  if (density_type == "Baryon") { column = 3; negCOM = 0; posCOM = 1; }
+  else if (density_type == "Strange") { column = 4; negCOM = 2; posCOM = 3; }
+  else if (density_type == "Charge") { column = 5; negCOM = 4; posCOM = 5; }
 
 	for (int s=0;s<max;s++)
   {
     if (sparse_density[s][column] < 0)
     {
-      x_component = (sparse_density[s][0] - charge_x_center_of_mass[xCOM]);
-      y_component = (sparse_density[s][1] - charge_y_center_of_mass[yCOM]);
+      x_component = (sparse_density[s][0] - charge_x_center_of_mass[negCOM]);
+      y_component = (sparse_density[s][1] - charge_y_center_of_mass[negCOM]);
     }
     else if (sparse_density[s][column] > 0)
     {
-      x_component = (sparse_density[s][0] - charge_x_center_of_mass[xCOM]);
-      y_component = (sparse_density[s][1] - charge_y_center_of_mass[yCOM]);
+      x_component = (sparse_density[s][0] - charge_x_center_of_mass[posCOM]);
+      y_component = (sparse_density[s][1] - charge_y_center_of_mass[posCOM]);
     }
 
 	   distance_squared[s] = pow(x_component, 2) + pow(y_component, 2);
@@ -249,17 +249,39 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         energy += density[0][i][j];
 
         if (density[1][i][j] < 0)
-        { charge_x_center_of_mass[0] += x*density[1][i][j]; baryon[0] += density[1][i][j];}
+        {
+          charge_x_center_of_mass[0] += x*density[1][i][j];
+          charge_y_center_of_mass[0] += y*density[1][i][j];
+          baryon[0] += density[1][i][j];
+        }
         else
-        { charge_y_center_of_mass[1] += y*density[1][i][j];  baryon[1] += density[1][i][j];}
+        {
+          charge_x_center_of_mass[1] += x*density[1][i][j];
+          charge_y_center_of_mass[1] += y*density[1][i][j];
+          baryon[1] += density[1][i][j];
+        }
         if (density[2][i][j] < 0)
-        { charge_x_center_of_mass[2] += x*density[2][i][j];  strange[0] += density[2][i][j];}
+        {
+          charge_x_center_of_mass[2] += x*density[2][i][j];
+          charge_y_center_of_mass[2] += y*density[2][i][j];
+          strange[0] += density[2][i][j];}
         else
-        { charge_y_center_of_mass[3] += y*density[2][i][j];  strange[1] += density[2][i][j];}
+        {
+          charge_x_center_of_mass[3] += x*density[2][i][j];
+          charge_y_center_of_mass[3] += y*density[2][i][j];
+          strange[1] += density[2][i][j];}
+        }
         if (density[2][i][j] < 0)
-        { charge_x_center_of_mass[4] += x*density[3][i][j];  charge[0] += density[3][i][j];}
+        {
+          charge_x_center_of_mass[4] += x*density[3][i][j];
+          charge_y_center_of_mass[4] += y*density[3][i][j];
+          charge[0] += density[3][i][j];}
         else
-        { charge_y_center_of_mass[5] += y*density[3][i][j];  charge[1] += density[3][i][j];}
+        {
+          charge_x_center_of_mass[5] += x*density[3][i][j];
+          charge_y_center_of_mass[5] += y*density[3][i][j];
+          charge[1] += density[3][i][j];}
+        }
 
         sparse_density.push_back({x, y, density[0][i][j], density[1][i][j], density[2][i][j], density[3][i][j]});
       }
@@ -279,10 +301,18 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   cout << "test 3" << endl;
 */
   charge_x_center_of_mass[0] /= baryon[0];
+  charge_y_center_of_mass[0] /= baryon[0];
+  charge_x_center_of_mass[1] /= baryon[1];
   charge_y_center_of_mass[1] /= baryon[1];
+
   charge_x_center_of_mass[2] /= strange[0];
+  charge_y_center_of_mass[2] /= strange[0];
+  charge_x_center_of_mass[3] /= strange[1];
   charge_y_center_of_mass[3] /= strange[1];
+
   charge_x_center_of_mass[4] /= charge[0];
+  charge_y_center_of_mass[4] /= charge[0];
+  charge_x_center_of_mass[5] /= charge[1];
   charge_y_center_of_mass[5] /= charge[1];
 
   //******************************************************************************************
