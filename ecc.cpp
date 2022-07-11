@@ -264,12 +264,13 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         {
           charge_x_center_of_mass[2] += x*density[2][i][j];
           charge_y_center_of_mass[2] += y*density[2][i][j];
-          strange[0] += density[2][i][j];}
+          strange[0] += density[2][i][j];
+        }
         else
         {
           charge_x_center_of_mass[3] += x*density[2][i][j];
           charge_y_center_of_mass[3] += y*density[2][i][j];
-          strange[1] += density[2][i][j];}
+          strange[1] += density[2][i][j];
         }
         if (density[2][i][j] < 0)
         {
@@ -280,8 +281,9 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
         {
           charge_x_center_of_mass[5] += x*density[3][i][j];
           charge_y_center_of_mass[5] += y*density[3][i][j];
-          charge[1] += density[3][i][j];}
+          charge[1] += density[3][i][j];
         }
+
 
         sparse_density.push_back({x, y, density[0][i][j], density[1][i][j], density[2][i][j], density[3][i][j]});
       }
