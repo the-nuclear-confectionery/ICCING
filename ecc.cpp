@@ -294,14 +294,8 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   x_center_of_mass /= energy;
   y_center_of_mass /= energy;
 
-/*  cout << charge_x_center_of_mass[0] << " " << baryon[0] << endl;
-  cout << charge_y_center_of_mass[1] << " " << baryon[1] << endl;
-  cout << charge_x_center_of_mass[2] << " " << strange[0] << endl;
-  cout << charge_y_center_of_mass[3] << " " << strange[1] << endl;
-  cout << charge_x_center_of_mass[4] << " " << charge[0] << endl;
-  cout << charge_y_center_of_mass[5] << " " << charge[1] << endl;
   cout << "test 3" << endl;
-*/
+
   charge_x_center_of_mass[0] /= baryon[0];
   charge_y_center_of_mass[0] /= baryon[0];
   charge_x_center_of_mass[1] /= baryon[1];
@@ -316,6 +310,13 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   charge_y_center_of_mass[4] /= charge[0];
   charge_x_center_of_mass[5] /= charge[1];
   charge_y_center_of_mass[5] /= charge[1];
+
+  cout << charge_x_center_of_mass[0] << " " << charge_y_center_of_mass[0] << endl;
+  cout << charge_x_center_of_mass[1] << " " << charge_y_center_of_mass[1] << endl;
+  cout << charge_x_center_of_mass[2] << " " << charge_y_center_of_mass[2] << endl;
+  cout << charge_x_center_of_mass[3] << " " << charge_y_center_of_mass[3] << endl;
+  cout << charge_x_center_of_mass[4] << " " << charge_y_center_of_mass[4] << endl;
+  cout << charge_x_center_of_mass[5] << " " << charge_y_center_of_mass[5] << endl;
 
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
