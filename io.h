@@ -93,6 +93,7 @@ private:
     ethresh,
     freezeoutthresh,
     chargetype,
+    eccentricitytype,
 
     backgroundpoints,
     greensfunctionspoints,
@@ -186,6 +187,7 @@ private:
   double e_thresh; // Splitting and event
   double freezeout_thresh;
   string charge_type; //  Flag for tracking BSQ or UDS charges
+  string eccentricity_type;
 
   int tracked_charge;
   int current_event;  //  Tracks what event is being handled

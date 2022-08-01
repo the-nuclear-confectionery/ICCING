@@ -51,6 +51,7 @@ void Event::CopyEvent(const Event &e)
   get_grid_point = e.get_grid_point;
   perturbative_regime = e.perturbative_regime;
   output_dir = e.output_dir;
+  eccentricity_type = e.eccentricity_type;
 
   initial_energy = e.initial_energy;
   t_a = e.t_a;
@@ -828,7 +829,7 @@ void Event::CalculateEccentricities()
 //  cout << "1st testing eccentricities " << initial_eccentricities[0][0] << " " << initial_eccentricities[0][1] << " " << initial_eccentricities[0][2] << endl;
   if (test_ != "ConvertEvent")
   {
-    eccentricities = ecc.CalculateEccentricities(grid_max, grid_step, density);
+    eccentricities = ecc.CalculateEccentricities(grid_max, grid_step, eccentricity_type, density);
   }
 }
 //__________________________________________________________________________________________

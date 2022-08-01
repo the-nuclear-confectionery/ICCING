@@ -87,6 +87,7 @@ IO::IO(string configFile)
       case ethresh:  input >> e_thresh; break;
       case freezeoutthresh:  input >> freezeout_thresh; break;
       case chargetype:  input >> charge_type; break;
+      case eccentricitytype:  input >> eccentricity_type; break;
 
       //  Error statement, triggered if unknown parameter is specified in config, exits program
       default: cout << "Error Unknown Parameter Used" << endl; exit(0); break;
@@ -197,6 +198,7 @@ void IO::CopyIO(const IO &e)
   e_thresh = e.e_thresh;
   freezeout_thresh = e.freezeout_thresh;
   charge_type = e.charge_type;
+  eccentricity_type = e.eccentricity_type;
   //#CONFIGPARAM
 
   tracked_charge = e.tracked_charge;
@@ -294,6 +296,7 @@ void IO::Initialize()
   e_thresh = 0.25;
   freezeout_thresh = 0.0;
   charge_type = "BSQ";
+  eccentricity_type = "COM";
   //#CONFIGPARAM
 
   tracked_charge = 0;
@@ -363,6 +366,7 @@ void IO::Initialize()
   mapConfigParams["e_thresh"] = ethresh;
   mapConfigParams["freezeout_thresh"] = freezeoutthresh;
   mapConfigParams["charge_type"] = chargetype;
+  mapConfigParams["eccentricity_type"] = eccentricitytype;
   //#CONFIGPARAM
 }
 //__________________________________________________________________________________________
@@ -438,7 +442,7 @@ void IO::OutputConfig(string file_name)
     << "\ntau_0 " << tau_0
     << "\ne_thresh " << e_thresh
     << "\nfreezeout_thresh " << freezeout_thresh
-
+    << "\neccentricity_type " << eccentricity_type
     << "\ncharge_type " << charge_type;
     //#CONFIGPARAM
 
@@ -470,6 +474,7 @@ Event IO::InitializeEvent()
   event_in.charm_chop = charm_chop;
   event_in.perturbative_regime = perturbative_regime;
   event_in.output_dir = output_dir;
+  event_in.eccentricity_type = eccentricity_type;
 
   //  Initialize input grid to 0 with dimensions grid_points + 1
   event_in.initial_energy.resize(grid_points + 1, vector<double>(grid_points + 1, 0.));

@@ -57,6 +57,7 @@ private:
   double perturbative_regime;
   string output_dir;
   uniform_int_distribution<int> get_grid_point;
+  string eccentricity_type;
   //__________________________________________________________________________________________
 
   //__________________________________________________________________________________________

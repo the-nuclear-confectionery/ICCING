@@ -127,7 +127,7 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
 //##########################################################################################
 //  Calculate eccentricities, seperating positive and negative density values
 //##########################################################################################
-vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
+vector<double> Eccentricity::NewCalculation(string density_type, int m, int n, string reference_point)
 {
   int column, negCOM, posCOM;
   int max = sparse_density.size(), max_pos = 0, max_neg = 0;
@@ -146,15 +146,23 @@ vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
 
 	for (int s=0;s<max;s++)
   {
-    if (sparse_density[s][column] < 0)
+    if (reference_point == "COM")
     {
-      x_component = (sparse_density[s][0] - charge_x_center_of_mass[negCOM]);
-      y_component = (sparse_density[s][1] - charge_y_center_of_mass[negCOM]);
+      x_component = (sparse_density[s][0] - x_center_of_mass);
+      y_component = (sparse_density[s][1] - y_center_of_mass);
     }
-    else if (sparse_density[s][column] > 0)
+    else if (reference_point == "COC")
     {
-      x_component = (sparse_density[s][0] - charge_x_center_of_mass[posCOM]);
-      y_component = (sparse_density[s][1] - charge_y_center_of_mass[posCOM]);
+      if (sparse_density[s][column] < 0)
+      {
+        x_component = (sparse_density[s][0] - charge_x_center_of_mass[negCOM]);
+        y_component = (sparse_density[s][1] - charge_y_center_of_mass[negCOM]);
+      }
+      else if (sparse_density[s][column] > 0)
+      {
+        x_component = (sparse_density[s][0] - charge_x_center_of_mass[posCOM]);
+        y_component = (sparse_density[s][1] - charge_y_center_of_mass[posCOM]);
+      }
     }
 
 	   distance_squared[s] = pow(x_component, 2) + pow(y_component, 2);
@@ -224,7 +232,7 @@ vector<double> Eccentricity::NewCalculation(string density_type, int m, int n)
 //##########################################################################################
 //  Calculate All eccentricities for given event
 //##########################################################################################
-vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_max, double grid_step, vector<vector<vector<double>>> density)
+vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_max, double grid_step, string reference_point, vector<vector<vector<double>>> density)
 {
   double x, y;
   double energy = 0;
@@ -322,9 +330,9 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   //  Calculate eccentricities and return in structure for easy output
   //******************************************************************************************
   return {{StandardCalculation("Energy",2,2), StandardCalculation("Energy",3,3), StandardCalculation("Energy",4,4), StandardCalculation("Energy",5,5)}
-         ,{NewCalculation("Baryon",2,2), NewCalculation("Baryon",3,3), NewCalculation("Baryon",4,4), NewCalculation("Baryon",5,5)}
-         ,{NewCalculation("Strange",2,2), NewCalculation("Strange",3,3), NewCalculation("Strange",4,4), NewCalculation("Strange",5,5)}
-         ,{NewCalculation("Charge",2,2), NewCalculation("Charge",3,3), NewCalculation("Charge",4,4), NewCalculation("Charge",5,5)}};
+         ,{NewCalculation("Baryon",2,2,reference_point), NewCalculation("Baryon",3,3,reference_point), NewCalculation("Baryon",4,4,reference_point), NewCalculation("Baryon",5,5,reference_point)}
+         ,{NewCalculation("Strange",2,2,reference_point), NewCalculation("Strange",3,3,reference_point), NewCalculation("Strange",4,4,reference_point), NewCalculation("Strange",5,5,reference_point)}
+         ,{NewCalculation("Charge",2,2,reference_point), NewCalculation("Charge",3,3,reference_point), NewCalculation("Charge",4,4,reference_point), NewCalculation("Charge",5,5,reference_point)}};
 }
 //__________________________________________________________________________________________
 

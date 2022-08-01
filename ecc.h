@@ -48,7 +48,7 @@ private:
   vector<double> StandardCalculation(string density_type, int m, int n);
 
   //  Calculate eccentricities, seperating positive and negative density values
-  vector<double> NewCalculation(string density_type, int m, int n);
+  vector<double> NewCalculation(string density_type, int m, int n, string reference_point);
 //__________________________________________________________________________________________
 
 public:
@@ -69,7 +69,7 @@ public:
 //  Eccentricity Specific Functions
 //##########################################################################################
   //  Calculate All eccentricities for given event
-  vector<vector<vector<double>>> CalculateEccentricities(int grid_max, double grid_step, vector<vector<vector<double>>> density);
+  vector<vector<vector<double>>> CalculateEccentricities(int grid_max, double grid_step, string reference_point, vector<vector<vector<double>>> density);
 
   //  Calculate initial state eccentricities for given event
   vector<vector<double>> CalculateInitialEccentricities(int grid_max, double grid_step, vector<vector<double>> initial_energy);
