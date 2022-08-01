@@ -272,7 +272,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
           charge_y_center_of_mass[3] += y*density[2][i][j];
           strange[1] += density[2][i][j];
         }
-        if (density[2][i][j] < 0)
+        if (density[3][i][j] < 0)
         {
           charge_x_center_of_mass[4] += x*density[3][i][j];
           charge_y_center_of_mass[4] += y*density[3][i][j];
