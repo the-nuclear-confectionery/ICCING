@@ -268,6 +268,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
           charge_y_center_of_mass[1] += y*density[1][i][j];
           baryon[1] += density[1][i][j];
         }
+
         if (density[2][i][j] < 0)
         {
           charge_x_center_of_mass[2] += x*density[2][i][j];
@@ -280,6 +281,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
           charge_y_center_of_mass[3] += y*density[2][i][j];
           strange[1] += density[2][i][j];
         }
+
         if (density[3][i][j] < 0)
         {
           charge_x_center_of_mass[4] += x*density[3][i][j];
@@ -302,7 +304,7 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   x_center_of_mass /= energy;
   y_center_of_mass /= energy;
 
-//  cout << "test 3" << endl;
+  cout << "test 3" << endl;
 
   charge_x_center_of_mass[0] /= baryon[0];
   charge_y_center_of_mass[0] /= baryon[0];
@@ -319,13 +321,13 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   charge_x_center_of_mass[5] /= charge[1];
   charge_y_center_of_mass[5] /= charge[1];
 
-/*  cout << charge_x_center_of_mass[0] << " " << charge_y_center_of_mass[0] << endl;
+  cout << charge_x_center_of_mass[0] << " " << charge_y_center_of_mass[0] << endl;
   cout << charge_x_center_of_mass[1] << " " << charge_y_center_of_mass[1] << endl;
   cout << charge_x_center_of_mass[2] << " " << charge_y_center_of_mass[2] << endl;
   cout << charge_x_center_of_mass[3] << " " << charge_y_center_of_mass[3] << endl;
   cout << charge_x_center_of_mass[4] << " " << charge_y_center_of_mass[4] << endl;
   cout << charge_x_center_of_mass[5] << " " << charge_y_center_of_mass[5] << endl;
-*/
+
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
   //******************************************************************************************
