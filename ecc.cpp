@@ -223,6 +223,7 @@ vector<double> Eccentricity::NewCalculation(string density_type, int m, int n, s
   // top and bottom of eccentricity is technically divided by number of particles (max)
 	radius_neg = normalization_neg/etot_neg;
   radius_pos = normalization_pos/etot_pos;
+  if (density_type == "Charge") { eccentricity_neg = 1; eccentricity_pos = 1; }
 
 	return {eccentricity_neg, psi_neg, radius_neg, eccentricity_pos, psi_pos, radius_pos};
 }
