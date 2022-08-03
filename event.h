@@ -73,6 +73,7 @@ private:
   vector<vector<int>> valued_points;
   vector<vector<double>> initial_eccentricities;
   vector<vector<vector<double>>> eccentricities;
+  vector<vector<vector<double>>> estimator_integrals;
   Eccentricity ecc;
   int number_gluon = 0;
   int number_up = 0;

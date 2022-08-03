@@ -82,6 +82,9 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
   phi.resize(max);
 
   if (density_type == "Energy") { column = 2; }
+  else if (density_type == "Baryon") { column = 3; }
+  else if (density_type == "Strange") { column = 4; }
+  else if (density_type == "Charge") { column = 5; }
 
 	for (int s=0;s<max;s++)
   {
@@ -116,7 +119,10 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
   eccentricity /= normalization;
 
   // top and bottom of eccentricity is technically divided by number of particles (max)
-	radius = normalization/etot;
+  if (column == 2)
+  {
+	   radius = normalization/etot;
+  }
 
 	return {eccentricity, psi, radius};
 
@@ -223,7 +229,6 @@ vector<double> Eccentricity::NewCalculation(string density_type, int m, int n, s
   // top and bottom of eccentricity is technically divided by number of particles (max)
 	radius_neg = normalization_neg/etot_neg;
   radius_pos = normalization_pos/etot_pos;
-  if (density_type == "Charge") { eccentricity_neg = 1; eccentricity_pos = 1; }
 
 	return {eccentricity_neg, psi_neg, radius_neg, eccentricity_pos, psi_pos, radius_pos};
 }
@@ -240,6 +245,10 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
   vector<double> baryon(2, 0.);
   vector<double> strange(2, 0.);
   vector<double> charge(2, 0.);
+
+  x_center_of_mass = 0;
+  y_center_of_mass = 0;
+  sparse_density.clear();
 //  cout << "test 1" << endl;
   //******************************************************************************************
   //  Take full density grid and convert to sparse density structure for easy and quick processing
@@ -339,10 +348,71 @@ vector<vector<vector<double>>> Eccentricity::CalculateEccentricities(int grid_ma
 }
 //__________________________________________________________________________________________
 
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Calculate Charge Estimators
+//##########################################################################################
+vector<vector<vector<double>>> Eccentricity::CalculateEstimatorIntegrals(int grid_max, double grid_step, vector<vector<vector<double>>> density)
+{
+  double x, y;
+  double energy = 0;
+  vector<vector<double>> charge_dipoles(3, vector<double>(2, 0.0));
+
+  x_center_of_mass = 0;
+  y_center_of_mass = 0;
+  sparse_density.clear();
+
+  //******************************************************************************************
+  //  Take full density grid and convert to sparse density structure for easy and quick processing
+  //******************************************************************************************
+  for (int i = 0; i < density[0].size(); i++)
+  {
+    for (int j = 0; j < density[0][0].size(); j++)
+    {
+      if (density[0][i][j] != 0)
+      {
+        x = -grid_max + i*grid_step;  //  Converts grid point to physical x-value
+        y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
+
+        x_center_of_mass += x*density[0][i][j];
+        y_center_of_mass += y*density[0][i][j];
+        energy += density[0][i][j];
+
+        charge_dipoles[0][0] += x*density[1][i][j];
+        charge_dipoles[0][1] += y*density[1][i][j];
+
+        charge_dipoles[1][0] += x*density[2][i][j];
+        charge_dipoles[1][1] += y*density[2][i][j];
+
+        charge_dipoles[2][0] += x*density[3][i][j];
+        charge_dipoles[2][1] += y*density[3][i][j];
+
+        sparse_density.push_back({x, y, density[0][i][j], density[1][i][j], density[2][i][j], density[3][i][j]});
+      }
+    }
+  }
+
+  x_center_of_mass /= energy;
+  y_center_of_mass /= energy;
+
+  //******************************************************************************************
+  //  Calculate eccentricities and return in structure for easy output
+  //******************************************************************************************
+  return {{{charge_dipoles[0][0], charge_dipoles[0][1], energy}, StandardCalculation("Baryon", 2, 2), StandardCalculation("Baryon", 3, 3), , StandardCalculation("Energy", 2, 2)}
+         ,{{charge_dipoles[1][0], charge_dipoles[1][1], energy}, StandardCalculation("Strange", 2, 2), StandardCalculation("Strange", 3, 3), , StandardCalculation("Energy", 2, 2)}
+         ,{{charge_dipoles[2][0], charge_dipoles[2][1], energy}, StandardCalculation("Charge", 2, 2), StandardCalculation("Charge", 3, 3), , StandardCalculation("Energy", 2, 2)}};
+}
+//__________________________________________________________________________________________
+
+
+
 vector<vector<double>> Eccentricity::CalculateInitialEccentricities(int grid_max, double grid_step, vector<vector<double>> initial_energy)
 {
   double x, y, energy = 0;
 
+  x_center_of_mass = 0;
+  y_center_of_mass = 0;
+  sparse_density.clear();
   //******************************************************************************************
   //  Take full density grid and convert to sparse density structure for easy and quick processing
   //******************************************************************************************

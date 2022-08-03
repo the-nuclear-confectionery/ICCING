@@ -62,6 +62,7 @@ void Event::CopyEvent(const Event &e)
   valued_points = e.valued_points;
   initial_eccentricities = e.initial_eccentricities;
   eccentricities = e.eccentricities;
+  estimator_integrals = e.estimator_integrals;
   ecc = e.ecc;
   number_gluon = e.number_gluon;
   number_up = e.number_up;
@@ -830,6 +831,7 @@ void Event::CalculateEccentricities()
   if (test_ != "ConvertEvent")
   {
     eccentricities = ecc.CalculateEccentricities(grid_max, grid_step, eccentricity_type, density);
+    estimator_integrals = ecc.CalculateEstimatorIntegrals(grid_max, grid_step, density);
   }
 }
 //__________________________________________________________________________________________
@@ -949,6 +951,7 @@ void Event::CleanEvent()
   t_b.clear();
   density.clear();
   eccentricities.clear();
+  estimator_integrals.clear();
   ecc.CleanEccentricity();
 
   total_initial_energy = 0;
