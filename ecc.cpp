@@ -398,9 +398,9 @@ vector<vector<vector<double>>> Eccentricity::CalculateEstimatorIntegrals(int gri
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
   //******************************************************************************************
-  return {{{charge_dipoles[0][0], charge_dipoles[0][1], energy}, StandardCalculation("Baryon", 2, 2), StandardCalculation("Baryon", 3, 3), , StandardCalculation("Energy", 2, 2)}
-         ,{{charge_dipoles[1][0], charge_dipoles[1][1], energy}, StandardCalculation("Strange", 2, 2), StandardCalculation("Strange", 3, 3), , StandardCalculation("Energy", 2, 2)}
-         ,{{charge_dipoles[2][0], charge_dipoles[2][1], energy}, StandardCalculation("Charge", 2, 2), StandardCalculation("Charge", 3, 3), , StandardCalculation("Energy", 2, 2)}};
+  return {{{charge_dipoles[0][0], charge_dipoles[0][1], energy}, StandardCalculation("Baryon", 2, 2), StandardCalculation("Baryon", 3, 3), StandardCalculation("Energy", 2, 2)}
+         ,{{charge_dipoles[1][0], charge_dipoles[1][1], energy}, StandardCalculation("Strange", 2, 2), StandardCalculation("Strange", 3, 3), StandardCalculation("Energy", 2, 2)}
+         ,{{charge_dipoles[2][0], charge_dipoles[2][1], energy}, StandardCalculation("Charge", 2, 2), StandardCalculation("Charge", 3, 3), StandardCalculation("Energy", 2, 2)}};
 }
 //__________________________________________________________________________________________
 
