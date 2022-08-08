@@ -82,9 +82,6 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
   phi.resize(max);
 
   if (density_type == "Energy") { column = 2; }
-  else if (density_type == "Baryon") { column = 3; }
-  else if (density_type == "Strange") { column = 4; }
-  else if (density_type == "Charge") { column = 5; }
 
 	for (int s=0;s<max;s++)
   {
@@ -119,13 +116,67 @@ vector<double> Eccentricity::StandardCalculation(string density_type, int m, int
   eccentricity /= normalization;
 
   // top and bottom of eccentricity is technically divided by number of particles (max)
-  if (column == 2)
-  {
-	   radius = normalization/etot;
-  }
+	radius = normalization/etot;
 
 	return {eccentricity, psi, radius};
 
+}
+//__________________________________________________________________________________________
+
+//__________________________________________________________________________________________
+//##########################################################################################
+//  Calculate eccentricities, seperating positive and negative density values
+//##########################################################################################
+vector<double> Eccentricity::EstimatorIntegrals(string density_type, int m, int n)
+{
+  int column;
+  int max = sparse_density.size();
+  vector <double> distance_squared, phi;
+  double psi;
+  double psi_top = 0, psi_bottom = 0, normalization = 0, x_component = 0, y_component = 0, weight = 0;
+  double eccentricity = 0, etot = 0;
+
+  distance_squared.resize(max);
+  phi.resize(max);
+
+  if (density_type == "Energy") { column = 2; }
+  else if (density_type == "Baryon") { column = 3; }
+  else if (density_type == "Strange") { column = 4; }
+  else if (density_type == "Charge") { column = 5; }
+
+  for (int s=0;s<max;s++)
+  {
+     x_component = (sparse_density[s][0] - x_center_of_mass);
+     y_component = (sparse_density[s][1] - y_center_of_mass);
+     distance_squared[s] = pow(x_component, 2) + pow(y_component, 2);
+
+     weight = sparse_density[s][column]*pow(distance_squared[s], (m/2.));
+     normalization += weight;
+
+     phi[s] = atan2(y_component, x_component); // angle of fluid cells
+
+     psi_top += weight*sin(1.0*n*phi[s]);
+     psi_bottom += weight*cos(1.0*n*phi[s]);
+
+     etot += sparse_density[s][column];
+  }
+  // m is radial weight
+  // n is anglular weight
+
+  psi_top /= max;
+  psi_bottom /= max;
+
+  // relative event plane angle (perp to major axis) (coming out of flat sides of shape)
+  psi = 1./(1.0*n)*atan2(psi_top, psi_bottom);
+
+  for (int s=0;s<max;s++)
+  {
+    eccentricity += sparse_density[s][column]*pow(distance_squared[s], m/2.)*cos(n*(phi[s] - psi));
+  }
+
+  // top and bottom of eccentricity is technically divided by number of particles (max)
+
+  return {eccentricity, psi, normalization};
 }
 //__________________________________________________________________________________________
 
@@ -398,9 +449,9 @@ vector<vector<vector<double>>> Eccentricity::CalculateEstimatorIntegrals(int gri
   //******************************************************************************************
   //  Calculate eccentricities and return in structure for easy output
   //******************************************************************************************
-  return {{{charge_dipoles[0][0], charge_dipoles[0][1], energy}, StandardCalculation("Baryon", 2, 2), StandardCalculation("Baryon", 3, 3), StandardCalculation("Energy", 2, 2)}
-         ,{{charge_dipoles[1][0], charge_dipoles[1][1], energy}, StandardCalculation("Strange", 2, 2), StandardCalculation("Strange", 3, 3), StandardCalculation("Energy", 2, 2)}
-         ,{{charge_dipoles[2][0], charge_dipoles[2][1], energy}, StandardCalculation("Charge", 2, 2), StandardCalculation("Charge", 3, 3), StandardCalculation("Energy", 2, 2)}};
+  return {{{charge_dipoles[0][0], charge_dipoles[0][1], energy}, EstimatorIntegrals("Baryon", 2, 2), EstimatorIntegrals("Baryon", 3, 3), EstimatorIntegrals("Energy", 2, 2)}
+         ,{{charge_dipoles[1][0], charge_dipoles[1][1], energy}, EstimatorIntegrals("Strange", 2, 2), EstimatorIntegrals("Strange", 3, 3), EstimatorIntegrals("Energy", 2, 2)}
+         ,{{charge_dipoles[2][0], charge_dipoles[2][1], energy}, EstimatorIntegrals("Charge", 2, 2), EstimatorIntegrals("Charge", 3, 3), EstimatorIntegrals("Energy", 2, 2)}};
 }
 //__________________________________________________________________________________________
 

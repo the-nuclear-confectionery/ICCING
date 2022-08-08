@@ -47,6 +47,8 @@ private:
   //  Calculate eccentricity
   vector<double> StandardCalculation(string density_type, int m, int n);
 
+  vector<double> EstimatorIntegrals(string density_type, int m, int n);
+
   //  Calculate eccentricities, seperating positive and negative density values
   vector<double> NewCalculation(string density_type, int m, int n, string reference_point);
 //__________________________________________________________________________________________
