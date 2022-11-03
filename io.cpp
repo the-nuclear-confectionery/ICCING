@@ -523,16 +523,17 @@ Event IO::InitializeEvent()
   }
   else
   {
-    event_in.quark_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of quarks
-    event_in.greens_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of quarks
-    cout << "greens radius = " << event_in.greens_rad << endl;
     //  Set size of quark_dist grid used to create quarks
     if (greens_evolution == 1)
     {
+      event_in.quark_rad = round((tau_hydro - tau_0)/grid_step); //  Set radius of quarks
+      event_in.greens_rad = round((tau_hydro - tau_0)/grid_step); //  Set radius of quarks
       event_in.quark_dist = Mask(density_profile_type, event_in.quark_rad, grid_step, tau_hydro);
     }
     else if (greens_evolution == 2)
     {
+      event_in.quark_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of quarks
+      event_in.greens_rad = round((1.5*(tau_hydro - tau_0))/grid_step); //  Set radius of quarks
       event_in.quark_dist = Mask("Uniform", event_in.quark_rad, grid_step, tau_hydro);
     }
   }
