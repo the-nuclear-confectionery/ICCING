@@ -528,6 +528,7 @@ Event IO::InitializeEvent()
     {
       event_in.quark_rad = round((tau_hydro - tau_0)/grid_step); //  Set radius of quarks
       event_in.greens_rad = round((tau_hydro - tau_0)/grid_step); //  Set radius of quarks
+      cout << "greens rad " << event_in.quark_rad << endl;
       event_in.quark_dist = Mask(density_profile_type, event_in.quark_rad, grid_step, tau_hydro);
     }
     else if (greens_evolution == 2)
