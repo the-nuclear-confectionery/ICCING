@@ -79,7 +79,7 @@ int main (int argc, char *argv[])
 	ofstream quark_output;
 	if (inOut.GetTest() == "QuarkRatio"){	quark_output.open(inOut.GetOutputDir() + "quark_ratio_test.dat");	}
 	//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-cout << "1" << endl;
+//cout << "1" << endl;
 	//******************************************************************************************
   //  Main Event Loop
   //******************************************************************************************
@@ -89,7 +89,7 @@ cout << "1" << endl;
 		//	Read next event using initializedEvent as base
 		currentEvent = inOut.ReadEvent(initializedEvent);
 		//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-		cout << "2" << endl;
+//		cout << "2" << endl;
 
 			//******************************************************************************************
 	  	//  Event Loop, Process event until initial energy density is empty
@@ -102,7 +102,7 @@ cout << "1" << endl;
 				//	Declare Sample and Quarks for individual event processing
 				Sample currentSample;
 				Quarks currentQuarks;
-				cout << "3" << endl;
+//				cout << "3" << endl;
 
 				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 				//	Get an energy sample from event
@@ -124,7 +124,7 @@ cout << "1" << endl;
 				// 	This is a test that records the mass of quark pairs and their relevent Qs
 				if (inOut.GetTest() == "QuarkRatio") {	quark_output << currentSample.q_s << " " << currentQuarks.GetCharge()[0] << endl;	}
 				//  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-				cout << "4" << endl;
+//				cout << "4" << endl;
 
 				//	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 				//	Update Density grids with sampled quarks
@@ -141,7 +141,7 @@ cout << "1" << endl;
 		//	Calculate Eccentricities of event
 		currentEvent.CalculateEccentricities();
 //		cout << "test 3" << endl;
-cout << "5" << endl;
+//cout << "5" << endl;
 
 		//	Write event data to files
 		inOut.WriteEvent(currentEvent);
