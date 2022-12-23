@@ -133,7 +133,7 @@ Charge Splitter::RollFlavor(double Qs)
   uniform_real_distribution<double> get_flavor(0, 1);
 
   //  For given Qs, probabilities to get each flavor are extrapolated
-  if (up_chem == 0.0 && down_chem == 0.0 && strange_chem == 0.0 && charm_chem == 0.0 && sub_test =! "SingleChemistry")
+  if (up_chem == 0.0 && down_chem == 0.0 && strange_chem == 0.0 && charm_chem == 0.0 && sub_test != "SingleChemistry")
   {
     u = alpha_s*InterpolateValue(FindRange(flavor_chemistry[0], Qs), Qs);
     d = alpha_s*InterpolateValue(FindRange(flavor_chemistry[1], Qs), Qs);
