@@ -228,7 +228,7 @@ vector<vector<vector<double>>> Event::GetAllGlue()
     if (initial_energy_backup[x][y] != 0)
     {
     vector<int> gluon_bounds = GetIntegrationBounds(gluon_dist.GetMaskSize(), gluon_rad, x, y);
-cout <<"Begin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+//cout <<"Begin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
     //  Loop over gluon_dist using gluon_bounds
     for (int i = gluon_bounds[0]; i < gluon_bounds[2]; i++)
     {
@@ -238,12 +238,12 @@ cout <<"Begin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
 
         //  Sum up total energy from gluon region
         all_gluons[0][x][y] += initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j]*gluon_dist.GetMaskValue(i, j);
-        all_gluons[1][x][y] += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
-        cout << all_gluons[0][x][y] << " " << initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j] << " " << all_gluons[1][x][y] << " " << kappa_ << " " << t_b[x_center - gluon_rad + i][y_center - gluon_rad + j] << " " << gluon_dist.GetMaskValue(i, j) << endl;
+        all_gluons[1][x][y] += kappa_*sqrt(t_b[x - gluon_rad + i][y - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
+//        cout << all_gluons[0][x][y] << " " << initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j] << " " << all_gluons[1][x][y] << " " << kappa_ << " " << t_b[x_center - gluon_rad + i][y_center - gluon_rad + j] << " " << gluon_dist.GetMaskValue(i, j) << endl;
       }
     }
-    cout << all_gluons[1][x][y] << endl;
-    cout << "End!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+//    cout << all_gluons[1][x][y] << endl;
+//    cout << "End!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
     }
   }
   }
