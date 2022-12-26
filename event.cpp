@@ -239,7 +239,7 @@ cout <<"Begin!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
         //  Sum up total energy from gluon region
         all_gluons[0][x][y] += initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j]*gluon_dist.GetMaskValue(i, j);
         all_gluons[1][x][y] += kappa_*sqrt(t_b[x_center - gluon_rad + i][y_center - gluon_rad + j])*gluon_dist.GetMaskValue(i, j);
-        cout << all_gluons[1][x][y] << " " << kappa_ << " " << t_b[x_center - gluon_rad + i][y_center - gluon_rad + j] << " " << gluon_dist.GetMaskValue(i, j) << endl;
+        cout << all_gluons[0][x][y] << " " << initial_energy_backup[x - gluon_rad + i][y - gluon_rad + j] << " " << all_gluons[1][x][y] << " " << kappa_ << " " << t_b[x_center - gluon_rad + i][y_center - gluon_rad + j] << " " << gluon_dist.GetMaskValue(i, j) << endl;
       }
     }
     cout << all_gluons[1][x][y] << endl;
