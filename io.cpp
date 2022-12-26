@@ -910,7 +910,7 @@ void IO::OutputSparseGluonGrids(vector<vector<vector<double>>> density_grid, int
         y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
         value = density_grid[0][i][j];
         qs = density_grid[1][i][j];
-        cout << "printed " << value << endl;
+        cout << "printed " << value << " " << qs << endl;
         output << x << " " << y << " " << value <<  " " << value/num_points << " " << qs << " " << qs/num_points << endl;
       }
     }

@@ -149,6 +149,7 @@ Charge Splitter::RollFlavor(double Qs)
   }
   else
   {
+    cout << "Fixed Qs" << endl;
     u = up_chem;
     d = down_chem;
     s = strange_chem;
