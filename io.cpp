@@ -678,17 +678,17 @@ void IO::ConvertEvent(vector<vector<double>> &input, double &total)
 
         //  If entropy is above specified entropy cuttoff then convert to energy,
         //  otherwise set to 0 since these points won't be seen by hydro anyway
-        if (entropy > s_chop)
-        {
+//        if (entropy > s_chop)
+//        {
           //  Find range where entropy lies in eos
           range = FindRange(eos_interped, entropy);
 
           //  Make conversion from entropy to energy and add to total tracker
           input[i][j] = InterpolateValue(range, entropy);
           total += input[i][j];
-        }
-        else
-        { input[i][j] = 0;  }
+ //       }
+ //       else
+ //       { input[i][j] = 0;  }
       }
     }
   }
