@@ -528,7 +528,7 @@ Event IO::InitializeEvent()
     {
       event_in.quark_rad = round((tau_hydro - tau_0)/grid_step); //  Set radius of quarks
       event_in.greens_rad = round((tau_hydro - tau_0)/grid_step); //  Set radius of quarks
-      cout << "greens rad " << event_in.quark_rad << endl;
+      
       event_in.quark_dist = Mask(density_profile_type, event_in.quark_rad, grid_step, tau_hydro);
     }
     else if (greens_evolution == 2)
@@ -678,17 +678,17 @@ void IO::ConvertEvent(vector<vector<double>> &input, double &total)
 
         //  If entropy is above specified entropy cuttoff then convert to energy,
         //  otherwise set to 0 since these points won't be seen by hydro anyway
-//        if (entropy > s_chop)
-//        {
+        if (entropy > s_chop)
+        {
           //  Find range where entropy lies in eos
           range = FindRange(eos_interped, entropy);
 
           //  Make conversion from entropy to energy and add to total tracker
           input[i][j] = InterpolateValue(range, entropy);
           total += input[i][j];
- //       }
- //       else
- //       { input[i][j] = 0;  }
+        }
+        else
+        { input[i][j] = 0;  }
       }
     }
   }
@@ -910,7 +910,7 @@ void IO::OutputSparseGluonGrids(vector<vector<vector<double>>> density_grid, int
         y = -grid_max + j*grid_step;  //  Converts grid point to physical y-value
         value = density_grid[0][i][j];
         qs = density_grid[1][i][j];
-        cout << "printed " << value << " " << qs << endl;
+	      
         output << x << " " << y << " " << value <<  " " << value/num_points << " " << qs << " " << qs/num_points << endl;
       }
     }
