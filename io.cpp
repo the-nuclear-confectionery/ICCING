@@ -829,13 +829,9 @@ void IO::OutputEccentricities(double total_entropy, vector<vector<double>> eccen
     //  Print magnitude and angle of eccentricities
     for (int i = 0; i < eccentricities.size(); i++)
     {
-      output_neg << eccentricities[i][0] << " " << eccentricities[i][1] << " ";
-      output_pos << eccentricities[i][3] << " " << eccentricities[i][4] << " ";
+      output_neg << eccentricities[i][0] << " " << eccentricities[i][1] << " " << eccentricities[i][2] << endl;
+      output_pos << eccentricities[i][3] << " " << eccentricities[i][4] << " " << eccentricities[i][5] << endl;
     }
-
-    //  Output radius
-    output_neg << eccentricities[0][2] << endl;
-    output_pos << eccentricities[0][5] << endl;
 
     output_neg.close();
     output_pos.close();
