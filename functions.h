@@ -24,12 +24,17 @@ struct SplineSet{
 
     SplineSet& operator=(const SplineSet& s)
     {
-      a = s.a;
-      b = s.b;
-      c = s.c;
-      d = s.d;
-      x = s.x;
+        if (this != &s)  // Prevent self-assignment
+        {
+            a = s.a;
+            b = s.b;
+            c = s.c;
+            d = s.d;
+            x = s.x;
+        }
+        return *this;  // Return the current object
     }
+
 
 };
 //__________________________________________________________________________________________
