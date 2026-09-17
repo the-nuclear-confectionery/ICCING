@@ -1,0 +1,39 @@
+trento_input_dir # <path to directory with trento output>
+output_dir # <path to ICCING output directory>
+eos_file # path to derv21.dat
+quark_input_file # path to GBW_Chemistry.dat
+input_type 1
+output_type 1
+density_profile_type Kernel
+greens_evolution 0
+perturbative_regime 0.0
+seed_ 862896169
+charge_type BSQ
+eccentricity_type COM
+dipole_model GBW
+first_event 0
+last_event 0
+grid_max 12.0
+grid_step 0.06
+kappa_ 1
+alpha_s 0.3
+s_chop 1e-19
+a_trento 125
+lambda_ 1
+lambda_bym 0.001
+r_max 1
+alpha_min 0.01
+e_thresh 0.25
+rad_ 0.5
+qrad_ 1.0
+tau_0 0.6
+t_a 0
+t_b 1
+background_attractor_file # <path to BackgroundAttractorRTA.txt>
+greens_functions_file # <path to GreensFunctionsRTA_New.txt>
+background_points 10146
+greens_functions_points 128
+greens_functions_chuncks 400
+c_infinity 0.8846609
+eta_over_s 0.047
+tau_hydro 0.6
